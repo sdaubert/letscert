@@ -1,3 +1,6 @@
 #!/usr/bin/ruby
 
 require 'acme-client'
+require 'letscert'
+
+LetsCert.run
