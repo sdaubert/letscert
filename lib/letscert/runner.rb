@@ -103,6 +103,31 @@ module LetsCert
       begin
         if @options[:revoke]
           revoke
+        elsif @options[:domains].empty?
+          raise Error, 'At leat one domain must be given with --domain option'
+        else
+          data = load_data_from_disk(@options[:files])
+
+          # Check all components are covered by plugins
+          persisted = IOPlugin::EMPTY_DATA
+          @options[:files].each do |file|
+            persisted.merge!(IOPlugin.registered[file].persisted) do |k, oldv, newv|
+              oldv || newv
+            end
+          end
+          not_persisted = persisted.keys.find_all { |k| !persisted[k] }
+          unless not_persisted.empty?
+            raise Error, 'Selected IO plugins do not cover following components: ' +
+                         not_persisted.join(', ')
+          end
+
+          # Check cert validity
+          # if cert is valid for valid_min and for domain
+          #   RETURN_OK
+          # else
+          #   create new cert
+          #   RETURN_OK_CERT
+          # end
         end
 
         RETURN_OK
