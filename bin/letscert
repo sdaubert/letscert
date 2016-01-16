@@ -3,4 +3,4 @@
 require 'acme-client'
 require 'letscert'
 
-LetsCert.run
+LetsCert::Runner.run
