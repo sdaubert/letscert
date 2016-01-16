@@ -70,7 +70,15 @@ module LetsCert
 
       @logger.debug { "options are: #{@options.inspect}" }
 
-      RETURN_OK
+      begin
+        if @options[:revoke]
+          revoke
+        end
+
+        RETURN_OK
+      rescue Error
+        RETURN_ERROR
+      end
     end
 
 
@@ -169,6 +177,9 @@ module LetsCert
       end
 
       @opt_parser.parse!
+    end
+
+    def revoke
     end
 
   end
