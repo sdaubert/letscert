@@ -11,7 +11,7 @@ module LetsCert
     class LoggerFormatter < Logger::Formatter
 
       # @private
-      FORMAT = "[%s] %5s: %s"
+      FORMAT = "[%s] %5s: %s\n"
 
       # @param [String] severity
       # @param [Datetime] time
@@ -104,7 +104,8 @@ module LetsCert
         end
 
         RETURN_OK
-      rescue Error
+      rescue Error => ex
+        puts "Error: #{ex.message}"
         RETURN_ERROR
       end
     end
