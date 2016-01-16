@@ -1,7 +1,7 @@
 require 'optparse'
 require 'logger'
 
-require_relative 'certificate'
+require_relative 'io_plugin'
 
 module LetsCert
 
@@ -98,6 +98,8 @@ module LetsCert
 
       @logger.debug { "options are: #{@options.inspect}" }
 
+      IOPlugin.logger = @logger
+
       begin
         if @options[:revoke]
           revoke
@@ -150,7 +152,7 @@ module LetsCert
         opts.on("-f", "--file FILE", 'Input/output file.',
                 'Can be specified multiple times',
                 'Allowed values: account_key.json, cert.der,',
-                'cert.pem, chain.pem, xternal.sh, full.pem,',
+                'cert.pem, chain.pem, full.pem,',
                 'fullchain.pem, key.der, key.pem.') do |file|
           @options[:files] << file
         end
@@ -213,6 +215,40 @@ module LetsCert
     end
 
     def revoke
+      @logger.info { "load certificates: #{@options[:files].join(', ')}" }
+      if @options[:files].empty?
+        raise Error, 'no certificate to revoke. Pass at least one with '+
+                     ' -f option.'
+      end
+
+      # Temp
+      @logger.warn "Not yet implemented"
+    end
+
+
+    private
+
+    # Load existing data from disk
+    def load_data_from_disk(files)
+      all_data = IOPlugin::EMPTY_DATA
+
+      files.each do |plugin_name|
+        persisted = IOPlugin.registered[plugin_name].persisted
+        data = IOPlugin.registered[plugin_name].load
+
+        test = IOPlugin::EMPTY_DATA.keys.all? do |key|
+          persisted[key] or data[key].nil?
+        end
+        raise Error unless test
+
+        # Merge data into all_data. New value replace old one only id old one was
+        # not defined
+        all_data.merge!(data) do |key, oldval, newval|
+          oldval || newval
+        end
+      end
+
+      all_data
     end
 
   end
