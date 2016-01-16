@@ -95,7 +95,7 @@ module LetsCert
           @options[:show_version] = v
         end
         opts.on('-v', '--verbose', 'Run verbosely') { |v| @options[:verbose] += 1 if v }
-        
+
 
         opts.separator("\nWebroot manager:")
 
@@ -114,8 +114,12 @@ module LetsCert
 
         opts.separator("\nCertificate data files:")
 
+        opts.on('--revoke', 'Revoke existing certificates') do |revoke|
+          @options[:revoke] = revoke
+        end
+
         opts.on("-f", "--file FILE", 'Input/output file.',
-                'an be specified multiple times',
+                'Can be specified multiple times',
                 'Allowed values: account_key.json, cert.der,',
                 'cert.pem, chain.pem, xternal.sh, full.pem,',
                 'fullchain.pem, key.der, key.pem.') do |file|
