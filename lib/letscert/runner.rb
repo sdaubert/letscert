@@ -1,9 +1,36 @@
 require 'optparse'
 require 'logger'
 
+require_relative 'certificate'
+
 module LetsCert
 
   class Runner
+
+    # Custom logger formatter
+    class LoggerFormatter < Logger::Formatter
+
+      # @private
+      FORMAT = "[%s] %5s: %s"
+
+      # @param [String] severity
+      # @param [Datetime] time
+      # @param [nil,String] progname
+      # @param [String] msg
+      # @return [String]
+      def call(severity, time, progname, msg)
+        FORMAT % [format_datetime(time), severity, msg2str(msg)]
+      end
+
+
+      private
+
+      def format_datetime(time)
+        time.strftime("%Y-%d-%d %H:%M:%S")
+      end
+
+    end
+
 
     # Exit value for OK
     RETURN_OK = 1
@@ -40,6 +67,7 @@ module LetsCert
       }
 
       @logger = Logger.new(STDOUT)
+      @logger.formatter = LoggerFormatter.new
     end
 
     # @return [Integer] exit code
