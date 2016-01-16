@@ -68,6 +68,8 @@ module LetsCert
         @logger.level = Logger::Severity::DEBUG
       end
 
+      @logger.debug { "options are: #{@options.inspect}" }
+
       RETURN_OK
     end
 
@@ -84,7 +86,7 @@ module LetsCert
         opts.on('-V', '--version', 'Show version and exit') do |v|
           @options[:show_version] = v
         end
-        opts.on('-v', '--verbose', 'Run verbosely') { |v| @options[:verbose] = v }
+        opts.on('-v', '--verbose', 'Run verbosely') { |v| @options[:verbose] += 1 if v }
         
 
         opts.separator("\nWebroot manager:")
