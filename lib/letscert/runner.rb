@@ -4,9 +4,20 @@ require 'logger'
 module LetsCert
 
   class Runner
+
+    # Exit value for OK
+    RETURN_OK = 1
+    # Exit value for OK but with creation/renewal of certificate data
+    RETURN_OK_CERT = 0
+    # Exit value for error(s)
+    RETURN_ERROR = 2
+    
     # @return [Logger]
     attr_reader :logger
 
+    # Run LetsCert
+    # @return [Integer]
+    # @see #run
     def self.run
       runner = new
       runner.parse_options
@@ -31,17 +42,21 @@ module LetsCert
       @logger = Logger.new(STDOUT)
     end
 
+    # @return [Integer] exit code
+    #   * 0 if certificate data were created or updated
+    #   * 1 if renewal was not necessery
+    #   * 2 in case of errors
     def run
       if @options[:print_help]
         puts @opt_parser
-        exit
+        exit RETURN_OK
       end
 
       if @options[:show_version]
         puts "letscert #{LetsCert::VERSION}"
         puts "Copyright (c) 2016 Sylvain Daubert"
         puts "License MIT: see http://opensource.org/licenses/MIT"
-        exit
+        exit RETURN_OK
       end
 
       case @options[:verbose]
@@ -52,6 +67,8 @@ module LetsCert
       when 2..5
         @logger.level = Logger::Severity::DEBUG
       end
+
+      RETURN_OK
     end
 
 

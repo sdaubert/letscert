@@ -3,4 +3,6 @@
 require 'acme-client'
 require 'letscert'
 
-LetsCert::Runner.run
+code = LetsCert::Runner.run
+
+exit code
