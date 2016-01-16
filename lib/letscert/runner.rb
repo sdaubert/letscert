@@ -1,8 +1,11 @@
 require 'optparse'
+require 'logger'
 
 module LetsCert
 
   class Runner
+    # @return [Logger]
+    attr_reader :logger
 
     def self.run
       runner = new
@@ -13,6 +16,7 @@ module LetsCert
 
     def initialize
       @options = {
+        verbose: 0,
         domains: [],
         files: [],
         cert_key_size: 4096,
@@ -23,6 +27,8 @@ module LetsCert
         user_agent: 'letscert/0',
         server: 'https://acme-v01.api.letsencrypt.org/directory',
       }
+
+      @logger = Logger.new(STDOUT)
     end
 
     def run
@@ -36,6 +42,15 @@ module LetsCert
         puts "Copyright (c) 2016 Sylvain Daubert"
         puts "License MIT: see http://opensource.org/licenses/MIT"
         exit
+      end
+
+      case @options[:verbose]
+      when 0
+        @logger.level = Logger::Severity::WARN
+      when 1
+        @logger.level = Logger::Severity::INFO
+      when 2..5
+        @logger.level = Logger::Severity::DEBUG
       end
     end
 
