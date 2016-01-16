@@ -16,8 +16,8 @@ module LetsCert
     @@registered = {}
 
     # Register a plugin
-    def self.register(klass, name)
-      plugin = klass.new(name)
+    def self.register(klass, *args)
+      plugin = klass.new(*args)
       if plugin.name =~ /[\/\\]/ or ['.', '..'].include?(plugin.name)
         raise Error, "plugin name should just ne a file name, without path"
       end
@@ -34,7 +34,7 @@ module LetsCert
 
     # Set logger
     def self.logger=(logger)
-      @@loger = logger
+      @@logger = logger
     end
 
     def initialize(name)
@@ -54,17 +54,17 @@ module LetsCert
   end
 
 
-  # {IOPlugin} which read/saves files on disk.
-  class FileIOPlugin < IOPlugin
+  # Mixin for IOPmugin subclasses that handle files
+  module FileIOPluginMixin
 
     def load
-      @@loger.debug { "Loading #@name" }
+      self.class.class_variable_get(:@@logger).debug { "Loading #@name" }
 
       begin
         content = File.read(@name)
       rescue SystemCallError => ex
         if ex.is_a? Errno::ENOENT
-          return EMPTY_DATA
+          return self.class::EMPTY_DATA
         end
         raise
       end
@@ -84,8 +84,8 @@ module LetsCert
   end
 
 
-  # Mixin for IOPlugin subclasses
-  module JWKIOPlugin
+  # Mixin for IOPlugin subclasses that handle JWK
+  module JWKIOPluginMixin
     def load_jwk(data)
     end
 
@@ -95,8 +95,9 @@ module LetsCert
 
 
   # Account key IO plugin
-  class AccountKey < FileIOPlugin
-    extend JWKIOPlugin
+  class AccountKey < IOPlugin
+    include FileIOPluginMixin
+    include JWKIOPluginMixin
 
     def persisted
       { account_key: true }
@@ -112,5 +113,78 @@ module LetsCert
 
   end
   IOPlugin.register(AccountKey, 'account_key.json')
+
+
+  # OpenSSL IOPlugin
+  class OpenSSLIOPlugin < IOPlugin
+
+    def initialize(name, type)
+      @type = type
+      super(name)
+    end
+
+    def load_key(data)
+      OpenSSL::PKey::RSA.new data
+    end
+
+    def dump_key
+    end
+
+    def load_cert(data)
+      OpenSSL::X509::Certificate.new data
+    end
+
+    def dump_cert(data)
+    end
+  end
+
+
+  # Key file plugin
+  class KeyFile < OpenSSLIOPlugin
+    include FileIOPluginMixin
+
+    def persisted
+      @persisted ||= { key: true }
+    end
+
+  end
+  IOPlugin.register(KeyFile, 'key.pem', :pem)
+  IOPlugin.register(KeyFile, 'key.der', :der)
+
+
+  # Chain file plugin
+  class ChainFile < OpenSSLIOPlugin
+    include FileIOPluginMixin
+
+    def persisted
+      @persisted ||= { chain: true }
+    end
+
+  end
+  IOPlugin.register(ChainFile, 'chain.pem', :pem)
+
+
+  # Fullchain file plugin
+  class FullChainFile < ChainFile
+
+    def persisted
+      @persisted ||= { cert: true, chain: true }
+    end
+
+  end
+  IOPlugin.register(FullChainFile, 'fullchain.pem', :pem)
+
+
+  # Cert file plugin
+  class CertFile < OpenSSLIOPlugin
+    include FileIOPluginMixin
+
+    def persisted
+      @persisted ||= { cert: true }
+    end
+
+  end
+  IOPlugin.register(CertFile, 'cert.pem', :pem)
+  IOPlugin.register(CertFile, 'cert.der', :der)
 
 end
