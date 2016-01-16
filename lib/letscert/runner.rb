@@ -106,10 +106,8 @@ module LetsCert
         elsif @options[:domains].empty?
           raise Error, 'At leat one domain must be given with --domain option'
         else
-          data = load_data_from_disk(@options[:files])
-
           # Check all components are covered by plugins
-          persisted = IOPlugin::EMPTY_DATA
+          persisted = IOPlugin.empty_data
           @options[:files].each do |file|
             persisted.merge!(IOPlugin.registered[file].persisted) do |k, oldv, newv|
               oldv || newv
@@ -120,6 +118,8 @@ module LetsCert
             raise Error, 'Selected IO plugins do not cover following components: ' +
                          not_persisted.join(', ')
           end
+
+          data = load_data_from_disk(@options[:files])
 
           # Check cert validity
           # if cert is valid for valid_min and for domain
@@ -255,13 +255,13 @@ module LetsCert
 
     # Load existing data from disk
     def load_data_from_disk(files)
-      all_data = IOPlugin::EMPTY_DATA
+      all_data = IOPlugin.empty_data
 
       files.each do |plugin_name|
         persisted = IOPlugin.registered[plugin_name].persisted
         data = IOPlugin.registered[plugin_name].load
 
-        test = IOPlugin::EMPTY_DATA.keys.all? do |key|
+        test = IOPlugin.empty_data.keys.all? do |key|
           persisted[key] or data[key].nil?
         end
         raise Error unless test

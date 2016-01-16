@@ -11,9 +11,13 @@ module LetsCert
     ALLOWED_PLUGINS = %w(account_key.json cert.der cert.pem chain.pem full.pem) +
                       %w(fullchain.pem key.der key.pem)
 
-    EMPTY_DATA = { account_key: nil, key: nil, cert: nil, chain: nil }
 
     @@registered = {}
+
+    # Get empty data
+    def self.empty_data
+      { account_key: nil, key: nil, cert: nil, chain: nil }
+    end
 
     # Register a plugin
     def self.register(klass, *args)
@@ -64,7 +68,7 @@ module LetsCert
         content = File.read(@name)
       rescue SystemCallError => ex
         if ex.is_a? Errno::ENOENT
-          return self.class::EMPTY_DATA
+          return self.class.empty_data
         end
         raise
       end
