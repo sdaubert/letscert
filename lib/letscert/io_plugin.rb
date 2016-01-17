@@ -187,6 +187,14 @@ module LetsCert
       @persisted ||= { cert: true }
     end
 
+    def load_from_content(content)
+      { cert: load_cert(content) }
+    end
+
+    def save(data)
+      save_to_file(dump_cert(data[:cert]))
+    end
+
   end
   IOPlugin.register(CertFile, 'cert.pem', :pem)
   IOPlugin.register(CertFile, 'cert.der', :der)
