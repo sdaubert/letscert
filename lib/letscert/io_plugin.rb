@@ -197,19 +197,20 @@ module LetsCert
       OpenSSL::PKey::RSA.new data
     end
 
-    # @todo
-    def dump_key(data)
-      puts "#{self.class}#dump_key: #{data.inspect}"
+    def dump_key(key)
+      puts "#{self.class}#dump_key: #{key.inspect}"
+      key.to_pem
     end
 
     def load_cert(data)
       OpenSSL::X509::Certificate.new data
     end
 
-    # @todo
-    def dump_cert(data)
-      puts "#{self.class}#dump_cert: #{data.inspect}"
+    def dump_cert(cert)
+      puts "#{self.class}#dump_cert: #{cert.inspect}"
+      cert.to_pem
     end
+
   end
 
 
