@@ -134,6 +134,8 @@ module LetsCert
       key.dmp1 = OpenSSL::BN.new(Base64.strict_decode64(hsh['dp']))
       key.dmq1 = OpenSSL::BN.new(Base64.strict_decode64(hsh['dq']))
       key.iqmp = OpenSSL::BN.new(Base64.strict_decode64(hsh['qi']))
+
+      key
     end
 
     # Dump crypto data (key) to a JSON-encoded string
@@ -157,7 +159,6 @@ module LetsCert
           hsh[key] = Base64.strict_encode64(hsh[key].to_s)
         end
       end
-      p hsh
       hsh.to_json
     end
   end
