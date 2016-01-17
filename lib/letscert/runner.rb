@@ -103,6 +103,7 @@ module LetsCert
       begin
         if @options[:revoke]
           revoke
+          RETURN_OK
         elsif @options[:domains].empty?
           raise Error, 'At leat one domain must be given with --domain option'
         else
@@ -121,16 +122,14 @@ module LetsCert
 
           data = load_data_from_disk(@options[:files])
 
-          # Check cert validity
-          # if cert is valid for valid_min and for domain
-          #   RETURN_OK
-          # else
-          #   create new cert
-          #   RETURN_OK_CERT
-          # end
+          if valid_existing_cert(data[:cert])
+            RETURN_OK
+          else
+            # update/create cert
+            RETURN_OK_CERT
+          end
         end
 
-        RETURN_OK
       rescue Error => ex
         puts "Error: #{ex.message}"
         RETURN_ERROR
@@ -274,6 +273,19 @@ module LetsCert
       end
 
       all_data
+    end
+
+    # Check if +cert+ exists and is always valid
+    # @todo For now, only check exitence.
+    def valid_existing_cert(cert)
+      return false if cert.nil?
+
+      subjects = []
+      subjects << cert.subject
+
+      cert.extensions.each do |ext|
+        p ext.oid
+      end
     end
 
   end
