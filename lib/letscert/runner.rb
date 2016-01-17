@@ -1,5 +1,6 @@
 require 'optparse'
 require 'logger'
+require 'awesome_print'
 
 require_relative 'io_plugin'
 
@@ -250,6 +251,58 @@ module LetsCert
 
 
     private
+
+    def get_account_key(data)
+      if data.nil?
+        logger.info { 'No account key. Generate a new one...' }
+        # As account key is a long term key, size is forced to 4096 bits
+        OpenSSL::PKey::RSA.new(4096)
+      else
+        data
+      end
+    end
+
+    # Get ACME client.
+    #
+    # Client is only created on first call, then it is cached.
+    def get_acme_client(account_key)
+      return @client if @client
+
+      key = get_account_key(account_key)
+
+      @logger.debug { "connect to #{@options[:server]}" }
+      @client = Acme::Client.new(private_key: key, endpoint: @options[:server])
+
+      if @options[:email].nil?
+        @logger.warn { '--email was not provided. ACME CA will have no way to ' +
+                       'contact you!' }
+      end
+
+      @logger.debug { "register with #{@options[:email]}" }
+      registration = @client.register(contact: "mailto:#{@options[:email]}")
+      ap registration.id
+      ap registration.contact
+      ap registration.uri
+      ap registration.next_uri
+      ap registration.recover_uri
+      ap registration.term_of_service_uri
+
+      #if registration.term_of_service_uri
+      #  @logger.debug { "get terms of service" }
+      #  terms = registration.get_terms
+      #  if !terms.nil?
+      #    tos_digest = OpenSSL::Digest::SHA256.digest(terms)
+      #    if tos_digest != @options[:tos_sha256]
+      #      raise Error, 'Terms Of Service mismatch'
+      #    end
+
+           @logger.debug { "agree terms of service" }
+           registration.agree_terms
+      #  end
+      #end
+
+      @client
+    end
 
     # Load existing data from disk
     def load_data_from_disk(files)
