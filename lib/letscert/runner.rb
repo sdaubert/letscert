@@ -343,6 +343,32 @@ module LetsCert
       end
     end
 
+    # Compute webroots
+    # @return [Hash] whre key are domains and value are their webroot path
+    def compute_roots
+      roots = {}
+      no_roots = []
+
+      @options[:domains].each do |domain|
+        match = domain.match(/([\w+\.]+):(.*)/)
+        if match
+          roots[match[1]] = match[2]
+        elsif @options[:default_path]
+          roots[domain] = @options[:default_path]
+        else
+          no_roots << domain
+        end
+      end
+
+      if !no_roots.empty?
+        raise Error, 'root for the following domain(s) are not specified: ' +
+                     no_roots.join(', ') + ".\nTry --default_root or use " +
+                     '-d example.com:/var/www/html syntax.'
+      end
+
+      roots
+    end
+
   end
 
 end
