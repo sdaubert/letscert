@@ -127,6 +127,7 @@ module LetsCert
             RETURN_OK
           else
             # update/create cert
+            new_data(data)
             RETURN_OK_CERT
           end
         end
@@ -341,6 +342,22 @@ module LetsCert
       cert.extensions.each do |ext|
         p ext.oid
       end
+    end
+
+    # Create/renew key/cert/chain
+    def new_data(data)
+      @logger.info {"create key/cert/chain..." }
+      roots = compute_roots
+      @logger.debug { "webroots are: #{roots.inspect}" }
+
+      client = get_acme_client(data[:account_key])
+
+      ########### TODO ###########
+
+      # To uncomment when TODO will be done
+      #IOPlugin.registered.each do |name, plugin|
+      #  plugin.save({ account_key: client.private_key })
+      #end
     end
 
     # Compute webroots
