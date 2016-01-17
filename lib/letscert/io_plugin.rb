@@ -1,3 +1,6 @@
+require 'json'
+require 'base64'
+
 module LetsCert
 
   # Input/output plugin
@@ -95,7 +98,17 @@ module LetsCert
     # @param [Hash] data
     # @return [void]
     def save_to_file(data)
-      @@logger.info { "saving #@name" }
+      return if data.nil?
+
+      logger.info { "saving #@name" }
+      begin
+        File.open(name, 'w') do |f|
+          f.write(data)
+        end
+      rescue Errno => ex
+        @logger.error { ex.message }
+        raise Error, "Error when saving #@name"
+      end
     end
 
   end
@@ -103,10 +116,49 @@ module LetsCert
 
   # Mixin for IOPlugin subclasses that handle JWK
   module JWKIOPluginMixin
+
+    # Load crypto data from JSON-encoded file
+    # @param [String] data JSON-encoded data
+    # @return [Hash]
     def load_jwk(data)
+      return nil if data.empty?
+
+      hsh = JSON.parse(data)
+
+      key = OpenSSL::PKey::RSA.new
+      key.n = OpenSSL::BN.new(Base64.strict_decode64(hsh['n']))
+      key.e = OpenSSL::BN.new(Base64.strict_decode64(hsh['e']))
+      key.d = OpenSSL::BN.new(Base64.strict_decode64(hsh['e']))
+      key.p = OpenSSL::BN.new(Base64.strict_decode64(hsh['p']))
+      key.q = OpenSSL::BN.new(Base64.strict_decode64(hsh['q']))
+      key.dmp1 = OpenSSL::BN.new(Base64.strict_decode64(hsh['dp']))
+      key.dmq1 = OpenSSL::BN.new(Base64.strict_decode64(hsh['dq']))
+      key.iqmp = OpenSSL::BN.new(Base64.strict_decode64(hsh['qi']))
     end
 
+    # Dump crypto data (key) to a JSON-encoded string
+    # @param [OpenSSL::PKey] jwk
+    # @return [String]
     def dump_jwk(jwk)
+      hsh = jwk.params
+
+      # Add and rename some fields to be compatible with simp_le
+      hsh['kty'] = 'RSA'
+      hsh['qi'] = hsh['iqmp'].dup
+      hsh['dp'] = hsh['dmp1'].dup
+      hsh['dq'] = hsh['dmq1'].dup
+      hsh.delete('iqmp')
+      hsh.delete('dmpl')
+      hsh.delete('dmql')
+      hsh.rehash
+
+      hsh.each_key do |key|
+        if hsh[key].is_a?(OpenSSL::BN)
+          hsh[key] = Base64.strict_encode64(hsh[key].to_s)
+        end
+      end
+      p hsh
+      hsh.to_json
     end
   end
 
@@ -144,14 +196,18 @@ module LetsCert
       OpenSSL::PKey::RSA.new data
     end
 
-    def dump_key
+    # @todo
+    def dump_key(data)
+      puts "#{self.class}#dump_key: #{data.inspect}"
     end
 
     def load_cert(data)
       OpenSSL::X509::Certificate.new data
     end
 
+    # @todo
     def dump_cert(data)
+      puts "#{self.class}#dump_cert: #{data.inspect}"
     end
   end
 
@@ -162,6 +218,14 @@ module LetsCert
 
     def persisted
       @persisted ||= { key: true }
+    end
+
+    def load_from_content(content)
+      { key: load_key(content) }
+    end
+
+    def save(data)
+      save_to_file(dump_key(data[:key]))
     end
 
   end
@@ -177,6 +241,14 @@ module LetsCert
       @persisted ||= { chain: true }
     end
 
+    # @todo
+    def load_from_content(content)
+    end
+
+    def save(data)
+      data[:chain].map { |c| dump_cert(c) }.join
+    end
+
   end
   IOPlugin.register(ChainFile, 'chain.pem', :pem)
 
@@ -186,6 +258,22 @@ module LetsCert
 
     def persisted
       @persisted ||= { cert: true, chain: true }
+    end
+
+    def load
+      data = super
+      if data[:chain].nil? or data[:chain].empty?
+        cert, chain = nil, nil
+      else
+        cert, chain = data[:chain]
+      end
+
+      { account_key: data[:account_key], key: data[:key], cert: cert, chain: chain }
+    end
+
+    def save(data)
+      super(account_key: data[:account_key], key: data[:key], cert: nil,
+            chain: [data[:cert]] + data[:chain])
     end
 
   end
