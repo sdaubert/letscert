@@ -1,5 +1,6 @@
 require 'optparse'
 require 'logger'
+require 'fileutils'
 require 'awesome_print'
 
 require_relative 'io_plugin'
@@ -367,6 +368,30 @@ module LetsCert
       if challenges.values.any? { |chall| chall.nil? }
         raise Error, 'CA did not offer http-01-only challenge. ' +
                      'This client is unable to solve any other challenges.'
+      end
+
+      challenges.each do |domain, challenge|
+        begin
+          FileUtils.mkdir_p(File.join(roots[domain], File.dirname(challenge.filename)))
+        rescue SystemCallError => ex
+          raise Error, ex.message
+        end
+
+        path = File.join(roots[domain], challenge.filename)
+        logger.debug { "Save validation #{challenge.file_content} to #{path}" }
+        File.write path, challenge.file_content
+
+        challenge.request_verification
+
+        status = 'pending'
+        while(status == 'pending') do
+          sleep(1)
+          status = challenge.verify_status
+        end
+
+        if status != 'valid'
+          @logger.warning { "#{domain} was not successfully verified." }
+        end
       end
 
 
