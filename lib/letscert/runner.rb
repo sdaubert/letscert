@@ -162,8 +162,7 @@ module LetsCert
         end
 
         opts.on('--default_root PATH', 'Default webroot path',
-                'Use for all domains (nor need for PATH part',
-                'of --domain DOMAIN:PATH)') do |path|
+                'Use for domains without PATH part.') do |path|
           @options[:default_root] = path
         end
 
@@ -278,7 +277,10 @@ module LetsCert
     # Check if +cert+ exists and is always valid
     # @todo For now, only check exitence.
     def valid_existing_cert(cert)
-      return false if cert.nil?
+      if cert.nil?
+        @logger.debug { 'no existing cert' }
+        return false
+      end
 
       subjects = []
       subjects << cert.subject
