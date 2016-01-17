@@ -41,8 +41,15 @@ module LetsCert
       @@logger = logger
     end
 
+    # @param [String] name
     def initialize(name)
       @name = name
+    end
+
+    # Get logger instance
+    # @return [Logger]
+    def logger
+      @logger ||= self.class.class_variable_get(:@@logger)
     end
     
     # @abstract This method must be overriden in subclasses
@@ -61,8 +68,10 @@ module LetsCert
   # Mixin for IOPmugin subclasses that handle files
   module FileIOPluginMixin
 
+    # Load data from file named {#name}
+    # @return [Hash]
     def load
-      self.class.class_variable_get(:@@logger).debug { "Loading #@name" }
+      logger.debug { "Loading #@name" }
 
       begin
         content = File.read(@name)
@@ -77,10 +86,14 @@ module LetsCert
     end
 
     # @abstract
+    # @return [Hash]
     def load_from_content(content)
       raise NotImplementedError
     end
 
+    # Save data to file {#name}
+    # @param [Hash] data
+    # @return [void]
     def save_to_file(data)
       @@logger.info { "saving #@name" }
     end
