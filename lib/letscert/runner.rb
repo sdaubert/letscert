@@ -352,6 +352,24 @@ module LetsCert
 
       client = get_acme_client(data[:account_key])
 
+      @logger.debug { 'Get authorization for all domains' }
+      challenges = {}
+      roots.keys.each do |domain|
+        authorization = client.authorize(domain: domain)
+         if authorization
+           challenges[domain] = authorization.http01
+         else
+           challenges[domain] = nil
+         end
+      end
+
+      @logger.debug { 'Check all challenges are HTTP-01' }
+      if challenges.values.any? { |chall| chall.nil? }
+        raise Error, 'CA did not offer http-01-only challenge. ' +
+                     'This client is unable to solve any other challenges.'
+      end
+
+
       ########### TODO ###########
 
       # To uncomment when TODO will be done
