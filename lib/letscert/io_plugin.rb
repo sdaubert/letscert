@@ -188,6 +188,13 @@ module LetsCert
   # OpenSSL IOPlugin
   class OpenSSLIOPlugin < IOPlugin
 
+    # @private Regulat expression to discriminate PEM
+    PEM_RE = /
+^-----BEGIN ((?:[\x21-\x2c\x2e-\x7e](?:[- ]?[\x21-\x2c\x2e-\x7e])*)?)\s*-----$
+.*?
+^-----END \1-----\s*
+/x
+
     def initialize(name, type)
       @type = type
       super(name)
@@ -209,6 +216,17 @@ module LetsCert
     def dump_cert(cert)
       puts "#{self.class}#dump_cert: #{cert.inspect}"
       cert.to_pem
+    end
+
+
+    private
+
+    def spli_pems(data)
+      m = data.match(PEM_RE)
+      while (m) do
+        yield m[0]
+        m = [data[m.end(0)..-1]].match(PEM_RE)
+      end
     end
 
   end
@@ -243,8 +261,13 @@ module LetsCert
       @persisted ||= { chain: true }
     end
 
-    # @todo
     def load_from_content(content)
+      chain = []
+      split_pems(content) do |pem|
+        chain << load_cert(pem)
+      end
+      puts "ChainFile#load_from_content: #{chain.inspect}"
+      chain
     end
 
     def save(data)
