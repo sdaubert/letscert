@@ -133,7 +133,8 @@ module LetsCert
           end
         end
 
-      rescue Error => ex
+      rescue Error, Acme::Client::Error => ex
+        @logger.error ex.message
         puts "Error: #{ex.message}"
         RETURN_ERROR
       end
@@ -394,17 +395,25 @@ module LetsCert
         end
 
         if status != 'valid'
-          @logger.warning { "#{domain} was not successfully verified." }
+          @logger.warn { "#{domain} was not successfully verified." }
         end
       end
 
+      if @options[:reuse_key] and !data[:key].nil?
+        @logger.info { 'Reuse existing private key' }
+        key = data[:key]
+      else
+        @logger.info { 'Generate new private key' }
+        key = OpenSSL::PKey::RSA.generate(@options[:cert_key_size])
+      end
 
-      ########### TODO ###########
+      csr = Acme::Client::CertificateRequest.new(names: roots.keys, private_key: key)
+      cert = client.new_certificate(csr)
 
-      # To uncomment when TODO will be done
-      #IOPlugin.registered.each do |name, plugin|
-      #  plugin.save({ account_key: client.private_key })
-      #end
+      IOPlugin.registered.each do |name, plugin|
+        plugin.save( account_key: client.private_key, key: key, cert: cert.x509,
+                     chain: cert.x509_chain)
+      end
     end
 
     # Compute webroots
