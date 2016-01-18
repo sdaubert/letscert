@@ -194,6 +194,10 @@ module LetsCert
           @options[:valid_min] = time
         end
 
+        opts.on('--reuse-key', 'Reuse previous private key') do |rk|
+          @options[:reuse_key] = rk
+        end
+
         opts.separator("\nRegistration:")
         opts.separator("  Automatically register an account with he ACME CA specified" +
                        " by --server")
