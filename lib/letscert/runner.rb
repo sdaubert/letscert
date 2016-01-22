@@ -388,8 +388,12 @@ module LetsCert
         end
 
         if status != 'valid'
-          @logger.warn { "#{domain} was not successfully verified." }
+          @logger.warn { "#{domain} was not successfully verified!" }
+        else
+          @logger.info { "#{domain} was successfully verified." }
         end
+
+        File.unlink path
       end
 
       if @options[:reuse_key] and !data[:key].nil?
