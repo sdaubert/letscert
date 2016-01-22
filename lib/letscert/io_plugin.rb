@@ -205,17 +205,17 @@ module LetsCert
     end
 
     def dump_key(key)
-      puts "#{self.class}#dump_key: #{key.inspect}"
-      key.to_pem
+      case @type
+      when :pem
+        key.to_pem
+      when :der
+        key.to_der
+      end
     end
+    alias :dump_cert :dump_key
 
     def load_cert(data)
       OpenSSL::X509::Certificate.new data
-    end
-
-    def dump_cert(cert)
-      puts "#{self.class}#dump_cert: #{cert.inspect}"
-      cert.to_pem
     end
 
 
