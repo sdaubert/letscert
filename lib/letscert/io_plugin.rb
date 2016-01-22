@@ -273,12 +273,11 @@ module LetsCert
       split_pems(content) do |pem|
         chain << load_cert(pem)
       end
-      puts "ChainFile#load_from_content: #{chain.inspect}"
-      chain
+      { chain: chain }
     end
 
     def save(data)
-      data[:chain].map { |c| dump_cert(c) }.join
+      save_to_file(data[:chain].map { |c| dump_cert(c) }.join)
     end
 
   end
