@@ -196,6 +196,13 @@ module LetsCert
 /x
 
     def initialize(name, type)
+      case type
+      when :pem
+      when :der
+      else
+        raise ArgumentError, "type should be :pem or :der"
+      end
+
       @type = type
       super(name)
     end
