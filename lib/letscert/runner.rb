@@ -426,8 +426,8 @@ module LetsCert
         match = domain.match(/([\w+\.]+):(.*)/)
         if match
           roots[match[1]] = match[2]
-        elsif @options[:default_path]
-          roots[domain] = @options[:default_path]
+        elsif @options[:default_root]
+          roots[domain] = @options[:default_root]
         else
           no_roots << domain
         end
