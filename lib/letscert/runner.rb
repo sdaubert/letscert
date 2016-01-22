@@ -1,7 +1,6 @@
 require 'optparse'
 require 'logger'
 require 'fileutils'
-require 'awesome_print'
 
 require_relative 'io_plugin'
 
@@ -287,12 +286,6 @@ module LetsCert
 
       @logger.debug { "register with #{@options[:email]}" }
       registration = @client.register(contact: "mailto:#{@options[:email]}")
-      ap registration.id
-      ap registration.contact
-      ap registration.uri
-      ap registration.next_uri
-      ap registration.recover_uri
-      ap registration.term_of_service_uri
 
       #if registration.term_of_service_uri
       #  @logger.debug { "get terms of service" }
