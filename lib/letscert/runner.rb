@@ -284,22 +284,28 @@ module LetsCert
                        'contact you!' }
       end
 
-      @logger.debug { "register with #{@options[:email]}" }
-      registration = @client.register(contact: "mailto:#{@options[:email]}")
-
-      #if registration.term_of_service_uri
-      #  @logger.debug { "get terms of service" }
-      #  terms = registration.get_terms
-      #  if !terms.nil?
-      #    tos_digest = OpenSSL::Digest::SHA256.digest(terms)
-      #    if tos_digest != @options[:tos_sha256]
-      #      raise Error, 'Terms Of Service mismatch'
-      #    end
-
-           @logger.debug { "agree terms of service" }
-           registration.agree_terms
-      #  end
-      #end
+      begin
+        @logger.debug { "register with #{@options[:email]}" }
+        registration = @client.register(contact: "mailto:#{@options[:email]}")
+      rescue Acme::Client::Error::Malformed => ex
+        if ex.message != 'Registration key is already in use'
+          raise
+        end
+      else
+        #if registration.term_of_service_uri
+        #  @logger.debug { "get terms of service" }
+        #  terms = registration.get_terms
+        #  if !terms.nil?
+        #    tos_digest = OpenSSL::Digest::SHA256.digest(terms)
+        #    if tos_digest != @options[:tos_sha256]
+        #      raise Error, 'Terms Of Service mismatch'
+        #    end
+        
+             @logger.debug { "agree terms of service" }
+             registration.agree_terms
+        #  end
+        #end
+      end
 
       @client
     end
