@@ -228,7 +228,7 @@ module LetsCert
 
     private
 
-    def spli_pems(data)
+    def split_pems(data)
       m = data.match(PEM_RE)
       while (m) do
         yield m[0]
