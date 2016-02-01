@@ -261,8 +261,7 @@ module LetsCert
     def get_account_key(data)
       if data.nil?
         logger.info { 'No account key. Generate a new one...' }
-        # As account key is a long term key, size is forced to 4096 bits
-        OpenSSL::PKey::RSA.new(4096)
+        OpenSSL::PKey::RSA.new(@options[:account_key_size])
       else
         data
       end
