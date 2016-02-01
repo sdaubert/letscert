@@ -58,7 +58,7 @@ module LetsCert
         verbose: 0,
         domains: [],
         files: [],
-        cert_key_size: 4096,
+        cert_key_size: 2048,
         validmin: 2_592_000,
         account_key_public_exponent: 65537,
         account_key_size: 4096,
@@ -185,7 +185,7 @@ module LetsCert
 
         opts.on('--cert-key-size BITS', Integer,
                 'Certificate key size in bits',
-                '(default: 4096)') do |bits|
+                '(default: 2048)') do |bits|
           @options[:cert_key_size] = bits
         end
 
