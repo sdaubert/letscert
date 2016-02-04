@@ -130,7 +130,7 @@ module LetsCert
             RETURN_OK
           else
             # update/create cert
-            new_data(data)
+            Certificate.get @options, data
             RETURN_OK_CERT
           end
         end
@@ -247,72 +247,8 @@ module LetsCert
       @opt_parser.parse!
     end
 
-    def revoke
-      @logger.info { "load certificates: #{@options[:files].join(', ')}" }
-      if @options[:files].empty?
-        raise Error, 'no certificate to revoke. Pass at least one with '+
-                     ' -f option.'
-      end
-
-      # Temp
-      @logger.warn "Not yet implemented"
-    end
-
 
     private
-
-    def get_account_key(data)
-      if data.nil?
-        logger.info { 'No account key. Generate a new one...' }
-        OpenSSL::PKey::RSA.new(@options[:account_key_size])
-      else
-        data
-      end
-    end
-
-    # Get ACME client.
-    #
-    # Client is only created on first call, then it is cached.
-    def get_acme_client(account_key)
-      return @client if @client
-
-      key = get_account_key(account_key)
-
-      @logger.debug { "connect to #{@options[:server]}" }
-      @client = Acme::Client.new(private_key: key, endpoint: @options[:server])
-
-      if @options[:email].nil?
-        @logger.warn { '--email was not provided. ACME CA will have no way to ' +
-                       'contact you!' }
-      end
-
-      begin
-        @logger.debug { "register with #{@options[:email]}" }
-        registration = @client.register(contact: "mailto:#{@options[:email]}")
-      rescue Acme::Client::Error::Malformed => ex
-        if ex.message != 'Registration key is already in use'
-          raise
-        end
-      else
-        # Requesting ToS make acme-client throw an exception: Connection reset by peer
-        # (Faraday::ConnectionFailed). To investigate...
-        #if registration.term_of_service_uri
-        #  @logger.debug { "get terms of service" }
-        #  terms = registration.get_terms
-        #  if !terms.nil?
-        #    tos_digest = OpenSSL::Digest::SHA256.digest(terms)
-        #    if tos_digest != @options[:tos_sha256]
-        #      raise Error, 'Terms Of Service mismatch'
-        #    end
-        
-             @logger.debug { "agree terms of service" }
-             registration.agree_terms
-        #  end
-        #end
-      end
-
-      @client
-    end
 
     # Load existing data from disk
     def load_data_from_disk(files)
@@ -370,102 +306,6 @@ module LetsCert
                       " (relative to #{now})" }
 
       diff < valid_min
-    end
-
-    # Create/renew key/cert/chain
-    def new_data(data)
-      @logger.info {"create key/cert/chain..." }
-      roots = compute_roots
-      @logger.debug { "webroots are: #{roots.inspect}" }
-
-      client = get_acme_client(data[:account_key])
-
-      @logger.debug { 'Get authorization for all domains' }
-      challenges = {}
-      roots.keys.each do |domain|
-        authorization = client.authorize(domain: domain)
-         if authorization
-           challenges[domain] = authorization.http01
-         else
-           challenges[domain] = nil
-         end
-      end
-
-      @logger.debug { 'Check all challenges are HTTP-01' }
-      if challenges.values.any? { |chall| chall.nil? }
-        raise Error, 'CA did not offer http-01-only challenge. ' +
-                     'This client is unable to solve any other challenges.'
-      end
-
-      challenges.each do |domain, challenge|
-        begin
-          FileUtils.mkdir_p(File.join(roots[domain], File.dirname(challenge.filename)))
-        rescue SystemCallError => ex
-          raise Error, ex.message
-        end
-
-        path = File.join(roots[domain], challenge.filename)
-        logger.debug { "Save validation #{challenge.file_content} to #{path}" }
-        File.write path, challenge.file_content
-
-        challenge.request_verification
-
-        status = 'pending'
-        while(status == 'pending') do
-          sleep(1)
-          status = challenge.verify_status
-        end
-
-        if status != 'valid'
-          @logger.warn { "#{domain} was not successfully verified!" }
-        else
-          @logger.info { "#{domain} was successfully verified." }
-        end
-
-        File.unlink path
-      end
-
-      if @options[:reuse_key] and !data[:key].nil?
-        @logger.info { 'Reuse existing private key' }
-        key = data[:key]
-      else
-        @logger.info { 'Generate new private key' }
-        key = OpenSSL::PKey::RSA.generate(@options[:cert_key_size])
-      end
-
-      csr = Acme::Client::CertificateRequest.new(names: roots.keys, private_key: key)
-      cert = client.new_certificate(csr)
-
-      IOPlugin.registered.each do |name, plugin|
-        plugin.save( account_key: client.private_key, key: key, cert: cert.x509,
-                     chain: cert.x509_chain)
-      end
-    end
-
-    # Compute webroots
-    # @return [Hash] whre key are domains and value are their webroot path
-    def compute_roots
-      roots = {}
-      no_roots = []
-
-      @options[:domains].each do |domain|
-        match = domain.match(/([\w+\.]+):(.*)/)
-        if match
-          roots[match[1]] = match[2]
-        elsif @options[:default_root]
-          roots[domain] = @options[:default_root]
-        else
-          no_roots << domain
-        end
-      end
-
-      if !no_roots.empty?
-        raise Error, 'root for the following domain(s) are not specified: ' +
-                     no_roots.join(', ') + ".\nTry --default_root or use " +
-                     '-d example.com:/var/www/html syntax.'
-      end
-
-      roots
     end
 
   end
