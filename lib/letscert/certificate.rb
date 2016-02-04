@@ -141,6 +141,9 @@ module LetsCert
       end
     end
 
+    # Do ACME challenges for each requested domain.
+    # @param [Acme::Client] client
+    # @param [Hash] roots
     def do_challenges(client, roots)
       logger.debug { 'Get authorization for all domains' }
       challenges = {}
