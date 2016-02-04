@@ -21,7 +21,7 @@ EOF
   s.files = files
   s.executables = ['letscert']
 
-  s.add_dependency 'acme-client', '~>0.2.4'
+  s.add_dependency 'acme-client', '~>0.3.0'
   s.add_dependency 'yard', '~>0.8.7'
 
   #s.add_development_dependency 'rspec', '~>3.4'
