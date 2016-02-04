@@ -323,7 +323,7 @@ module LetsCert
         end
         raise Error unless test
 
-        # Merge data into all_data. New value replace old one only id old one was
+        # Merge data into all_data. New value replace old one only if old one was
         # not defined
         all_data.merge!(data) do |key, oldval, newval|
           oldval || newval
