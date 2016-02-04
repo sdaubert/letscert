@@ -59,7 +59,7 @@ module LetsCert
         domains: [],
         files: [],
         cert_key_size: 2048,
-        validmin: 2_592_000,
+        valid_min: 30 * 24 * 60 * 60,
         account_key_public_exponent: 65537,
         account_key_size: 4096,
         tos_sha256: '33d233c8ab558ba6c8ebc370a509acdded8b80e5d587aa5d192193f35226540f',
@@ -123,7 +123,8 @@ module LetsCert
 
           data = load_data_from_disk(@options[:files])
 
-          if valid_existing_cert(data[:cert])
+          if valid_existing_cert(data[:cert], @options[:domains], @options[:valid_min])
+            @logger.info { 'no need to update cert' }
             RETURN_OK
           else
             # update/create cert
@@ -189,8 +190,8 @@ module LetsCert
           @options[:cert_key_size] = bits
         end
 
-        opts.on('--valid-min SECONDS', Integer, 'Minimum validity of the resulting',
-                'certificate (default: 2592000 (30 days))') do |time|
+        opts.on('--valid-min SECONDS', Integer, 'Renew existing certificate if validity',
+                'is lesser than SECONDS (default: 2592000 (30 days))') do |time|
           @options[:valid_min] = time
         end
 
@@ -334,18 +335,37 @@ module LetsCert
 
     # Check if +cert+ exists and is always valid
     # @todo For now, only check exitence.
-    def valid_existing_cert(cert)
+    def valid_existing_cert(cert, domains, valid_min)
       if cert.nil?
         @logger.debug { 'no existing cert' }
         return false
       end
 
       subjects = []
-      subjects << cert.subject
-
       cert.extensions.each do |ext|
-        p ext.oid
+        if ext.oid == 'subjectAltName'
+          subjects += ext.value.split(/,\s*/).map { |s| s.sub(/DNS:/, '') }
+        end
       end
+      @logger.debug { "cert SANs: #{subjects.join(', ')}" }
+
+      # Check all domains are subjects of certificate
+      unless domains.all? { |domain| subjects.include? domain }
+        raise Error, "At least one domain is not declared as a certificate subject." +
+                     "Backup and remove existing cert if you want to proceed"
+      end
+
+      !renewal_necessary?(cert, valid_min)
+    end
+
+    # Check if a renewal is necessary for +cert+
+    def renewal_necessary?(cert, valid_min)
+      now = Time.now.utc
+      diff = (cert.not_after - now).to_i
+      @logger.debug { "Certificate expires in #{diff}s on #{cert.not_after}" +
+                      " (relative to #{now})" }
+
+      diff < valid_min
     end
 
     # Create/renew key/cert/chain
