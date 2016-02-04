@@ -292,6 +292,8 @@ module LetsCert
           raise
         end
       else
+        # Requesting ToS make acme-client throw an exception: Connection reset by peer
+        # (Faraday::ConnectionFailed). To investigate...
         #if registration.term_of_service_uri
         #  @logger.debug { "get terms of service" }
         #  terms = registration.get_terms
