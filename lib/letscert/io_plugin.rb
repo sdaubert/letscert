@@ -80,6 +80,7 @@ module LetsCert
         content = File.read(@name)
       rescue SystemCallError => ex
         if ex.is_a? Errno::ENOENT
+          logger.info { "no #@name file" }
           return self.class.empty_data
         end
         raise
