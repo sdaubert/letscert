@@ -3,6 +3,7 @@ require 'logger'
 require 'fileutils'
 
 require_relative 'io_plugin'
+require_relative 'certificate'
 
 module LetsCert
 
@@ -100,10 +101,11 @@ module LetsCert
       @logger.debug { "options are: #{@options.inspect}" }
 
       IOPlugin.logger = @logger
+      Certificate.logger = @logger
 
       begin
         if @options[:revoke]
-          revoke
+          Certificate.revoke @options[:files]
           RETURN_OK
         elsif @options[:domains].empty?
           raise Error, 'At leat one domain must be given with --domain option'
