@@ -1,10 +1,9 @@
 # letscert
 A simple `Let's Encrypt` client in ruby.
 
-I think `simp_le` do it the right way: it is simple, it is safe as it does not needed to be run as root,
-but it is Python (no one is perfect :-)) So I started to create a clone, but in Ruby.
-
-Work in progress.
+I think `simp_le` do it the right way: it is simple, it is safe as it does not need to be
+run as root, but it is Python (no one is perfect :-)) So I started to create a clone, but
+in Ruby.
 
 # Usage
 
@@ -14,3 +13,21 @@ letscert -d example.com:/var/www/example.com/html -f key.pem -f cert.pem -f full
 ```
 
 The command is the same for certificate renewal.
+
+# What `letscert` do
+
+* Automagically a new ACME account if needed.
+* Issue new certificate if no previous one found.
+* Renew certificate only if needed.
+* Only `http-01` challenge supported. An existing web server must be alreay running. `letscert` should have write access to `${webroot}/.well-known/acme-challenge`.
+* Crontab friendly: no promts.
+* No configuration file.
+* Support multiple domains with multiple roots. Always create a single certificate per un
+  (ie a certificate may have multiple SANs).
+* As `simp_le`, check the exit code to known if a renewal has happened:
+  * 0 if certificate data was created or updated;
+  * 1 if renewal not necessary;
+  * 2 in case of errors.
+
+# Todo
+Add support to revocation.
