@@ -54,7 +54,7 @@ module LetsCert
       # @param [DateTime] time
       # @return [String]
       def format_datetime(time)
-        time.strftime("%Y-%d-%d %H:%M:%S")
+        time.strftime("%Y-%m-%d %H:%M:%S")
       end
 
     end
