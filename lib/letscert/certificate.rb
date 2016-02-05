@@ -1,19 +1,10 @@
+require_relative 'loggable'
+
 module LetsCert
 
   # Class to handle ACME operations on certificates
   class Certificate
-
-    # Set logger
-    # @param [Logger] logger
-    def self.logger=(logger)
-      @@logger = logger
-    end
-
-    # Get logger instance
-    # @return [Logger]
-    def logger
-      @logger ||= self.class.class_variable_get(:@@logger)
-    end
+    include Loggable
 
     # Revoke certificates
     # @param [Array<String>] files

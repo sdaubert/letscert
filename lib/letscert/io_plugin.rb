@@ -1,10 +1,12 @@
 require 'json'
 require 'base64'
+require_relative 'loggable'
 
 module LetsCert
 
   # Input/output plugin
   class IOPlugin
+    include Loggable
 
     # Plugin name
     # @return [String]
@@ -39,22 +41,11 @@ module LetsCert
       @@registered
     end
 
-    # Set logger
-    def self.logger=(logger)
-      @@logger = logger
-    end
-
     # @param [String] name
     def initialize(name)
       @name = name
     end
 
-    # Get logger instance
-    # @return [Logger]
-    def logger
-      @logger ||= self.class.class_variable_get(:@@logger)
-    end
-    
     # @abstract This method must be overriden in subclasses
     def load
       raise NotImplementedError
