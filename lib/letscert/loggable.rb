@@ -36,6 +36,8 @@ module LetsCert
       mod.extend(ClassMethods)
     end
 
+    # Class methods from {Loggable} module to include in target classes.
+    # @author Sylvain Daubert
     module ClassMethods
 
       # @private hook called a subclass is created.

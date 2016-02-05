@@ -28,12 +28,14 @@ require_relative 'certificate'
 
 module LetsCert
 
+  # Runner class: analyse and execute CLI commands.
+  # @author Sylvain Daubert
   class Runner
 
     # Custom logger formatter
     class LoggerFormatter < Logger::Formatter
 
-      # @private
+      # @private log format
       FORMAT = "[%s] %5s: %s\n"
 
       # @param [String] severity
@@ -48,6 +50,9 @@ module LetsCert
 
       private
 
+      # @private simple datetime formatter
+      # @param [DateTime] time
+      # @return [String]
       def format_datetime(time)
         time.strftime("%Y-%d-%d %H:%M:%S")
       end
@@ -164,6 +169,9 @@ module LetsCert
     end
 
 
+    # Parse line command options
+    # @raise [OptionParser::InvalidOption] on unrecognized or malformed option
+    # @return [void]
     def parse_options
       @opt_parser = OptionParser.new do |opts|
         opts.banner = "Usage: lestcert [options]"
@@ -272,6 +280,8 @@ module LetsCert
     private
 
     # Load existing data from disk
+    # @param [Array<String>] files
+    # @return [Hash]
     def load_data_from_disk(files)
       all_data = IOPlugin.empty_data
 
@@ -296,6 +306,10 @@ module LetsCert
 
     # Check if +cert+ exists and is always valid
     # @todo For now, only check exitence.
+    # @param [nil, OpenSSL::X509::Certificate] cert certificate to valid
+    # @param [Array<String>] domains list if domains to valid
+    # @param [Number] valid_min minimum validity in seconds to ensure
+    # @return [Boolean]
     def valid_existing_cert(cert, domains, valid_min)
       if cert.nil?
         @logger.debug { 'no existing cert' }
@@ -320,6 +334,9 @@ module LetsCert
     end
 
     # Check if a renewal is necessary for +cert+
+    # @param [OpenSSL::X509::Certificate] cert
+    # @param [Number] valid_min minimum validity in seconds to ensure
+    # @return [Boolean]
     def renewal_necessary?(cert, valid_min)
       now = Time.now.utc
       diff = (cert.not_after - now).to_i

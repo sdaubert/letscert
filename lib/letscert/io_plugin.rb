@@ -26,6 +26,7 @@ require_relative 'loggable'
 module LetsCert
 
   # Input/output plugin
+  # @author Sylvain Daubert
   class IOPlugin
     include Loggable
 
@@ -38,18 +39,23 @@ module LetsCert
                       %w(fullchain.pem key.der key.pem)
 
 
+    # Registered plugins
     @@registered = {}
 
     # Get empty data
+    # @return [Hash] +{ account_key: nil, key: nil, cert: nil, chain: nil }+
     def self.empty_data
       { account_key: nil, key: nil, cert: nil, chain: nil }
     end
 
     # Register a plugin
+    # @param [Class] klass
+    # @param [Array] args args to pass to +klass+ constructor
+    # @return [IOPlugin]
     def self.register(klass, *args)
       plugin = klass.new(*args)
       if plugin.name =~ /[\/\\]/ or ['.', '..'].include?(plugin.name)
-        raise Error, "plugin name should just ne a file name, without path"
+        raise Error, "plugin name should just be a file name, without path"
       end
 
       @@registered[plugin.name] = plugin
@@ -58,6 +64,7 @@ module LetsCert
     end
 
     # Get registered plugins
+    # @return [Hash] keys are filenames and keys are instances of IOPlugin subclasses.
     def self.registered
       @@registered
     end
@@ -81,6 +88,7 @@ module LetsCert
 
 
   # Mixin for IOPmugin subclasses that handle files
+  # @author Sylvain Daubert
   module FileIOPluginMixin
 
     # Load data from file named {#name}
@@ -128,6 +136,7 @@ module LetsCert
 
 
   # Mixin for IOPlugin subclasses that handle JWK
+  # @author Sylvain Daubert
   module JWKIOPluginMixin
 
     # Load crypto data from JSON-encoded file
@@ -178,18 +187,24 @@ module LetsCert
 
 
   # Account key IO plugin
+  # @author Sylvain Daubert
   class AccountKey < IOPlugin
     include FileIOPluginMixin
     include JWKIOPluginMixin
 
+    # @return [Hash] always get +true+ for +:account_key+ key
     def persisted
       { account_key: true }
     end
 
+    # @return [Hash]
     def load_from_content(content)
       { account_key: load_jwk(content) }
     end
 
+    # Save account key.
+    # @param [Hash] data
+    # @return [void]
     def save(data)
       save_to_file(dump_jwk(data[:account_key]))
     end
@@ -199,15 +214,18 @@ module LetsCert
 
 
   # OpenSSL IOPlugin
+  # @author Sylvain Daubert
   class OpenSSLIOPlugin < IOPlugin
 
-    # @private Regulat expression to discriminate PEM
+    # @private Regular expression to discriminate PEM
     PEM_RE = /
 ^-----BEGIN ((?:[\x21-\x2c\x2e-\x7e](?:[- ]?[\x21-\x2c\x2e-\x7e])*)?)\s*-----$
 .*?
 ^-----END \1-----\s*
 /x
 
+    # @param [String] name filename
+    # @param [:pem,:der] type
     def initialize(name, type)
       case type
       when :pem
@@ -220,10 +238,16 @@ module LetsCert
       super(name)
     end
 
+    # Load key from raw +data+
+    # @param [String] data
+    # @return [OpenSSL::PKey]
     def load_key(data)
       OpenSSL::PKey::RSA.new data
     end
 
+    # Dump key/cert data
+    # @param [OpenSSL::PKey] key
+    # @return [String]
     def dump_key(key)
       case @type
       when :pem
@@ -234,6 +258,9 @@ module LetsCert
     end
     alias :dump_cert :dump_key
 
+    # Load certificate from raw +data+
+    # @param [String] data
+    # @return [OpenSSL::X509::Certificate]
     def load_cert(data)
       OpenSSL::X509::Certificate.new data
     end
@@ -241,6 +268,9 @@ module LetsCert
 
     private
 
+    # Split concatenated PEMs.
+    # @param [String] data
+    # @yield [String] pem
     def split_pems(data)
       m = data.match(PEM_RE)
       while (m) do
@@ -253,17 +283,23 @@ module LetsCert
 
 
   # Key file plugin
+  # @author Sylvain Daubert
   class KeyFile < OpenSSLIOPlugin
     include FileIOPluginMixin
 
+    # @return [Hash] always get +true+ for +:key+ key
     def persisted
       @persisted ||= { key: true }
     end
 
+    # @return [Hash]
     def load_from_content(content)
       { key: load_key(content) }
     end
 
+    # Save private key.
+    # @param [Hash] data
+    # @return [void]
     def save(data)
       save_to_file(dump_key(data[:key]))
     end
@@ -274,13 +310,16 @@ module LetsCert
 
 
   # Chain file plugin
+  # @author Sylvain Daubert
   class ChainFile < OpenSSLIOPlugin
     include FileIOPluginMixin
 
+    # @return [Hash] always get +true+ for +:chain+ key
     def persisted
       @persisted ||= { chain: true }
     end
 
+    # @return [Hash]
     def load_from_content(content)
       chain = []
       split_pems(content) do |pem|
@@ -289,6 +328,9 @@ module LetsCert
       { chain: chain }
     end
 
+    # Save chain.
+    # @param [Hash] data
+    # @return [void]
     def save(data)
       save_to_file(data[:chain].map { |c| dump_cert(c) }.join)
     end
@@ -298,12 +340,16 @@ module LetsCert
 
 
   # Fullchain file plugin
+  # @author Sylvain Daubert
   class FullChainFile < ChainFile
 
+    # @return [Hash] always get +true+ for +:cert+ and +:chain+ keys
     def persisted
       @persisted ||= { cert: true, chain: true }
     end
 
+    # Load full certificate chain
+    # @return [Hash]
     def load
       data = super
       if data[:chain].nil? or data[:chain].empty?
@@ -315,6 +361,9 @@ module LetsCert
       { account_key: data[:account_key], key: data[:key], cert: cert, chain: chain }
     end
 
+    # Save fullchain.
+    # @param [Hash] data
+    # @return [void]
     def save(data)
       super(account_key: data[:account_key], key: data[:key], cert: nil,
             chain: [data[:cert]] + data[:chain])
@@ -325,17 +374,23 @@ module LetsCert
 
 
   # Cert file plugin
+  # @author Sylvain Daubert
   class CertFile < OpenSSLIOPlugin
     include FileIOPluginMixin
 
+    # @return [Hash] always get +true+ for +:cert+ key
     def persisted
       @persisted ||= { cert: true }
     end
 
+    # @return [Hash]
     def load_from_content(content)
       { cert: load_cert(content) }
     end
 
+    # Save certificate.
+    # @param [Hash] data
+    # @return [void]
     def save(data)
       save_to_file(dump_cert(data[:cert]))
     end
