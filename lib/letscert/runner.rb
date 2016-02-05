@@ -134,7 +134,8 @@ module LetsCert
           Certificate.revoke @options[:files]
           RETURN_OK
         elsif @options[:domains].empty?
-          raise Error, 'At leat one domain must be given with --domain option'
+          raise Error, "At leat one domain must be given with --domain option.\n" +
+                       "Try 'letscert --help' for more information."
         else
           # Check all components are covered by plugins
           persisted = IOPlugin.empty_data
