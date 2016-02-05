@@ -24,7 +24,7 @@
 module LetsCert
 
   # Letscert version number
-  VERSION = '0.2.2a'
+  VERSION = '0.2.2'
 
 
   # Base error class
