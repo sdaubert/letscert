@@ -1,17 +1,41 @@
+# The MIT License (MIT)
+#
+# Copyright (c) 2016 Sylvain Daubert
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 require 'optparse'
 require 'logger'
 require 'fileutils'
 
 require_relative 'io_plugin'
+require_relative 'certificate'
 
 module LetsCert
 
+  # Runner class: analyse and execute CLI commands.
+  # @author Sylvain Daubert
   class Runner
 
     # Custom logger formatter
     class LoggerFormatter < Logger::Formatter
 
-      # @private
+      # @private log format
       FORMAT = "[%s] %5s: %s\n"
 
       # @param [String] severity
@@ -26,8 +50,11 @@ module LetsCert
 
       private
 
+      # @private simple datetime formatter
+      # @param [DateTime] time
+      # @return [String]
       def format_datetime(time)
-        time.strftime("%Y-%d-%d %H:%M:%S")
+        time.strftime("%Y-%m-%d %H:%M:%S")
       end
 
     end
@@ -100,13 +127,15 @@ module LetsCert
       @logger.debug { "options are: #{@options.inspect}" }
 
       IOPlugin.logger = @logger
+      Certificate.logger = @logger
 
       begin
         if @options[:revoke]
-          revoke
+          Certificate.revoke @options[:files]
           RETURN_OK
         elsif @options[:domains].empty?
-          raise Error, 'At leat one domain must be given with --domain option'
+          raise Error, "At leat one domain must be given with --domain option.\n" +
+                       "Try 'letscert --help' for more information."
         else
           # Check all components are covered by plugins
           persisted = IOPlugin.empty_data
@@ -128,7 +157,7 @@ module LetsCert
             RETURN_OK
           else
             # update/create cert
-            new_data(data)
+            Certificate.get @options, data
             RETURN_OK_CERT
           end
         end
@@ -141,6 +170,9 @@ module LetsCert
     end
 
 
+    # Parse line command options
+    # @raise [OptionParser::InvalidOption] on unrecognized or malformed option
+    # @return [void]
     def parse_options
       @opt_parser = OptionParser.new do |opts|
         opts.banner = "Usage: lestcert [options]"
@@ -245,74 +277,12 @@ module LetsCert
       @opt_parser.parse!
     end
 
-    def revoke
-      @logger.info { "load certificates: #{@options[:files].join(', ')}" }
-      if @options[:files].empty?
-        raise Error, 'no certificate to revoke. Pass at least one with '+
-                     ' -f option.'
-      end
-
-      # Temp
-      @logger.warn "Not yet implemented"
-    end
-
 
     private
 
-    def get_account_key(data)
-      if data.nil?
-        logger.info { 'No account key. Generate a new one...' }
-        OpenSSL::PKey::RSA.new(@options[:account_key_size])
-      else
-        data
-      end
-    end
-
-    # Get ACME client.
-    #
-    # Client is only created on first call, then it is cached.
-    def get_acme_client(account_key)
-      return @client if @client
-
-      key = get_account_key(account_key)
-
-      @logger.debug { "connect to #{@options[:server]}" }
-      @client = Acme::Client.new(private_key: key, endpoint: @options[:server])
-
-      if @options[:email].nil?
-        @logger.warn { '--email was not provided. ACME CA will have no way to ' +
-                       'contact you!' }
-      end
-
-      begin
-        @logger.debug { "register with #{@options[:email]}" }
-        registration = @client.register(contact: "mailto:#{@options[:email]}")
-      rescue Acme::Client::Error::Malformed => ex
-        if ex.message != 'Registration key is already in use'
-          raise
-        end
-      else
-        # Requesting ToS make acme-client throw an exception: Connection reset by peer
-        # (Faraday::ConnectionFailed). To investigate...
-        #if registration.term_of_service_uri
-        #  @logger.debug { "get terms of service" }
-        #  terms = registration.get_terms
-        #  if !terms.nil?
-        #    tos_digest = OpenSSL::Digest::SHA256.digest(terms)
-        #    if tos_digest != @options[:tos_sha256]
-        #      raise Error, 'Terms Of Service mismatch'
-        #    end
-        
-             @logger.debug { "agree terms of service" }
-             registration.agree_terms
-        #  end
-        #end
-      end
-
-      @client
-    end
-
     # Load existing data from disk
+    # @param [Array<String>] files
+    # @return [Hash]
     def load_data_from_disk(files)
       all_data = IOPlugin.empty_data
 
@@ -337,6 +307,10 @@ module LetsCert
 
     # Check if +cert+ exists and is always valid
     # @todo For now, only check exitence.
+    # @param [nil, OpenSSL::X509::Certificate] cert certificate to valid
+    # @param [Array<String>] domains list if domains to valid
+    # @param [Number] valid_min minimum validity in seconds to ensure
+    # @return [Boolean]
     def valid_existing_cert(cert, domains, valid_min)
       if cert.nil?
         @logger.debug { 'no existing cert' }
@@ -361,6 +335,9 @@ module LetsCert
     end
 
     # Check if a renewal is necessary for +cert+
+    # @param [OpenSSL::X509::Certificate] cert
+    # @param [Number] valid_min minimum validity in seconds to ensure
+    # @return [Boolean]
     def renewal_necessary?(cert, valid_min)
       now = Time.now.utc
       diff = (cert.not_after - now).to_i
@@ -368,102 +345,6 @@ module LetsCert
                       " (relative to #{now})" }
 
       diff < valid_min
-    end
-
-    # Create/renew key/cert/chain
-    def new_data(data)
-      @logger.info {"create key/cert/chain..." }
-      roots = compute_roots
-      @logger.debug { "webroots are: #{roots.inspect}" }
-
-      client = get_acme_client(data[:account_key])
-
-      @logger.debug { 'Get authorization for all domains' }
-      challenges = {}
-      roots.keys.each do |domain|
-        authorization = client.authorize(domain: domain)
-         if authorization
-           challenges[domain] = authorization.http01
-         else
-           challenges[domain] = nil
-         end
-      end
-
-      @logger.debug { 'Check all challenges are HTTP-01' }
-      if challenges.values.any? { |chall| chall.nil? }
-        raise Error, 'CA did not offer http-01-only challenge. ' +
-                     'This client is unable to solve any other challenges.'
-      end
-
-      challenges.each do |domain, challenge|
-        begin
-          FileUtils.mkdir_p(File.join(roots[domain], File.dirname(challenge.filename)))
-        rescue SystemCallError => ex
-          raise Error, ex.message
-        end
-
-        path = File.join(roots[domain], challenge.filename)
-        logger.debug { "Save validation #{challenge.file_content} to #{path}" }
-        File.write path, challenge.file_content
-
-        challenge.request_verification
-
-        status = 'pending'
-        while(status == 'pending') do
-          sleep(1)
-          status = challenge.verify_status
-        end
-
-        if status != 'valid'
-          @logger.warn { "#{domain} was not successfully verified!" }
-        else
-          @logger.info { "#{domain} was successfully verified." }
-        end
-
-        File.unlink path
-      end
-
-      if @options[:reuse_key] and !data[:key].nil?
-        @logger.info { 'Reuse existing private key' }
-        key = data[:key]
-      else
-        @logger.info { 'Generate new private key' }
-        key = OpenSSL::PKey::RSA.generate(@options[:cert_key_size])
-      end
-
-      csr = Acme::Client::CertificateRequest.new(names: roots.keys, private_key: key)
-      cert = client.new_certificate(csr)
-
-      IOPlugin.registered.each do |name, plugin|
-        plugin.save( account_key: client.private_key, key: key, cert: cert.x509,
-                     chain: cert.x509_chain)
-      end
-    end
-
-    # Compute webroots
-    # @return [Hash] whre key are domains and value are their webroot path
-    def compute_roots
-      roots = {}
-      no_roots = []
-
-      @options[:domains].each do |domain|
-        match = domain.match(/([\w+\.]+):(.*)/)
-        if match
-          roots[match[1]] = match[2]
-        elsif @options[:default_root]
-          roots[domain] = @options[:default_root]
-        else
-          no_roots << domain
-        end
-      end
-
-      if !no_roots.empty?
-        raise Error, 'root for the following domain(s) are not specified: ' +
-                     no_roots.join(', ') + ".\nTry --default_root or use " +
-                     '-d example.com:/var/www/html syntax.'
-      end
-
-      roots
     end
 
   end
