@@ -19,8 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-require 'json'
-require 'base64'
+require 'json/jwt'
 require_relative 'loggable'
 
 module LetsCert
@@ -145,43 +144,14 @@ module LetsCert
     def load_jwk(data)
       return nil if data.empty?
 
-      hsh = JSON.parse(data)
-
-      key = OpenSSL::PKey::RSA.new
-      key.n = OpenSSL::BN.new(Base64.strict_decode64(hsh['n']))
-      key.e = OpenSSL::BN.new(Base64.strict_decode64(hsh['e']))
-      key.d = OpenSSL::BN.new(Base64.strict_decode64(hsh['e']))
-      key.p = OpenSSL::BN.new(Base64.strict_decode64(hsh['p']))
-      key.q = OpenSSL::BN.new(Base64.strict_decode64(hsh['q']))
-      key.dmp1 = OpenSSL::BN.new(Base64.strict_decode64(hsh['dp']))
-      key.dmq1 = OpenSSL::BN.new(Base64.strict_decode64(hsh['dq']))
-      key.iqmp = OpenSSL::BN.new(Base64.strict_decode64(hsh['qi']))
-
-      key
+      JSON::JWK.new(JSON.parse(data)).to_key
     end
 
     # Dump crypto data (key) to a JSON-encoded string
-    # @param [OpenSSL::PKey] jwk
+    # @param [OpenSSL::PKey] key
     # @return [String]
-    def dump_jwk(jwk)
-      hsh = jwk.params
-
-      # Add and rename some fields to be compatible with simp_le
-      hsh['kty'] = 'RSA'
-      hsh['qi'] = hsh['iqmp'].dup
-      hsh['dp'] = hsh['dmp1'].dup
-      hsh['dq'] = hsh['dmq1'].dup
-      hsh.delete('iqmp')
-      hsh.delete('dmpl')
-      hsh.delete('dmql')
-      hsh.rehash
-
-      hsh.each_key do |key|
-        if hsh[key].is_a?(OpenSSL::BN)
-          hsh[key] = Base64.strict_encode64(hsh[key].to_s)
-        end
-      end
-      hsh.to_json
+    def dump_jwk(key)
+      key.to_jwk.to_json
     end
   end
 
