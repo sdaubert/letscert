@@ -7,12 +7,17 @@ in Ruby.
 
 # Usage
 
-Generate a key pair and get signed certificate
+Generate a key pair and get signed certificate:
 ```bash
-letscert -d example.com:/var/www/example.com/html -f key.pem -f cert.pem -f fullchain.pem
+letscert -d example.com:/var/www/example.com/html -f account_key.json -f key.pem -f cert.pem -f fullchain.pem
 ```
 
-The command is the same for certificate renewal.
+Generate a key pair and get a signed certificate for multi-domains:
+```bash
+letscert -d example.com -d www.example.com --default_root /var/www/html -f account_key.json -f key.pem -f cert.pem -f fullchain.pem
+```
+
+Commands are the sames for certificate renewal.
 
 # What `letscert` do
 
