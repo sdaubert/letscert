@@ -1,3 +1,5 @@
+[![Gem Version](https://badge.fury.io/rb/letscert.svg)](https://badge.fury.io/rb/letscert)
+
 # letscert
 A simple `Let's Encrypt` client in ruby.
 
