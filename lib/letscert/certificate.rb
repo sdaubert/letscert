@@ -54,15 +54,17 @@ module LetsCert
         key = data[:key]
       else
         logger.info { 'Generate new private key' }
-        key = OpenSSL::PKey::RSA.generate(@options[:cert_key_size])
+        key = OpenSSL::PKey::RSA.generate(options[:cert_key_size])
       end
 
-      csr = Acme::Client::CertificateRequest.new(names: roots.keys, private_key: key)
+      csr = Acme::Client::CertificateRequest.new(names: roots.keys,
+                                                 private_key: key)
       cert = client.new_certificate(csr)
 
-      IOPlugin.registered.each do |name, plugin|
-        plugin.save( account_key: client.private_key, key: key, cert: cert.x509,
-                     chain: cert.x509_chain)
+      options[:files].each do |plugname|
+        IOPlugin.registered[plugname].save(account_key: client.private_key,
+                                           key: key, cert: cert.x509,
+                                           chain: cert.x509_chain)
       end
     end
 
