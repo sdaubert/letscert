@@ -1,4 +1,5 @@
 require_relative 'spec_helper'
+require 'fileutils'
 
 module LetsCert
 
@@ -55,6 +56,49 @@ module LetsCert
       jwk2 = test.dump_jwk(key)
       expect(jwk2).to eq(jwk)
     end
+  end
+
+  describe AccountKey do
+
+    before(:all) { IOPlugin.logger = Logger.new('/dev/null') }
+
+    let(:ak) { IOPlugin.registered['account_key.json'] }
+
+    it 'persist account_key' do
+      persisted = ak.persisted
+      expect(persisted[:account_key]).to be(true)
+    end
+
+    it "#load account key from account_key.json file" do
+      expect(ak).to be_a(AccountKey)
+
+      pwd = FileUtils.pwd
+      FileUtils.cd File.dirname(__FILE__)
+
+      begin
+        content = ak.load
+        expect(content).to be_a(Hash)
+        expect(content.keys.size).to eq(1)
+        expect(content[:account_key]).to be_a(OpenSSL::PKey::PKey)
+      rescue Exception
+        raise
+      ensure
+        FileUtils.cd pwd
+      end
+    end
+
+    it "#save account key to account_key.json file" do
+      data = { account_key: OpenSSL::PKey::RSA.new(1024) }
+      ak.save(data)
+      begin
+        expect(File.exist?('account_key.json')).to be_truthy
+      rescue Exception
+        raise
+      ensure
+        File.unlink('account_key.json')
+      end
+    end
+
   end
 
 end
