@@ -321,9 +321,11 @@ module LetsCert
     def load
       data = super
       if data[:chain].nil? or data[:chain].empty?
-        cert, chain = nil, nil
+        cert = nil
+        chain = []
       else
-        cert, chain = data[:chain]
+        cert = data[:chain].shift
+        chain = data[:chain]
       end
 
       { account_key: data[:account_key], key: data[:key], cert: cert, chain: chain }

@@ -169,7 +169,36 @@ module LetsCert
       end
     end
 
-    it '#save cert and chain to fullchain.pem file'
+    it '#save cert and chain to fullchain.pem file' do
+      pwd = FileUtils.pwd
+      FileUtils.cd File.dirname(__FILE__)
+
+      begin
+        data = fullchain.load
+        expect(data[:cert]).to_not be_nil
+        expect(data[:chain]).to_not be_nil
+      rescue Exception
+        raise
+      ensure
+        FileUtils.cd pwd
+      end
+
+      fullchain.save data
+
+      begin
+        expect(File.exist? 'fullchain.pem').to be(true)
+
+        data2 = fullchain.load
+        expect(data2[:cert].to_pem).to eq(data[:cert].to_pem)
+        data2[:chain].each_with_index do |cert, i|
+          expect(cert.to_pem).to eq(data[:chain][i].to_pem)
+        end
+      rescue Exception
+        raise
+      ensure
+        File.unlink 'fullchain.pem'
+      end
+    end
 
   end
 
