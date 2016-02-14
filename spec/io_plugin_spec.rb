@@ -160,7 +160,8 @@ module LetsCert
         expect(data[:cert]).to_not be_nil
         expect(data[:cert]).to be_a(OpenSSL::X509::Certificate)
         expect(data[:chain]).to_not be_nil
-        expect(data[:chain]).to be_a(OpenSSL::X509::Certificate)
+        expect(data[:chain]).to be_a(Array)
+        expect(data[:chain].first).to be_a(OpenSSL::X509::Certificate)
       rescue Exception
         raise
       ensure
