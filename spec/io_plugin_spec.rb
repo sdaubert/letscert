@@ -178,6 +178,53 @@ module LetsCert
       expect(chain.persisted[:chain]).to be(true)
     end
 
+    it '#load chain from chain.pem file' do
+      pwd = FileUtils.pwd
+      FileUtils.cd File.dirname(__FILE__)
+
+      begin
+        data = chain.load
+        expect(data[:cert]).to be_nil
+        expect(data[:chain]).to_not be_nil
+        expect(data[:chain]).to be_a(Array)
+        expect(data[:chain].first).to be_a(OpenSSL::X509::Certificate)
+      rescue Exception
+        raise
+      ensure
+        FileUtils.cd pwd
+      end
+    end
+
+    it '#save chain to chain.pem file' do
+      pwd = FileUtils.pwd
+      FileUtils.cd File.dirname(__FILE__)
+
+      begin
+        data = chain.load
+        expect(data[:cert]).to be_nil
+        expect(data[:chain]).to_not be_nil
+      rescue Exception
+        raise
+      ensure
+        FileUtils.cd pwd
+      end
+
+      chain.save data
+
+      begin
+        expect(File.exist? 'chain.pem').to be(true)
+
+        data2 = chain.load
+        data2[:chain].each_with_index do |cert, i|
+          expect(cert.to_pem).to eq(data[:chain][i].to_pem)
+        end
+      rescue Exception
+        raise
+      ensure
+        File.unlink 'chain.pem'
+      end
+    end
+
   end
 
   describe FullChainFile do
