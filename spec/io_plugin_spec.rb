@@ -290,6 +290,98 @@ module LetsCert
   end
 
   describe CertFile do
+
+    let(:certpem) { IOPlugin.registered['cert.pem'] }
+    let(:certder) { IOPlugin.registered['cert.der'] }
+
+    it 'persist cert' do
+      expect(certpem.persisted[:cert]).to be(true)
+      expect(certder.persisted[:cert]).to be(true)
+    end
+
+    it '#load cert from cert.pem' do
+      pwd = FileUtils.pwd
+      FileUtils.cd File.dirname(__FILE__)
+
+      begin
+        data = certpem.load
+        expect(data[:cert]).to_not be_nil
+        expect(data[:cert]).to be_a(OpenSSL::X509::Certificate)
+      rescue Exception
+        raise
+      ensure
+        FileUtils.cd pwd
+      end
+    end
+
+    it '#load cert from cert.der' do
+      pwd = FileUtils.pwd
+      FileUtils.cd File.dirname(__FILE__)
+
+      begin
+        data = certder.load
+        expect(data[:cert]).to_not be_nil
+        expect(data[:cert]).to be_a(OpenSSL::X509::Certificate)
+      rescue Exception
+        raise
+      ensure
+        FileUtils.cd pwd
+      end
+    end
+
+    it '#save cert to cert.pem' do
+      pwd = FileUtils.pwd
+      FileUtils.cd File.dirname(__FILE__)
+
+      begin
+        data = certpem.load
+        expect(data[:cert]).to_not be_nil
+      rescue Exception
+        raise
+      ensure
+        FileUtils.cd pwd
+      end
+
+      certpem.save data
+
+      begin
+        expect(File.exist? 'cert.pem').to be(true)
+
+        data2 = certpem.load
+        expect(data2[:cert].to_pem).to eq(data[:cert].to_pem)
+      rescue Exception
+        raise
+      ensure
+        File.unlink 'cert.pem'
+      end
+    end
+
+    it '#save cert to cert.der' do
+      pwd = FileUtils.pwd
+      FileUtils.cd File.dirname(__FILE__)
+
+      begin
+        data = certder.load
+        expect(data[:cert]).to_not be_nil
+      rescue Exception
+        raise
+      ensure
+        FileUtils.cd pwd
+      end
+
+      certder.save data
+
+      begin
+        expect(File.exist? 'cert.der').to be(true)
+
+        data2 = certder.load
+        expect(data2[:cert].to_pem).to eq(data[:cert].to_pem)
+      rescue Exception
+        raise
+      ensure
+        File.unlink 'cert.der'
+      end
+    end
   end
 
 end
