@@ -188,11 +188,7 @@ module LetsCert
   class OpenSSLIOPlugin < IOPlugin
 
     # @private Regular expression to discriminate PEM
-    PEM_RE = /
-^-----BEGIN ((?:[\x21-\x2c\x2e-\x7e](?:[- ]?[\x21-\x2c\x2e-\x7e])*)?)\s*-----$
-.*?
-^-----END \1-----\s*
-/x
+    PEM_RE = /^-----BEGIN CERTIFICATE-----\n.*?\n-----END CERTIFICATE-----\n/m
 
     # @param [String] name filename
     # @param [:pem,:der] type
@@ -242,10 +238,12 @@ module LetsCert
     # @param [String] data
     # @yield [String] pem
     def split_pems(data)
-      m = data.match(PEM_RE)
+      my_data = data
+      m = my_data.match(PEM_RE)
       while (m) do
         yield m[0]
-        m = [data[m.end(0)..-1]].match(PEM_RE)
+        my_data = my_data[m.end(0)..-1]
+        m = my_data.match(PEM_RE)
       end
     end
 

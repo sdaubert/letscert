@@ -61,7 +61,6 @@ module LetsCert
   describe AccountKey do
 
     before(:all) { IOPlugin.logger = Logger.new('/dev/null') }
-
     let(:ak) { IOPlugin.registered['account_key.json'] }
 
     it 'persist account_key' do
@@ -99,6 +98,81 @@ module LetsCert
       end
     end
 
+  end
+
+  describe KeyFile do
+
+    let(:keypem) { IOPlugin.registered['key.pem'] }
+    let(:keyder) { IOPlugin.registered['key.der'] }
+
+    it 'persist key' do
+      expect(keypem.persisted[:key]).to be(true)
+      expect(keyder.persisted[:key]).to be(true)
+    end
+
+    it '#load private key from key.pem file' do
+      pending
+      raise
+    end
+
+    it '#save private key to key.pem file' do
+      pending
+      raise
+    end
+
+    it '#load private key from key.der file' do
+      pending
+      raise
+    end
+
+    it '#save private key to key.der file' do
+      pending
+      raise
+    end
+  end
+
+  describe ChainFile do
+    let(:chain) { IOPlugin.registered['chain.pem'] }
+
+    it 'persist chain' do
+      expect(chain.persisted[:chain]).to be(true)
+    end
+
+  end
+
+  describe FullChainFile do
+    let(:fullchain) { IOPlugin.registered['fullchain.pem'] }
+
+    it 'persist chain' do
+      expect(fullchain.persisted[:chain]).to be(true)
+    end
+
+    it 'persist cert' do
+      expect(fullchain.persisted[:cert]).to be(true)
+    end
+
+    it '#load cert and chain from fullchain.pem file' do
+      pwd = FileUtils.pwd
+      FileUtils.cd File.dirname(__FILE__)
+
+      begin
+        data = fullchain.load
+        expect(data[:cert]).to_not be_nil
+        expect(data[:cert]).to be_a(OpenSSL::X509::Certificate)
+        expect(data[:chain]).to_not be_nil
+        expect(data[:chain]).to be_a(OpenSSL::X509::Certificate)
+      rescue Exception
+        raise
+      ensure
+        FileUtils.cd pwd
+      end
+    end
+
+    it '#save cert and chain to fullchain.pem file'
+
+  end
+
+  describe CertFile do
   end
 
 end
