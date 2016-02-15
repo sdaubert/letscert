@@ -21,6 +21,8 @@ EOF
   s.files = files
   s.executables = ['letscert']
 
+  s.required_ruby_version = '>= 2.1.0'
+
   s.add_dependency 'acme-client', '~>0.3.0'
   s.add_dependency 'json-jwt', '~>1.5'
 
