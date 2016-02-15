@@ -23,9 +23,9 @@ EOF
 
   s.add_dependency 'acme-client', '~>0.3.0'
   s.add_dependency 'json-jwt', '~>1.5'
-  s.add_dependency 'yard', '~>0.8'
 
-  #s.add_development_dependency 'rspec', '~>3.4'
+  s.add_development_dependency 'rspec', '~>3.4'
+  s.add_development_dependency 'yard', '~>0.8'
 end
 
 
