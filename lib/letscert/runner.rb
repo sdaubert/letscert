@@ -131,8 +131,12 @@ module LetsCert
 
       begin
         if @options[:revoke]
-          Certificate.revoke @options[:files]
-          RETURN_OK
+          data = load_data_from_disk(IOPlugin.registered.keys)
+           if Certificate.revoke(data, @options)
+             RETURN_OK
+           else
+             RETURN_ERROR
+           end
         elsif @options[:domains].empty?
           raise Error, "At leat one domain must be given with --domain option.\n" +
                        "Try 'letscert --help' for more information."

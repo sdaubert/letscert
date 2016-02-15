@@ -24,13 +24,15 @@ require_relative 'loggable'
 module LetsCert
 
   # Class to handle ACME operations on certificates
+  # @author Sylvain Daubert
   class Certificate
     include Loggable
 
-    # Revoke certificates
-    # @param [Array<String>] files
-    def self.revoke(files)
-      logger.warn "revoke not yet implemented"
+    # Revoke certificate
+    # @param [Hash] data
+    # @return [Boolean]
+    def self.revoke(data, options)
+      new.revoke data, options
     end
 
     # Get a new certificate, or renew an existing one
@@ -40,6 +42,9 @@ module LetsCert
       new.get options, data
     end
 
+    # Get a new certificate, or renew an existing one
+    # @param [Hash] options
+    # @param [Hash] data
     def get(options, data)
       logger.info {"create key/cert/chain..." }
       roots = compute_roots(options)
@@ -66,6 +71,31 @@ module LetsCert
                                            key: key, cert: cert.x509,
                                            chain: cert.x509_chain)
       end
+    end
+
+    # Revoke certificate
+    # @param [Hash] data
+    # @return [Boolean]
+    def revoke(data, options)
+      if data[:cert].nil?
+        raise Error, 'no certification data to revoke'
+      end
+
+      client = get_acme_client(data[:account_key], options)
+      begin
+        result = client.revoke_certificate(data[:cert])
+      rescue Exception => ex
+        p ex
+        raise
+      end
+
+      if result
+        logger.info { 'certificate is revoked' }
+      else
+        logger.warn { 'certificate is not revoked!' }
+      end
+
+      result
     end
 
 
