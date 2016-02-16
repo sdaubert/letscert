@@ -35,7 +35,8 @@ module LetsCert
     end
 
     # Get a new certificate, or renew an existing one
-    # @param [Hash] options
+    # @param [OpenSSL::PKey::PKey] account_key private key to authenticate to ACME server
+    # @param [OpenSSL::PKey::PKey] key private key from which make a certificate
     # @param [Hash] data
     def get(account_key, key, options)
       logger.info {"create key/cert/chain..." }
@@ -101,12 +102,12 @@ module LetsCert
       end
 
       subjects = []
-      cert.extensions.each do |ext|
+      @cert.extensions.each do |ext|
         if ext.oid == 'subjectAltName'
           subjects += ext.value.split(/,\s*/).map { |s| s.sub(/DNS:/, '') }
         end
       end
-      @logger.debug { "cert SANs: #{subjects.join(', ')}" }
+      logger.debug { "cert SANs: #{subjects.join(', ')}" }
 
       # Check all domains are subjects of certificate
       unless domains.all? { |domain| subjects.include? domain }
