@@ -244,11 +244,6 @@ module LetsCert
                        " by --server")
         opts.separator('')
 
-        opts.on('--account-key-public-exponent BITS', Integer,
-                'Account key public exponent value (default: 65537)') do |bits|
-          @options[:account_key_public_exponent] = bits
-        end
-
         opts.on('--account-key-size BITS', Integer,
                 'Account key size (default: 4096)') do |bits|
           @options[:account_key_size] = bits
