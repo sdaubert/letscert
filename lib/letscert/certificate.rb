@@ -37,18 +37,17 @@ module LetsCert
     # Get a new certificate, or renew an existing one
     # @param [Hash] options
     # @param [Hash] data
-    def get(options, data)
+    def get(account_key, key, options)
       logger.info {"create key/cert/chain..." }
       roots = compute_roots(options)
       logger.debug { "webroots are: #{roots.inspect}" }
 
-      client = get_acme_client(data[:account_key], options)
+      client = get_acme_client(account_key, options)
 
       do_challenges client, roots
 
-      if options[:reuse_key] and !data[:key].nil?
+      if options[:reuse_key] and !key.nil?
         logger.info { 'Reuse existing private key' }
-        key = data[:key]
       else
         logger.info { 'Generate new private key' }
         key = OpenSSL::PKey::RSA.generate(options[:cert_key_size])

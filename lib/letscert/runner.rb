@@ -165,7 +165,7 @@ module LetsCert
             RETURN_OK
           else
             # update/create cert
-            certificate.get @options, data
+            certificate.get data[:account_key], data[:key], @options
             RETURN_OK_CERT
           end
         end
