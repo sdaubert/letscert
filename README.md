@@ -29,8 +29,8 @@ letscert -d example.com -d www.example.com --default_root /var/www/html --email 
 Commands are the sames for certificate renewal.
 
 ## Revoke a key pair:
-From directory where are stored ```account_key.json``` and ```cert.pem``` or
-```fullchain.pem```:
+From directory where are stored ```account_key.json``` and ```cert.pem```
+or ```fullchain.pem```:
 ```bash
 letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld --revoke
 ```
