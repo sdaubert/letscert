@@ -10,12 +10,12 @@ in Ruby.
 # Usage
 
 ## Generate a key pair and get signed certificate:
-With full chain support (```fullchain.pem``` file will contain all certificates):
+With full chain support (`fullchain.pem` file will contain all certificates):
 ```bash
 letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld -f account_key.json -f key.pem -f fullchain.pem
 ```
-else (certificate for example.com is in ```cert.pem``` file, rest of certification chain
-is in ```chain.pem```):
+else (certificate for example.com is in `cert.pem` file, rest of certification chain
+is in `chain.pem`):
 ```bash
 letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld -f account_key.json -f key.pem -f cert.pem -f chain.pem
 ```
@@ -29,8 +29,7 @@ letscert -d example.com -d www.example.com --default_root /var/www/html --email 
 Commands are the sames for certificate renewal.
 
 ## Revoke a key pair:
-From directory where are stored ```account_key.json``` and ```cert.pem```
-or ```fullchain.pem```:
+From directory where are stored `account_key.json` and `cert.pem` or `fullchain.pem`:
 ```bash
 letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld --revoke
 ```
@@ -38,14 +37,15 @@ letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld --r
 
 # What `letscert` do
 
-* Automagically a new ACME account if needed.
+* Automagically create a new ACME account if needed.
 * Issue new certificate if no previous one found.
 * Renew certificate only if needed.
-* Only `http-01` challenge supported. An existing web server must be alreay running. `letscert` should have write access to `${webroot}/.well-known/acme-challenge`.
+* Only `http-01` challenge supported. An existing web server must be alreay running.
+  `letscert` should have write access to `${webroot}/.well-known/acme-challenge`.
 * Crontab friendly: no promts.
 * No configuration file.
-* Support multiple domains with multiple roots. Always create a single certificate per un
-  (ie a certificate may have multiple SANs).
+* Support multiple domains with multiple roots. Always create a single certificate per
+  run (ie a certificate may have multiple SANs).
 * As `simp_le`, check the exit code to known if a renewal has happened:
   * 0 if certificate data was created or updated;
   * 1 if renewal not necessary;
