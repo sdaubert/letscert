@@ -66,18 +66,17 @@ module LetsCert
     end
 
     # Revoke certificate
-    # @param [Hash] data
+    # @param [OpenSSL::PKey::PKey] account_key
     # @return [Boolean]
-    def revoke(data, options)
-      if data[:cert].nil?
+    def revoke(account_key, options)
+      if @cert.nil?
         raise Error, 'no certification data to revoke'
       end
 
-      client = get_acme_client(data[:account_key], options)
+      client = get_acme_client(account_key, options)
       begin
-        result = client.revoke_certificate(data[:cert])
+        result = client.revoke_certificate(@cert)
       rescue Exception => ex
-        p ex
         raise
       end
 

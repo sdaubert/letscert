@@ -138,7 +138,7 @@ module LetsCert
         if @options[:revoke]
           data = load_data_from_disk(IOPlugin.registered.keys)
           certificate = Certificate.new(data[:cert])
-          if certificate.revoke(data, @options)
+          if certificate.revoke(data[:account_key], @options)
             RETURN_OK
           else
             RETURN_ERROR
