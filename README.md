@@ -26,7 +26,7 @@ Commands are the sames for certificate renewal.
 ## Generate a key pair and get a signed certificate for multi-domains:
 Generate a single certificate for `example.com` and `www.example.com`:
 ```bash
-letscert -d example.com -d www.example.com --default_root /var/www/html --email my.name@domain.tld -f account_key.json -f key.pem -f fullchain.pem
+letscert -d example.com -d www.example.com --default-root /var/www/html --email my.name@domain.tld -f account_key.json -f key.pem -f fullchain.pem
 ```
 
 Command is the same for certificate renewal.

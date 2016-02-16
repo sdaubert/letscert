@@ -205,7 +205,7 @@ module LetsCert
           @options[:domains] << domain
         end
 
-        opts.on('--default_root PATH', 'Default webroot path',
+        opts.on('--default-root PATH', 'Default webroot path',
                 'Use for domains without PATH part.') do |path|
           @options[:default_root] = path
         end
