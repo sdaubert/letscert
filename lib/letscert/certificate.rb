@@ -28,18 +28,10 @@ module LetsCert
   class Certificate
     include Loggable
 
-    # Revoke certificate
-    # @param [Hash] data
-    # @return [Boolean]
-    def self.revoke(data, options)
-      new.revoke data, options
-    end
 
-    # Get a new certificate, or renew an existing one
-    # @param [Hash] options
-    # @param [Hash] data
-    def self.get(options, data)
-      new.get options, data
+    # @param [OpenSSL::X509::Certificate,nil] cert
+    def initialize(cert)
+      @cert = cert
     end
 
     # Get a new certificate, or renew an existing one
@@ -96,6 +88,34 @@ module LetsCert
       end
 
       result
+    end
+
+    # Check if certificate is still valid for at least +valid_min+ seconds.
+    # Also checks that +domains+ are certified by certificate.
+    # @param [Array<String>] domains list of certificate domains
+    # @param [Integer] valid_min
+    # @return [Boolean]
+    def valid?(domains, valid_min=0)
+      if @cert.nil?
+        logger.debug { 'no existing certificate' }
+        return false
+      end
+
+      subjects = []
+      cert.extensions.each do |ext|
+        if ext.oid == 'subjectAltName'
+          subjects += ext.value.split(/,\s*/).map { |s| s.sub(/DNS:/, '') }
+        end
+      end
+      @logger.debug { "cert SANs: #{subjects.join(', ')}" }
+
+      # Check all domains are subjects of certificate
+      unless domains.all? { |domain| subjects.include? domain }
+        raise Error, "At least one domain is not declared as a certificate subject." +
+                     "Backup and remove existing cert if you want to proceed"
+      end
+
+      !renewal_necessary?(valid_min)
     end
 
 
@@ -234,6 +254,19 @@ module LetsCert
 
         File.unlink path
       end
+    end
+
+    # Check if a renewal is necessary for +cert+
+    # @param [OpenSSL::X509::Certificate] cert
+    # @param [Number] valid_min minimum validity in seconds to ensure
+    # @return [Boolean]
+    def renewal_necessary?(valid_min)
+      now = Time.now.utc
+      diff = (@cert.not_after - now).to_i
+      logger.debug { "Certificate expires in #{diff}s on #{@cert.not_after}" +
+                     " (relative to #{now})" }
+
+      diff < valid_min
     end
 
   end
