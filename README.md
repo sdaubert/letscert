@@ -20,13 +20,16 @@ is in `chain.pem`):
 letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld -f account_key.json -f key.pem -f cert.pem -f chain.pem
 ```
 
+Commands are the sames for certificate renewal.
+
 
 ## Generate a key pair and get a signed certificate for multi-domains:
+Generate a single certificate for `example.com` and `www.example.com`:
 ```bash
 letscert -d example.com -d www.example.com --default_root /var/www/html --email my.name@domain.tld -f account_key.json -f key.pem -f fullchain.pem
 ```
 
-Commands are the sames for certificate renewal.
+Command is the same for certificate renewal.
 
 ## Revoke a key pair:
 From directory where are stored `account_key.json` and `cert.pem` or `fullchain.pem`:
