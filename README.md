@@ -9,17 +9,32 @@ in Ruby.
 
 # Usage
 
-Generate a key pair and get signed certificate:
+## Generate a key pair and get signed certificate:
+With full chain support (```fullchain.pem``` file will contain all certificates):
 ```bash
-letscert -d example.com:/var/www/example.com/html -f account_key.json -f key.pem -f cert.pem -f fullchain.pem
+letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld -f account_key.json -f key.pem -f fullchain.pem
+```
+else (certificate for example.com is in ```cert.pem``` file, rest of certification chain
+is in ```chain.pem```):
+```bash
+letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld -f account_key.json -f key.pem -f cert.pem -f chain.pem
 ```
 
-Generate a key pair and get a signed certificate for multi-domains:
+
+## Generate a key pair and get a signed certificate for multi-domains:
 ```bash
-letscert -d example.com -d www.example.com --default_root /var/www/html -f account_key.json -f key.pem -f cert.pem -f fullchain.pem
+letscert -d example.com -d www.example.com --default_root /var/www/html --email my.name@domain.tld -f account_key.json -f key.pem -f fullchain.pem
 ```
 
 Commands are the sames for certificate renewal.
+
+## Revoke a key pair:
+From directory where are stored ```account_key.json``` and ```cert.pem``` or
+```fullchain.pem```:
+```bash
+letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld --revoke
+```
+
 
 # What `letscert` do
 
@@ -35,6 +50,3 @@ Commands are the sames for certificate renewal.
   * 0 if certificate data was created or updated;
   * 1 if renewal not necessary;
   * 2 in case of errors.
-
-# Todo
-Add support to revocation.
