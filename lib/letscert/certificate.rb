@@ -24,34 +24,31 @@ require_relative 'loggable'
 module LetsCert
 
   # Class to handle ACME operations on certificates
+  # @author Sylvain Daubert
   class Certificate
     include Loggable
 
-    # Revoke certificates
-    # @param [Array<String>] files
-    def self.revoke(files)
-      logger.warn "revoke not yet implemented"
+
+    # @param [OpenSSL::X509::Certificate,nil] cert
+    def initialize(cert)
+      @cert = cert
     end
 
     # Get a new certificate, or renew an existing one
-    # @param [Hash] options
+    # @param [OpenSSL::PKey::PKey] account_key private key to authenticate to ACME server
+    # @param [OpenSSL::PKey::PKey] key private key from which make a certificate
     # @param [Hash] data
-    def self.get(options, data)
-      new.get options, data
-    end
-
-    def get(options, data)
+    def get(account_key, key, options)
       logger.info {"create key/cert/chain..." }
       roots = compute_roots(options)
       logger.debug { "webroots are: #{roots.inspect}" }
 
-      client = get_acme_client(data[:account_key], options)
+      client = get_acme_client(account_key, options)
 
       do_challenges client, roots
 
-      if options[:reuse_key] and !data[:key].nil?
+      if options[:reuse_key] and !key.nil?
         logger.info { 'Reuse existing private key' }
-        key = data[:key]
       else
         logger.info { 'Generate new private key' }
         key = OpenSSL::PKey::RSA.generate(options[:cert_key_size])
@@ -66,6 +63,58 @@ module LetsCert
                                            key: key, cert: cert.x509,
                                            chain: cert.x509_chain)
       end
+    end
+
+    # Revoke certificate
+    # @param [OpenSSL::PKey::PKey] account_key
+    # @return [Boolean]
+    def revoke(account_key, options)
+      if @cert.nil?
+        raise Error, 'no certification data to revoke'
+      end
+
+      client = get_acme_client(account_key, options)
+      begin
+        result = client.revoke_certificate(@cert)
+      rescue Exception => ex
+        raise
+      end
+
+      if result
+        logger.info { 'certificate is revoked' }
+      else
+        logger.warn { 'certificate is not revoked!' }
+      end
+
+      result
+    end
+
+    # Check if certificate is still valid for at least +valid_min+ seconds.
+    # Also checks that +domains+ are certified by certificate.
+    # @param [Array<String>] domains list of certificate domains
+    # @param [Integer] valid_min
+    # @return [Boolean]
+    def valid?(domains, valid_min=0)
+      if @cert.nil?
+        logger.debug { 'no existing certificate' }
+        return false
+      end
+
+      subjects = []
+      @cert.extensions.each do |ext|
+        if ext.oid == 'subjectAltName'
+          subjects += ext.value.split(/,\s*/).map { |s| s.sub(/DNS:/, '') }
+        end
+      end
+      logger.debug { "cert SANs: #{subjects.join(', ')}" }
+
+      # Check all domains are subjects of certificate
+      unless domains.all? { |domain| subjects.include? domain }
+        raise Error, "At least one domain is not declared as a certificate subject." +
+                     "Backup and remove existing cert if you want to proceed"
+      end
+
+      !renewal_necessary?(valid_min)
     end
 
 
@@ -204,6 +253,19 @@ module LetsCert
 
         File.unlink path
       end
+    end
+
+    # Check if a renewal is necessary for +cert+
+    # @param [OpenSSL::X509::Certificate] cert
+    # @param [Number] valid_min minimum validity in seconds to ensure
+    # @return [Boolean]
+    def renewal_necessary?(valid_min)
+      now = Time.now.utc
+      diff = (@cert.not_after - now).to_i
+      logger.debug { "Certificate expires in #{diff}s on #{@cert.not_after}" +
+                     " (relative to #{now})" }
+
+      diff < valid_min
     end
 
   end

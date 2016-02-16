@@ -130,12 +130,19 @@ module LetsCert
       Certificate.logger = @logger
 
       begin
-        if @options[:revoke]
-          Certificate.revoke @options[:files]
-          RETURN_OK
-        elsif @options[:domains].empty?
+        if @options[:domains].empty?
           raise Error, "At leat one domain must be given with --domain option.\n" +
                        "Try 'letscert --help' for more information."
+        end
+
+        if @options[:revoke]
+          data = load_data_from_disk(IOPlugin.registered.keys)
+          certificate = Certificate.new(data[:cert])
+          if certificate.revoke(data[:account_key], @options)
+            RETURN_OK
+          else
+            RETURN_ERROR
+          end
         else
           # Check all components are covered by plugins
           persisted = IOPlugin.empty_data
@@ -152,12 +159,13 @@ module LetsCert
 
           data = load_data_from_disk(@options[:files])
 
-          if valid_existing_cert(data[:cert], @options[:domains], @options[:valid_min])
+          certificate = Certificate.new(data[:cert])
+          if certificate.valid?(@options[:domains], @options[:valid_min])
             @logger.info { 'no need to update cert' }
             RETURN_OK
           else
             # update/create cert
-            Certificate.get @options, data
+            certificate.get data[:account_key], data[:key], @options
             RETURN_OK_CERT
           end
         end
@@ -303,48 +311,6 @@ module LetsCert
       end
 
       all_data
-    end
-
-    # Check if +cert+ exists and is always valid
-    # @todo For now, only check exitence.
-    # @param [nil, OpenSSL::X509::Certificate] cert certificate to valid
-    # @param [Array<String>] domains list if domains to valid
-    # @param [Number] valid_min minimum validity in seconds to ensure
-    # @return [Boolean]
-    def valid_existing_cert(cert, domains, valid_min)
-      if cert.nil?
-        @logger.debug { 'no existing cert' }
-        return false
-      end
-
-      subjects = []
-      cert.extensions.each do |ext|
-        if ext.oid == 'subjectAltName'
-          subjects += ext.value.split(/,\s*/).map { |s| s.sub(/DNS:/, '') }
-        end
-      end
-      @logger.debug { "cert SANs: #{subjects.join(', ')}" }
-
-      # Check all domains are subjects of certificate
-      unless domains.all? { |domain| subjects.include? domain }
-        raise Error, "At least one domain is not declared as a certificate subject." +
-                     "Backup and remove existing cert if you want to proceed"
-      end
-
-      !renewal_necessary?(cert, valid_min)
-    end
-
-    # Check if a renewal is necessary for +cert+
-    # @param [OpenSSL::X509::Certificate] cert
-    # @param [Number] valid_min minimum validity in seconds to ensure
-    # @return [Boolean]
-    def renewal_necessary?(cert, valid_min)
-      now = Time.now.utc
-      diff = (cert.not_after - now).to_i
-      @logger.debug { "Certificate expires in #{diff}s on #{cert.not_after}" +
-                      " (relative to #{now})" }
-
-      diff < valid_min
     end
 
   end
