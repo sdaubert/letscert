@@ -31,6 +31,9 @@ module LetsCert
   # Runner class: analyse and execute CLI commands.
   # @author Sylvain Daubert
   class Runner
+    # Get options
+    # @return [Hash]
+    attr_reader :options
 
     # Custom logger formatter
     class LoggerFormatter < Logger::Formatter
