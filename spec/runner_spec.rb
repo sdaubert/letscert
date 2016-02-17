@@ -6,9 +6,41 @@ module LetsCert
 
     context '#parse_options' do
 
-      it 'accepts --domain with DOMAIN only'
-      it 'accepts --domain with DOMAIN:PATH'
-      it 'accepts multiple domains with --domain option'
+      before(:each) { ARGV.clear }
+
+      let(:runner) { Runner.new }
+
+      it 'accepts --domain with DOMAIN only' do
+        ARGV << '--domain' << 'example.com'
+
+        runner.parse_options
+        expect(runner.options[:domains]).to be_a(Array)
+        expect(runner.options[:domains].size).to eq(1)
+        expect(runner.options[:domains]).to include('example.com')
+      end
+
+      it 'accepts --domain with DOMAIN:PATH' do
+        ARGV << '--domain' << 'example.com:/var/www/html'
+
+        runner.parse_options
+        expect(runner.options[:domains]).to be_a(Array)
+        expect(runner.options[:domains].size).to eq(1)
+        expect(runner.options[:domains]).to include('example.com:/var/www/html')
+      end
+
+      it 'accepts multiple domains with --domain option' do
+        ARGV << '--domain' << 'example.com'
+        ARGV << '--domain' << 'www.example.com'
+        ARGV << '--domain' << 'www2.example.com'
+
+        runner.parse_options
+        expect(runner.options[:domains]).to be_a(Array)
+        expect(runner.options[:domains].size).to eq(3)
+        expect(runner.options[:domains]).to include('example.com')
+        expect(runner.options[:domains]).to include('www.example.com')
+        expect(runner.options[:domains]).to include('www2.example.com')
+      end
+
       it 'sets default root path with --default-root for domains without PATH'
       it 'accepts multiples files with --file option'
       it '--file option only accepts some predefined values'
