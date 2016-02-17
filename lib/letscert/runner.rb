@@ -90,7 +90,7 @@ module LetsCert
         account_key_public_exponent: 65537,
         account_key_size: 4096,
         tos_sha256: '33d233c8ab558ba6c8ebc370a509acdded8b80e5d587aa5d192193f35226540f',
-        user_agent: 'letscert/0',
+        user_agent: "letscert/#{VERSION.gsub(/\..*/, '')}",
         server: 'https://acme-v01.api.letsencrypt.org/directory',
       }
 
@@ -226,12 +226,12 @@ module LetsCert
 
         opts.on('--cert-key-size BITS', Integer,
                 'Certificate key size in bits',
-                '(default: 2048)') do |bits|
+                "(default: #{@options[:cert_key_size]})") do |bits|
           @options[:cert_key_size] = bits
         end
 
         opts.on('--valid-min SECONDS', Integer, 'Renew existing certificate if validity',
-                'is lesser than SECONDS (default: 2592000 (30 days))') do |time|
+                'is lesser than SECONDS', '(default: 2592000 (30 days))') do |time|
           @options[:valid_min] = time
         end
 
@@ -245,12 +245,13 @@ module LetsCert
         opts.separator('')
 
         opts.on('--account-key-size BITS', Integer,
-                'Account key size (default: 4096)') do |bits|
+                "Account key size (default: #{@options[:account_key_size]})") do |bits|
           @options[:account_key_size] = bits
         end
 
         opts.on('--tos-sha256 HASH', String,
-                'SHA-256 digest of the content of Terms Of Service URI') do |hash|
+                'SHA-256 digest of the content of Terms',
+                'Of Service URI') do |hash|
           @options[:tos_sha256] = hash
         end
 
@@ -267,12 +268,12 @@ module LetsCert
         opts.separator('')
 
         opts.on('--user-agent NAME', 'User-Agent sent in all HTTP requests',
-                '(default: letscert/0)') do |ua|
+                "(default: #{@options[:user_agent]})") do |ua|
           @options[:user_agent] = ua
         end
         
         opts.on('--server URI', 'URI for the CA ACME API endpoint',
-                '(default: https://acme-v01.api.letsencrypt.org/directory)') do |uri|
+                "(default: #{@options[:server]})") do |uri|
           @options[:server] = uri
         end
       end
