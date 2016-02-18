@@ -33,10 +33,6 @@ module LetsCert
     # @return [String]
     attr_reader :name
 
-    # Allowed plugin names
-    ALLOWED_PLUGINS = %w(account_key.json cert.der cert.pem chain.pem full.pem) +
-                      %w(fullchain.pem key.der key.pem)
-
 
     # Registered plugins
     @@registered = {}
