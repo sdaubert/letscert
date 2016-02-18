@@ -282,6 +282,7 @@ module LetsCert
       end
 
       @opt_parser.parse!
+      compute_roots
     end
 
 
@@ -310,6 +311,25 @@ module LetsCert
       end
 
       all_data
+    end
+
+    # Compute webroots and set +@options[:roots]+
+    # @return [Hash] where keys are domains and value are their webroot path
+    def compute_roots
+      roots = {}
+
+      @options[:domains].each do |domain|
+        match = domain.match(/([-\w\.]+):(.*)/)
+        if match
+          roots[match[1]] = match[2]
+        elsif @options[:default_root]
+          roots[domain] = @options[:default_root]
+        else
+          roots[domain] = nil
+        end
+      end
+
+      @options[:roots] = roots
     end
 
   end

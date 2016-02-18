@@ -40,7 +40,7 @@ module LetsCert
     # @param [Hash] data
     def get(account_key, key, options)
       logger.info {"create key/cert/chain..." }
-      roots = compute_roots(options)
+      roots = check_roots(options[:roots])
       logger.debug { "webroots are: #{roots.inspect}" }
 
       client = get_acme_client(account_key, options)
@@ -120,30 +120,17 @@ module LetsCert
 
     private
 
-    # Compute webroots
-    # @return [Hash] whre key are domains and value are their webroot path
-    def compute_roots(options)
-      roots = {}
-      no_roots = []
-
-      options[:domains].each do |domain|
-        match = domain.match(/([\w+\.]+):(.*)/)
-        if match
-          roots[match[1]] = match[2]
-        elsif options[:default_root]
-          roots[domain] = options[:default_root]
-        else
-          no_roots << domain
-        end
-      end
+    # check webroots.
+    # @param [Hash] roots
+    # @raise [Error] if some domains have no defined root.
+    def check_roots(roots)
+      no_roots = roots.select { |k,v| v.nil? }
 
       if !no_roots.empty?
         raise Error, 'root for the following domain(s) are not specified: ' +
                      no_roots.join(', ') + ".\nTry --default_root or use " +
                      '-d example.com:/var/www/html syntax.'
       end
-
-      roots
     end
 
     # Get ACME client.
