@@ -187,18 +187,7 @@ module LetsCert
             RETURN_ERROR
           end
         else
-          # Check all components are covered by plugins
-          persisted = IOPlugin.empty_data
-          @options[:files].each do |file|
-            persisted.merge!(IOPlugin.registered[file].persisted) do |k, oldv, newv|
-              oldv || newv
-            end
-          end
-          not_persisted = persisted.keys.find_all { |k| !persisted[k] }
-          unless not_persisted.empty?
-            raise Error, 'Selected IO plugins do not cover following components: ' +
-                         not_persisted.join(', ')
-          end
+          check_persisted
 
           data = load_data_from_disk(@options[:files])
 
@@ -327,6 +316,24 @@ module LetsCert
 
       @opt_parser.parse!
       compute_roots
+    end
+
+    # Check all components are covered by plugins
+    # @raise [Error]
+    def check_persisted
+      persisted = IOPlugin.empty_data
+
+      @options[:files].each do |file|
+        persisted.merge!(IOPlugin.registered[file].persisted) do |k, oldv, newv|
+          oldv || newv
+        end
+      end
+      not_persisted = persisted.keys.find_all { |k| !persisted[k] }
+
+      unless not_persisted.empty?
+        raise Error, 'Selected IO plugins do not cover following components: ' +
+                     not_persisted.join(', ')
+      end
     end
 
 
