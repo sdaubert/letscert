@@ -64,10 +64,37 @@ module LetsCert
         expect(runner.options[:files]).to include('cert.pem')
       end
 
-      it 'sets minimum validity time with --valid-min option'
-      it '--valid-min option accepts minute format'
-      it '--valid-min option accepts hour format'
-      it '--valid-min option accepts day format'
+      it 'sets minimum validity time with --valid-min option' do
+        ARGV << '--valid-min' << '30000'
+
+        runner.parse_options
+        expect(runner.options[:valid_min].to_seconds).to eq(30000)
+      end
+
+      it '--valid-min option accepts minute format' do
+        minutes = 156
+        ARGV << '--valid-min' << "#{minutes}m"
+
+        runner.parse_options
+        expect(runner.options[:valid_min].to_seconds).to eq(minutes * 60)
+      end
+
+      it '--valid-min option accepts hour format' do
+        hours = 4
+        ARGV << '--valid-min' << "#{hours}h"
+
+        runner.parse_options
+        expect(runner.options[:valid_min].to_seconds).to eq(hours * 3600)
+      end
+
+      it '--valid-min option accepts day format' do
+        days = 20
+        ARGV << '--valid-min' << "#{days}d"
+
+        runner.parse_options
+        expect(runner.options[:valid_min].to_seconds).to eq(days * 24 * 3600)
+      end
+
     end
 
     it '#check_persisted checks all mandatory components are covered by files'
