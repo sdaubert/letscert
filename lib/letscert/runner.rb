@@ -62,6 +62,47 @@ module LetsCert
 
     end
 
+    # Class used to process validation time from String.
+    # @author Sylvain Daubert
+    class ValidTime
+
+      # @param [String] str time string. May be:
+      #   * an integer -> time in seconds
+      #   * an integer plus a letter:
+      #     * 30m: 30 minutes,
+      #     * 30h: 30 hours,
+      #     * 30d: 30 days.
+      def initialize(str)
+        m = str.match(/^(\d+)([mhd])?$/)
+        if m
+          case m[2]
+          when nil
+            @seconds = m[1].to_i
+          when 'm'
+            @seconds = m[1].to_i * 60
+          when 'h'
+            @seconds = m[1].to_i * 60 * 60
+          when 'd'
+            @seconds = m[1].to_i * 24 * 60 * 60
+          end
+        else
+          raise OptionParser::InvalidArgument, "invalid argument: --valid-min #{str}"
+        end
+        @string = str
+      end
+
+      # Get time in seconds
+      # @return [Integer]
+      def to_seconds
+        @seconds
+      end
+
+      # Get time as string
+      # @return [String]
+      def to_s
+        @string
+      end
+    end
 
     # Exit value for OK
     RETURN_OK = 1
@@ -89,8 +130,7 @@ module LetsCert
         domains: [],
         files: [],
         cert_key_size: 2048,
-        valid_min: 30 * 24 * 60 * 60,
-        account_key_public_exponent: 65537,
+        valid_min: ValidTime.new('30d'),
         account_key_size: 4096,
         tos_sha256: '33d233c8ab558ba6c8ebc370a509acdded8b80e5d587aa5d192193f35226540f',
         user_agent: "letscert/#{VERSION.gsub(/\..*/, '')}",
@@ -163,7 +203,7 @@ module LetsCert
           data = load_data_from_disk(@options[:files])
 
           certificate = Certificate.new(data[:cert])
-          if certificate.valid?(@options[:domains], @options[:valid_min])
+          if certificate.valid?(@options[:domains], @options[:valid_min].to_seconds)
             @logger.info { 'no need to update cert' }
             RETURN_OK
           else
@@ -233,9 +273,13 @@ module LetsCert
           @options[:cert_key_size] = bits
         end
 
-        opts.on('--valid-min SECONDS', Integer, 'Renew existing certificate if validity',
-                'is lesser than SECONDS', '(default: 2592000 (30 days))') do |time|
-          @options[:valid_min] = time
+        opts.accept(ValidTime) do |valid_time|
+          ValidTime.new(valid_time)
+        end
+        opts.on('--valid-min TIME', ValidTime, 'Renew existing certificate if validity',
+                'is lesser than TIME',
+                "(default: #{@options[:valid_min].to_s})") do |vt|
+          @options[:valid_min] = vt
         end
 
         opts.on('--reuse-key', 'Reuse previous private key') do |rk|
