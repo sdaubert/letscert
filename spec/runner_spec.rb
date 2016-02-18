@@ -4,11 +4,11 @@ module LetsCert
 
   describe Runner do
 
+    before(:each) { ARGV.clear }
+
+    let(:runner) { Runner.new }
+
     context '#parse_options' do
-
-      before(:each) { ARGV.clear }
-
-      let(:runner) { Runner.new }
 
       it 'accepts --domain with DOMAIN only' do
         ARGV << '--domain' << 'example.com'
@@ -97,7 +97,30 @@ module LetsCert
 
     end
 
-    it '#check_persisted checks all mandatory components are covered by files'
+    it '#check_persisted checks all mandatory components are covered by files' do
+      expect { runner.check_persisted }.to raise_error(LetsCert::Error)
+
+      all_needed = [%w(account_key.json cert.pem chain.pem key.pem),
+                    %w(account_key.json cert.der chain.pem key.der),
+                    %w(account_key.json fullchain.pem key.pem),
+                    %w(account_key.json fullchain.pem key.der)]
+      all_needed.each do |needed|
+        needed.size.times do |nb|
+          ARGV.clear
+          runner.options[:files] = []
+          0.upto(nb) do |i|
+            ARGV << '-f' << needed[i]
+          end
+          runner.parse_options
+
+          if nb == needed.size - 1
+            expect { runner.check_persisted }.to_not raise_error
+          else
+            expect { runner.check_persisted }.to raise_error(LetsCert::Error)
+          end
+        end
+      end
+    end
 
   end
 
