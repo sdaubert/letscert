@@ -19,6 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+require 'acme-client'
 require_relative 'loggable'
 
 module LetsCert
@@ -40,12 +41,12 @@ module LetsCert
     # @param [Hash] data
     def get(account_key, key, options)
       logger.info {"create key/cert/chain..." }
-      roots = check_roots(options[:roots])
-      logger.debug { "webroots are: #{roots.inspect}" }
+      check_roots(options[:roots])
+      logger.debug { "webroots are: #{options[:roots].inspect}" }
 
       client = get_acme_client(account_key, options)
 
-      do_challenges client, roots
+      do_challenges client, options[:roots]
 
       if options[:reuse_key] and !key.nil?
         logger.info { 'Reuse existing private key' }
@@ -54,7 +55,7 @@ module LetsCert
         key = OpenSSL::PKey::RSA.generate(options[:cert_key_size])
       end
 
-      csr = Acme::Client::CertificateRequest.new(names: roots.keys,
+      csr = Acme::Client::CertificateRequest.new(names: options[:roots].keys,
                                                  private_key: key)
       cert = client.new_certificate(csr)
 
@@ -128,7 +129,7 @@ module LetsCert
 
       if !no_roots.empty?
         raise Error, 'root for the following domain(s) are not specified: ' +
-                     no_roots.join(', ') + ".\nTry --default_root or use " +
+                     no_roots.keys.join(', ') + ".\nTry --default_root or use " +
                      '-d example.com:/var/www/html syntax.'
       end
     end
