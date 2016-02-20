@@ -66,6 +66,11 @@ module LetsCert
         expect(runner.options[:roots]['www.example.com']).to eq('/opt/www')
       end
 
+      it 'uses existing account key'
+      it 'creates an ACME account key if non exists'
+      it 'creates an ACME client with provided account key and end point'
+      it 'raises when register without e-mail'
+
     end
 
     context '#valid?' do
