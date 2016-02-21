@@ -29,6 +29,11 @@ module LetsCert
   class Certificate
     include Loggable
 
+    # @return [OpenSSL::X509::Certificate,nil]
+    attr_reader :cert
+    # @return [Acme::Client,nil]
+    attr_reader :client
+
 
     # @param [OpenSSL::X509::Certificate,nil] cert
     def initialize(cert)
