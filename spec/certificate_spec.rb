@@ -39,6 +39,7 @@ module LetsCert
         ARGV.clear
 
         ARGV << '-d' << 'example.com:/var/ww/html'
+        ARGV << '--server' << 'https://acme-staging.api.letsencrypt.org/directory'
         runner.parse_options
         # raise error because no e-mail address was given
         expect { certificate.get(nil, nil, runner.options) }.
@@ -47,6 +48,7 @@ module LetsCert
         ARGV.clear
         ARGV << '-d' << 'example.com:/var/www/html'
         ARGV << '-d' << 'www.example.com'
+        ARGV << '--server' << 'https://acme-staging.api.letsencrypt.org/directory'
         runner.options[:domains] = []
         runner.parse_options
         expect { certificate.get(nil, nil, runner.options) }.
@@ -57,7 +59,7 @@ module LetsCert
         ARGV << '-d' << 'example.com:/var/www/html'
         ARGV << '-d' << 'www.example.com'
         ARGV << '--default-root' << '/opt/www'
-        p ARGV
+        ARGV << '--server' << 'https://acme-staging.api.letsencrypt.org/directory'
         runner.parse_options
         # raise error because no e-mail address was given
         expect { certificate.get(nil, nil, runner.options) }.
