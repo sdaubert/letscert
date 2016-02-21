@@ -27,7 +27,10 @@ module LetsCert
                                                 "DNS:#{domain}",
                                                 false))
       end
-        @cert.sign(root_key, OpenSSL::Digest::SHA256.new)
+      @cert.sign(root_key, OpenSSL::Digest::SHA256.new)
+
+      # minimum size accepted by ACME server
+      @account_key2048 = OpenSSL::PKey::RSA.new(2048)
     end
 
     let(:certificate) { Certificate.new(@cert) }
@@ -69,18 +72,50 @@ module LetsCert
       end
 
       it 'uses existing account key' do
-        account_key = OpenSSL::PKey::RSA.new(256)
         options = { roots: { 'example.com' => '/var/www/html' } }
 
         # Connection error: no server to connect to
-        expect { certificate.get(account_key, nil, options) }.
+        expect { certificate.get(@account_key2048, nil, options) }.
           to raise_error(Faraday::ConnectionFailed)
-        expect(certificate.client.private_key).to eq(account_key)
+        expect(certificate.client.private_key).to eq(@account_key2048)
       end
 
-      it 'creates an ACME account key if non exists'
-      it 'creates an ACME client with provided account key and end point'
-      it 'raises when register without e-mail'
+      it 'creates an ACME account key if non exists' do
+        options = {
+          roots: { 'example.com' => '/var/www/html' },
+          account_key_size: 128,
+        }
+
+        # Connection error: no server to connect to
+        expect { certificate.get(nil, nil, options) }.
+          to raise_error(Faraday::ConnectionFailed)
+        expect(certificate.client.private_key).to be_a(OpenSSL::PKey::RSA)
+      end
+
+      it 'creates an ACME client with provided account key and end point' do
+        options = {
+          roots: { 'example.com' => '/var/www/html' },
+          server: 'https://acme-staging.api.letsencrypt.org/directory',
+        }
+
+        # Acme error: not valid e-mail address
+        expect { certificate.get(@account_key2048, nil, options) }.
+          to raise_error(Acme::Client::Error)
+        expect(certificate.client.private_key).to eq(@account_key2048)
+        expect(certificate.client.instance_eval { @endpoint }).to eq(options[:server])
+      end
+
+      it 'raises when register without e-mail' do
+        options = {
+          roots: { 'example.com' => '/var/www/html' },
+          server: 'https://acme-staging.api.letsencrypt.org/directory',
+        }
+
+        # Acme error: not valid e-mail address
+        expect { certificate.get(@account_key2048, nil, options) }.
+          to raise_error(Acme::Client::Error).
+              with_message('not a valid e-mail address')
+      end
 
     end
 
