@@ -41,9 +41,21 @@ module LetsCert
     end
 
     # Get a new certificate, or renew an existing one
-    # @param [OpenSSL::PKey::PKey] account_key private key to authenticate to ACME server
-    # @param [OpenSSL::PKey::PKey] key private key from which make a certificate
-    # @param [Hash] data
+    # @param [OpenSSL::PKey::PKey,nil] account_key private key to authenticate to ACME
+    #   server
+    # @param [OpenSSL::PKey::PKey, nil] key private key from which make a certificate.
+    #    If +nil+, generate a new one with +options[:cet_key_size]+ bits.
+    # @param [Hash] options option hash
+    # @option options [Fixnum] :account_key_size ACME account private key size in bits
+    # @option options [Fixnum] :cert_key_size private key size used to generate
+    #    a certificate
+    # @option options [String] :email e-mail used as ACME account
+    # @option options [Array<String>] :files plugin names to use
+    # @option options [Boolean] :reuse_key reuse private key when getting a new
+    #    certificate
+    # @option options [Hash] :roots hash associating domains as keys to web roots as
+    #    values
+    # @option options [String] :server ACME servel URL
     def get(account_key, key, options)
       logger.info {"create key/cert/chain..." }
       check_roots(options[:roots])
