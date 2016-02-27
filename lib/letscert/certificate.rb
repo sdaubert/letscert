@@ -91,7 +91,7 @@ module LetsCert
     # @option options [String] :email e-mail used as ACME account
     # @option options [String] :server ACME servel URL
     # @return [Boolean]
-    def revoke(account_key, options)
+    def revoke(account_key, options={})
       if @cert.nil?
         raise Error, 'no certification data to revoke'
       end
