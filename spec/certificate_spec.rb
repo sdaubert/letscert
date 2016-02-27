@@ -117,6 +117,20 @@ module LetsCert
               with_message('not a valid e-mail address')
       end
 
+      it 'responds to HTTP-01 challenge'
+      it 'raises if HTTP-01 challenge is unavailable'
+      it 'reuses existing private key if --reuse-key is present'
+
+    end
+
+    context '#revoke' do
+      it 'raises if no certificate is given' do
+        certificate = Certificate.new(nil)
+        expect { certificate.revoke(@account_key2048) }.
+          to raise_error(LetsCert::Error)
+      end
+
+      it 'revokes an existing certificate'
     end
 
     context '#valid?' do
