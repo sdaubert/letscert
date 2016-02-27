@@ -56,6 +56,7 @@ module LetsCert
     # @option options [Hash] :roots hash associating domains as keys to web roots as
     #    values
     # @option options [String] :server ACME servel URL
+    # @return [void]
     def get(account_key, key, options)
       logger.info {"create key/cert/chain..." }
       check_roots(options[:roots])
@@ -85,6 +86,10 @@ module LetsCert
 
     # Revoke certificate
     # @param [OpenSSL::PKey::PKey] account_key
+    # @param [Hash] options
+    # @option options [Fixnum] :account_key_size ACME account private key size in bits
+    # @option options [String] :email e-mail used as ACME account
+    # @option options [String] :server ACME servel URL
     # @return [Boolean]
     def revoke(account_key, options)
       if @cert.nil?
