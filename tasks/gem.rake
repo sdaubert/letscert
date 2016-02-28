@@ -27,6 +27,8 @@ EOF
   s.add_dependency 'json-jwt', '~>1.5'
 
   s.add_development_dependency 'rspec', '~>3.4'
+  s.add_development_dependency 'vcr', '~>3.0'
+  s.add_development_dependency 'faraday', '~>0.9'
   s.add_development_dependency 'yard', '~>0.8'
 end
 
