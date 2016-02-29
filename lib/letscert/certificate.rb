@@ -140,27 +140,12 @@ module LetsCert
       !renewal_necessary?(valid_min)
     end
 
-
-    private
-
-    # check webroots.
-    # @param [Hash] roots
-    # @raise [Error] if some domains have no defined root.
-    def check_roots(roots)
-      no_roots = roots.select { |k,v| v.nil? }
-
-      if !no_roots.empty?
-        raise Error, 'root for the following domain(s) are not specified: ' +
-                     no_roots.keys.join(', ') + ".\nTry --default_root or use " +
-                     '-d example.com:/var/www/html syntax.'
-      end
-    end
-
     # Get ACME client.
     #
     # Client is only created on first call, then it is cached.
     # @param [Hash] account_key
     # @param [Hash] options
+    # @return [Acme::Client]
     def get_acme_client(account_key, options)
       return @client if @client
 
@@ -168,6 +153,8 @@ module LetsCert
 
       logger.debug { "connect to #{options[:server]}" }
       @client = Acme::Client.new(private_key: key, endpoint: options[:server])
+
+      yield @client if block_given?
 
       if options[:email].nil?
         logger.warn { '--email was not provided. ACME CA will have no way to ' +
@@ -200,6 +187,22 @@ module LetsCert
       end
 
       @client
+    end
+
+
+    private
+
+    # check webroots.
+    # @param [Hash] roots
+    # @raise [Error] if some domains have no defined root.
+    def check_roots(roots)
+      no_roots = roots.select { |k,v| v.nil? }
+
+      if !no_roots.empty?
+        raise Error, 'root for the following domain(s) are not specified: ' +
+                     no_roots.keys.join(', ') + ".\nTry --default_root or use " +
+                     '-d example.com:/var/www/html syntax.'
+      end
     end
 
     # Generate a new account key if no one is given in +data+
