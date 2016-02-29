@@ -118,7 +118,23 @@ module LetsCert
       end
 
       it 'responds to HTTP-01 challenge'
-      it 'raises if HTTP-01 challenge is unavailable'
+
+      it 'raises if HTTP-01 challenge is unavailable' do
+        options = {
+          roots: { 'example.com' => '/var/www/html' },
+          server: 'https://acme-staging.api.letsencrypt.org/directory',
+          email: 'test@example.org',
+        }
+
+        VCR.use_cassette('no-http-01-challenge') do
+          certificate.get_acme_client(@account_key2048, options) do |client|
+            client.connection.builder.insert 0, RemoveHttp01Middleware
+          end
+          expect { certificate.get(@account_key2048, nil, options) }.
+            to raise_error(LetsCert::Error).with_message(/not offer http-01/)
+        end
+      end
+
       it 'reuses existing private key if --reuse-key is present'
 
     end
