@@ -61,7 +61,7 @@ letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld --r
 * Renew certificate only if needed.
 * Only `http-01` challenge supported. An existing web server must be alreay running.
   `letscert` should have write access to `${webroot}/.well-known/acme-challenge`.
-* Crontab friendly: no promts.
+* Crontab friendly: no prompts.
 * No configuration file.
 * Support multiple domains with multiple roots. Always create a single certificate per
   run (ie a certificate may have multiple SANs).
