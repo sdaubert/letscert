@@ -203,8 +203,10 @@ module LetsCert
         end
 
       rescue Error, Acme::Client::Error => ex
-        @logger.error ex.message
-        puts "Error: #{ex.message}"
+        msg = ex.message
+        msg = "[Acme] #{msg}" if ex.is_a?(Acme::Client::Error)
+        @logger.error msg
+        puts "Error: #{msg}"
         RETURN_ERROR
       end
     end
