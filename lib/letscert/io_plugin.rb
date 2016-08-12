@@ -19,7 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-require 'json/jwt'
+require 'base64'
 require_relative 'loggable'
 
 module LetsCert
@@ -134,13 +134,34 @@ module LetsCert
   # @author Sylvain Daubert
   module JWKIOPluginMixin
 
+    # Decode base64 string +data+
+    # @param [String] data
+    # @return [String]
+    def urlsafe_decode64(data)
+      Base64.urlsafe_decode64(data).sub(/[\s=]*\z/, '')
+    end
+
     # Load crypto data from JSON-encoded file
     # @param [String] data JSON-encoded data
-    # @return [Hash]
+    # @return [OpenSSL::PKey::PKey]
     def load_jwk(data)
       return nil if data.empty?
 
-      JSON::JWK.new(JSON.parse(data)).to_key
+      h = JSON.parse(data)
+
+      case h['kty']
+      when 'RSA'
+        key = OpenSSL::PKey::RSA.new
+        [:e, :n, :d, :p, :q].collect do |key|
+          next if h[key].nil?
+          value = OpenSSL::BN.new(urlsafe_decode64(h[key]), 2)
+          key.send "#{key}=".to_sym, value
+        end
+      else
+        raise Error, "unknown account key type '#{k['kty']}'"
+      end
+
+      key
     end
 
     # Dump crypto data (key) to a JSON-encoded string
