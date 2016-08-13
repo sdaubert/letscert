@@ -175,7 +175,22 @@ module LetsCert
     # @param [OpenSSL::PKey] key
     # @return [String]
     def dump_jwk(key)
-      key.to_jwk.to_json
+      return {}.to_json if key.nil?
+
+      h = { 'kty' => 'RSA' }
+      case key
+      when OpenSSL::PKey::RSA
+        h['e'] = urlsafe_encode64(key.e.to_s(2)) if key.e
+        h['n'] = urlsafe_encode64(key.n.to_s(2)) if key.n
+        if key.private?
+          h['d'] = urlsafe_encode64(key.d.to_s(2))
+          h['p'] = urlsafe_encode64(key.p.to_s(2))
+          h['q'] = urlsafe_encode64(key.q.to_s(2))
+        end
+      else
+        raise Error, "only RSA keys are supported"
+      end
+      h.to_json
     end
   end
 
