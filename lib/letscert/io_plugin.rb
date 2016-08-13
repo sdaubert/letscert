@@ -155,20 +155,19 @@ module LetsCert
       return nil if data.empty?
 
       h = JSON.parse(data)
-
       case h['kty']
       when 'RSA'
-        key = OpenSSL::PKey::RSA.new
-        [:e, :n, :d, :p, :q].collect do |key|
+        pkey = OpenSSL::PKey::RSA.new
+        %w(e n d p q).collect do |key|
           next if h[key].nil?
           value = OpenSSL::BN.new(urlsafe_decode64(h[key]), 2)
-          key.send "#{key}=".to_sym, value
+          pkey.send "#{key}=".to_sym, value
         end
       else
         raise Error, "unknown account key type '#{k['kty']}'"
       end
 
-      key
+      pkey
     end
 
     # Dump crypto data (key) to a JSON-encoded string
