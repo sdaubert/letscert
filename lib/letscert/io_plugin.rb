@@ -145,7 +145,7 @@ module LetsCert
     # @param [String] data
     # @return [String]
     def urlsafe_decode64(data)
-      Base64.urlsafe_decode64(data).sub(/[\s=]*\z/, '')
+      Base64.urlsafe_decode64(data.sub(/[\s=]*\z/, ''))
     end
 
     # Load crypto data from JSON-encoded file
