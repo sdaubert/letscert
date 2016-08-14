@@ -86,7 +86,7 @@ module LetsCert
   # @author Sylvain Daubert
   module FileIOPluginMixin
 
-    # Load data from file named {#name}
+    # Load data from file named +#name+
     # @return [Hash]
     def load
       logger.debug { "Loading #@name" }
@@ -110,7 +110,7 @@ module LetsCert
       raise NotImplementedError
     end
 
-    # Save data to file {#name}
+    # Save data to file +#name+
     # @param [Hash] data
     # @return [void]
     def save_to_file(data)
