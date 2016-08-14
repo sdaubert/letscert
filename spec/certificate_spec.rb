@@ -44,9 +44,11 @@ module LetsCert
         ARGV << '-d' << 'example.com:/var/ww/html'
         ARGV << '--server' << 'https://acme-staging.api.letsencrypt.org/directory'
         runner.parse_options
-        # raise error because no e-mail address was given
-        expect { certificate.get(nil, nil, runner.options) }.
-          to raise_error(Acme::Client::Error)
+        VCR.use_cassette('single-domain') do
+          # raise error because no e-mail address was given
+          expect { certificate.get(nil, nil, runner.options) }.
+            to raise_error(Acme::Client::Error)
+        end
 
         ARGV.clear
         ARGV << '-d' << 'example.com:/var/www/html'
@@ -64,9 +66,11 @@ module LetsCert
         ARGV << '--default-root' << '/opt/www'
         ARGV << '--server' << 'https://acme-staging.api.letsencrypt.org/directory'
         runner.parse_options
-        # raise error because no e-mail address was given
-        expect { certificate.get(nil, nil, runner.options) }.
-          to raise_error(Acme::Client::Error)
+        VCR.use_cassette('default-root') do
+          # raise error because no e-mail address was given
+          expect { certificate.get(nil, nil, runner.options) }.
+            to raise_error(Acme::Client::Error)
+        end
         expect(runner.options[:roots]['example.com']).to eq('/var/www/html')
         expect(runner.options[:roots]['www.example.com']).to eq('/opt/www')
       end
@@ -74,9 +78,11 @@ module LetsCert
       it 'uses existing account key' do
         options = { roots: { 'example.com' => '/var/www/html' } }
 
-        # Connection error: no server to connect to
-        expect { certificate.get(@account_key2048, nil, options) }.
-          to raise_error(Faraday::ConnectionFailed)
+        VCR.use_cassette('no-server') do
+          # Connection error: no server to connect to
+          expect { certificate.get(@account_key2048, nil, options) }.
+            to raise_error(Faraday::ConnectionFailed)
+        end
         expect(certificate.client.private_key).to eq(@account_key2048)
       end
 
@@ -86,9 +92,11 @@ module LetsCert
           account_key_size: 128,
         }
 
-        # Connection error: no server to connect to
-        expect { certificate.get(nil, nil, options) }.
-          to raise_error(Faraday::ConnectionFailed)
+        VCR.use_cassette('no-server') do
+          # Connection error: no server to connect to
+          expect { certificate.get(nil, nil, options) }.
+            to raise_error(Faraday::ConnectionFailed)
+        end
         expect(certificate.client.private_key).to be_a(OpenSSL::PKey::RSA)
       end
 
@@ -98,9 +106,11 @@ module LetsCert
           server: 'https://acme-staging.api.letsencrypt.org/directory',
         }
 
-        # Acme error: not valid e-mail address
-        expect { certificate.get(@account_key2048, nil, options) }.
-          to raise_error(Acme::Client::Error)
+        VCR.use_cassette('create-acme-client') do
+          # Acme error: not valid e-mail address
+          expect { certificate.get(@account_key2048, nil, options) }.
+            to raise_error(Acme::Client::Error)
+        end
         expect(certificate.client.private_key).to eq(@account_key2048)
         expect(certificate.client.instance_eval { @endpoint }).to eq(options[:server])
       end
@@ -111,10 +121,12 @@ module LetsCert
           server: 'https://acme-staging.api.letsencrypt.org/directory',
         }
 
-        # Acme error: not valid e-mail address
-        expect { certificate.get(@account_key2048, nil, options) }.
-          to raise_error(Acme::Client::Error).
-              with_message('not a valid e-mail address')
+        VCR.use_cassette('create-acme-client-but-bad-email') do
+          # Acme error: not valid e-mail address
+          expect { certificate.get(@account_key2048, nil, options) }.
+            to raise_error(Acme::Client::Error).
+                with_message('not a valid e-mail address')
+        end
       end
 
       it 'responds to HTTP-01 challenge'
