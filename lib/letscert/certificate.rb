@@ -207,7 +207,8 @@ module LetsCert
 
     # Generate a new account key if no one is given in +data+
     # @param [OpenSSL::PKey,nil] key
-    # @param [Hash] options
+    # @param [Integer] key_size
+    # @return [OpenSSL::PKey::PKey]
     def get_account_key(key, key_size)
       if key.nil?
         logger.info { 'No account key. Generate a new one...' }
@@ -268,8 +269,7 @@ module LetsCert
       end
     end
 
-    # Check if a renewal is necessary for +cert+
-    # @param [OpenSSL::X509::Certificate] cert
+    # Check if a renewal is necessary
     # @param [Number] valid_min minimum validity in seconds to ensure
     # @return [Boolean]
     def renewal_necessary?(valid_min)
