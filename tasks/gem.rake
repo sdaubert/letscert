@@ -24,6 +24,7 @@ EOF
   s.required_ruby_version = '>= 2.1.0'
 
   s.add_dependency 'acme-client', '~>0.4.0'
+  s.add_dependency 'json', '~>1.8.3'
 
   s.add_development_dependency 'rspec', '~>3.4'
   s.add_development_dependency 'vcr', '~>3.0'
