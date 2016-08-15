@@ -56,7 +56,10 @@ module LetsCert
     let(:test) { Test.new}
 
     it '#load'
-    it '#load_from_content'
+    it '#load_from_content raises NotImplementedError' do
+      expect { Test.new.load_from_content("a") }.to raise_error(NotImplementedError)
+    end
+
     it '#save_to_file'
     
   end
