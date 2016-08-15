@@ -39,6 +39,14 @@ module LetsCert
       expect { IOPlugin.register(NewIO2, 'new/io') }.to raise_error(LetsCert::Error)
     end
 
+    it '#load raises NotImplementedError' do
+      expect { IOPlugin.new('a').load }.to raise_error(NotImplementedError)
+    end
+
+    it '#save raises NotImplementedError' do
+      expect { IOPlugin.new('a').save }.to raise_error(NotImplementedError)
+    end
+
   end
 
   describe JWKIOPluginMixin do
