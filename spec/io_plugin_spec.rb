@@ -34,6 +34,11 @@ module LetsCert
       expect(IOPlugin.registered['newio']).to be_a(NewIO)
     end
 
+    it '.register raises when plugin name contains a path' do
+      class NewIO2 < IOPlugin; end
+      expect { IOPlugin.register(NewIO2, 'new/io') }.to raise_error(LetsCert::Error)
+    end
+
   end
 
   describe JWKIOPluginMixin do
