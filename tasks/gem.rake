@@ -30,6 +30,7 @@ EOF
   s.add_development_dependency 'vcr', '~>3.0'
   s.add_development_dependency 'faraday', '~>0.9'
   s.add_development_dependency 'yard', '~>0.8'
+  s.add_development_dependency 'simplecov'
 end
 
 
