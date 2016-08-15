@@ -49,6 +49,18 @@ module LetsCert
 
   end
 
+  describe FileIOPluginMixin do
+
+    class Test; include FileIOPluginMixin; end
+
+    let(:test) { Test.new}
+
+    it '#load'
+    it '#load_from_content'
+    it '#save_to_file'
+    
+  end
+
   describe JWKIOPluginMixin do
 
     class Test; include JWKIOPluginMixin; end
