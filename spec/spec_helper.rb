@@ -8,6 +8,8 @@ require 'letscert'
 
 require 'vcr'
 require 'faraday'
+require 'fileutils'
+
 
 VCR.configure do |config|
   config.cassette_library_dir = "fixtures/vcr_cassettes"
@@ -29,5 +31,17 @@ class RemoveHttp01Middleware < Faraday::Middleware
         end
       end
     end
+  end
+end
+
+
+def change_dir_to(new_dir)
+  old_dir = FileUtils.pwd
+  FileUtils.cd new_dir
+
+  begin
+    yield if block_given?
+  ensure
+    FileUtils.cd old_dir
   end
 end

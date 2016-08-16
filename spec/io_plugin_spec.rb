@@ -1,5 +1,4 @@
 require_relative 'spec_helper'
-require 'fileutils'
 
 module LetsCert
 
@@ -62,14 +61,9 @@ module LetsCert
     let(:test) { Test2.new('test.fileioplugin') }
 
     it '#load loads data from a file' do
-      pwd = FileUtils.pwd
-      FileUtils.cd File.dirname(__FILE__)
-
-      begin
+      change_dir_to File.dirname(__FILE__) do
         content = test.load
         expect(content).to eq("This is a test!\n")
-      ensure
-        FileUtils.cd pwd
       end
     end
 
@@ -122,18 +116,11 @@ module LetsCert
     it "#load account key from account_key.json file" do
       expect(ak).to be_a(AccountKey)
 
-      pwd = FileUtils.pwd
-      FileUtils.cd File.dirname(__FILE__)
-
-      begin
+      change_dir_to File.dirname(__FILE__) do
         content = ak.load
         expect(content).to be_a(Hash)
         expect(content.keys.size).to eq(1)
         expect(content[:account_key]).to be_a(OpenSSL::PKey::PKey)
-      rescue Exception
-        raise
-      ensure
-        FileUtils.cd pwd
       end
     end
 
@@ -162,17 +149,10 @@ module LetsCert
     end
 
     it '#load private key from key.pem file' do
-      pwd = FileUtils.pwd
-      FileUtils.cd File.dirname(__FILE__)
-
-      begin
+      change_dir_to File.dirname(__FILE__) do
         data = keypem.load
         expect(data[:key]).to be_a(OpenSSL::PKey::RSA)
         expect(data[:key].params['d']).to eq(OpenSSL::BN.new(0x573C8C0EADCBA5E571CD57FAB4D9FE6AC9DC5F9ADF8FEC48667D836B6A0EA9E1240D2A5861258A7E6E5EA1052AFAD71176A49E90BA80F43C44F2BD415161C1E71AA37E7C2BE5C7C18CF964A5A7100C801F558C7B7825D082FEF79A76963786D8CDFE1058F7F178869A09F5377F51DD45EA05B428F41F09C9F29D37BB539512C5))
-      rescue Exception
-        raise
-      ensure
-        FileUtils.cd pwd
       end
     end
 
@@ -192,17 +172,10 @@ module LetsCert
     end
 
     it '#load private key from key.der file' do
-      pwd = FileUtils.pwd
-      FileUtils.cd File.dirname(__FILE__)
-
-      begin
+      change_dir_to File.dirname(__FILE__) do
         data = keyder.load
         expect(data[:key]).to be_a(OpenSSL::PKey::RSA)
         expect(data[:key].params['d']).to eq(OpenSSL::BN.new(0x648C2A57083D12CA32A89538DD1AD7BAC5C522E682F0AFD9C834BB44CC536A57880F24D9D8987A0FC2CEF5C8F7A9BA70223E3C3E06229C815955FCE06F198175))
-      rescue Exception
-        raise
-      ensure
-        FileUtils.cd pwd
       end
     end
 
@@ -230,34 +203,22 @@ module LetsCert
     end
 
     it '#load chain from chain.pem file' do
-      pwd = FileUtils.pwd
-      FileUtils.cd File.dirname(__FILE__)
-
-      begin
+      change_dir_to File.dirname(__FILE__) do
         data = chain.load
         expect(data[:cert]).to be_nil
         expect(data[:chain]).to_not be_nil
         expect(data[:chain]).to be_a(Array)
         expect(data[:chain].first).to be_a(OpenSSL::X509::Certificate)
-      rescue Exception
-        raise
-      ensure
-        FileUtils.cd pwd
       end
     end
 
     it '#save chain to chain.pem file' do
-      pwd = FileUtils.pwd
-      FileUtils.cd File.dirname(__FILE__)
+      data = nil
 
-      begin
+      change_dir_to File.dirname(__FILE__) do
         data = chain.load
         expect(data[:cert]).to be_nil
         expect(data[:chain]).to_not be_nil
-      rescue Exception
-        raise
-      ensure
-        FileUtils.cd pwd
       end
 
       chain.save data
@@ -290,35 +251,23 @@ module LetsCert
     end
 
     it '#load cert and chain from fullchain.pem file' do
-      pwd = FileUtils.pwd
-      FileUtils.cd File.dirname(__FILE__)
-
-      begin
+      change_dir_to File.dirname(__FILE__) do
         data = fullchain.load
         expect(data[:cert]).to_not be_nil
         expect(data[:cert]).to be_a(OpenSSL::X509::Certificate)
         expect(data[:chain]).to_not be_nil
         expect(data[:chain]).to be_a(Array)
         expect(data[:chain].first).to be_a(OpenSSL::X509::Certificate)
-      rescue Exception
-        raise
-      ensure
-        FileUtils.cd pwd
       end
     end
 
     it '#save cert and chain to fullchain.pem file' do
-      pwd = FileUtils.pwd
-      FileUtils.cd File.dirname(__FILE__)
+      data = nil
 
-      begin
+      change_dir_to File.dirname(__FILE__) do
         data = fullchain.load
         expect(data[:cert]).to_not be_nil
         expect(data[:chain]).to_not be_nil
-      rescue Exception
-        raise
-      ensure
-        FileUtils.cd pwd
       end
 
       fullchain.save data
@@ -351,46 +300,27 @@ module LetsCert
     end
 
     it '#load cert from cert.pem' do
-      pwd = FileUtils.pwd
-      FileUtils.cd File.dirname(__FILE__)
-
-      begin
+      change_dir_to File.dirname(__FILE__) do
         data = certpem.load
         expect(data[:cert]).to_not be_nil
         expect(data[:cert]).to be_a(OpenSSL::X509::Certificate)
-      rescue Exception
-        raise
-      ensure
-        FileUtils.cd pwd
       end
     end
 
     it '#load cert from cert.der' do
-      pwd = FileUtils.pwd
-      FileUtils.cd File.dirname(__FILE__)
-
-      begin
+      change_dir_to File.dirname(__FILE__) do
         data = certder.load
         expect(data[:cert]).to_not be_nil
         expect(data[:cert]).to be_a(OpenSSL::X509::Certificate)
-      rescue Exception
-        raise
-      ensure
-        FileUtils.cd pwd
       end
     end
 
     it '#save cert to cert.pem' do
-      pwd = FileUtils.pwd
-      FileUtils.cd File.dirname(__FILE__)
+      data = nil
 
-      begin
+      change_dir_to File.dirname(__FILE__) do
         data = certpem.load
         expect(data[:cert]).to_not be_nil
-      rescue Exception
-        raise
-      ensure
-        FileUtils.cd pwd
       end
 
       certpem.save data
@@ -408,16 +338,11 @@ module LetsCert
     end
 
     it '#save cert to cert.der' do
-      pwd = FileUtils.pwd
-      FileUtils.cd File.dirname(__FILE__)
+      data = nil
 
-      begin
+      change_dir_to File.dirname(__FILE__) do
         data = certder.load
         expect(data[:cert]).to_not be_nil
-      rescue Exception
-        raise
-      ensure
-        FileUtils.cd pwd
       end
 
       certder.save data
