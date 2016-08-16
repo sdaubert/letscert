@@ -51,11 +51,34 @@ module LetsCert
 
   describe FileIOPluginMixin do
 
+    before(:all) { IOPlugin.logger = Logger.new('/dev/null') }
+
     class Test; include FileIOPluginMixin; end
+    class Test2 < IOPlugin
+      include FileIOPluginMixin
+      def load_from_content(content); content; end
+    end
 
-    let(:test) { Test.new}
+    let(:test) { Test2.new('test.fileioplugin') }
 
-    it '#load'
+    it '#load loads data from a file' do
+      pwd = FileUtils.pwd
+      FileUtils.cd File.dirname(__FILE__)
+
+      begin
+        content = test.load
+        expect(content).to eq("This is a test!\n")
+      ensure
+        FileUtils.cd pwd
+      end
+    end
+
+    it '#load returns an empty set when no file exists' do
+      test.instance_eval { @name = 'nofilename' }
+      content = test.load
+      expect(content).to eq(IOPlugin.empty_data)
+    end
+
     it '#load_from_content raises NotImplementedError' do
       expect { Test.new.load_from_content("a") }.to raise_error(NotImplementedError)
     end
