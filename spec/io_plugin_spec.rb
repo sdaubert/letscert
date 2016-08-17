@@ -77,7 +77,24 @@ module LetsCert
       expect { Test.new.load_from_content("a") }.to raise_error(NotImplementedError)
     end
 
-    it '#save_to_file'
+    it '#save_to_file' do
+      tmpfile = 'tmpfile43'
+      content = nil
+
+      change_dir_to File.dirname(__FILE__) do
+        content = test.load
+      end
+
+      test2 = Test2.new(tmpfile)
+      test2.save_to_file(content)
+
+      expect(File.read(tmpfile)).to eq(content)
+
+      begin
+      ensure
+        File.unlink tmpfile if File.exist? tmpfile
+      end
+    end
     
   end
 
