@@ -69,3 +69,16 @@ letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld --r
   * 0 if certificate data was created or updated;
   * 1 if renewal not necessary;
   * 2 in case of errors.
+
+# Installation
+`letscert` is cryptographically signed. To be sure the gem you install hasn’t been tampered:
+* add my public key as a trusted certificate:
+```
+gem cert --add <(curl -Ls https://raw.github.com/metricfu/metric_fu/master/certs/gem-public_cert.pem)
+```
+* install letscert gem with a policy:
+```
+gem install letscert -P MediumSecurity
+```
+
+The MediumSecurity trust profile will verify signed gems, but allow the installation of unsigned dependencies. This is necessary because not all of letcert’s dependencies are signed, so we cannot use HighSecurity.
