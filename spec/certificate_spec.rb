@@ -2,6 +2,9 @@ require_relative 'spec_helper'
 
 module LetsCert
 
+  TEST_SERVER = 'http://172.17.0.1:4000'
+
+
   describe Certificate do
 
     before(:all) { Certificate.logger = Logger.new('/dev/null') }
@@ -42,7 +45,7 @@ module LetsCert
         ARGV.clear
 
         ARGV << '-d' << 'example.com:/var/ww/html'
-        ARGV << '--server' << 'https://acme-staging.api.letsencrypt.org/directory'
+        ARGV << '--server' << TEST_SERVER
         runner.parse_options
         VCR.use_cassette('single-domain') do
           # raise error because no e-mail address was given
@@ -53,7 +56,7 @@ module LetsCert
         ARGV.clear
         ARGV << '-d' << 'example.com:/var/www/html'
         ARGV << '-d' << 'www.example.com'
-        ARGV << '--server' << 'https://acme-staging.api.letsencrypt.org/directory'
+        ARGV << '--server' << TEST_SERVER
         runner.options[:domains] = []
         runner.parse_options
         expect { certificate.get(nil, nil, runner.options) }.
@@ -64,7 +67,7 @@ module LetsCert
         ARGV << '-d' << 'example.com:/var/www/html'
         ARGV << '-d' << 'www.example.com'
         ARGV << '--default-root' << '/opt/www'
-        ARGV << '--server' << 'https://acme-staging.api.letsencrypt.org/directory'
+        ARGV << '--server' << TEST_SERVER
         runner.parse_options
         VCR.use_cassette('default-root') do
           # raise error because no e-mail address was given
@@ -103,7 +106,7 @@ module LetsCert
       it 'creates an ACME client with provided account key and end point' do
         options = {
           roots: { 'example.com' => '/var/www/html' },
-          server: 'https://acme-staging.api.letsencrypt.org/directory',
+          server: TEST_SERVER,
         }
 
         VCR.use_cassette('create-acme-client') do
@@ -118,7 +121,7 @@ module LetsCert
       it 'raises when register without e-mail' do
         options = {
           roots: { 'example.com' => '/var/www/html' },
-          server: 'https://acme-staging.api.letsencrypt.org/directory',
+          server: TEST_SERVER,
         }
 
         VCR.use_cassette('create-acme-client-but-bad-email') do
@@ -134,7 +137,7 @@ module LetsCert
       it 'raises if HTTP-01 challenge is unavailable' do
         options = {
           roots: { 'example.com' => '/var/www/html' },
-          server: 'https://acme-staging.api.letsencrypt.org/directory',
+          server: TEST_SERVER,
           email: 'test@example.org',
         }
 
