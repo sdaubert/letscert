@@ -1,0 +1,219 @@
+---
+http_interactions:
+- request:
+    method: head
+    uri: http://172.17.0.1:4000/acme/new-reg
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Acme::Client v0.4.0 (https://github.com/unixcharles/acme-client)
+  response:
+    status:
+      code: 405
+      message: 
+    headers:
+      allow:
+      - POST
+      boulder-request-id:
+      - 7j_wF_Zl1jA44I7kCspvz1phMhXH5j4ty40B2RsCadI
+      cache-control:
+      - public, max-age=0, no-cache
+      content-type:
+      - application/problem+json
+      replay-nonce:
+      - klgWcnnJXyV_nJRZDhZIpcCbpERHgQWWUKz_xVTw8PQ
+      date:
+      - Sat, 20 Aug 2016 17:17:16 GMT
+      content-length:
+      - '91'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Sat, 20 Aug 2016 17:17:16 GMT
+- request:
+    method: post
+    uri: http://172.17.0.1:4000/acme/new-reg
+    body:
+      encoding: UTF-8
+      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJxM3VPazMzdFhIVmQ1Qy1uV2gyTVFjUDVlLWV2XzBnMVJnZU9hanNudkx1aXR1aXVCY2NoZ3pGMkkzYk9Sc3ZHRmdUYVpkVThIMXhoOWZ6Z3FabzUzQlRoaGd6REQ0YnhzVmFkakxXaDlsalU4dWlZOGt4OFB6VVFfd3UyME1iOWJyeTB2S2owSGhiQWRidUxzSElOUW4tWUZwY3FCWEZyOXZHY1IzMjF0MWVpTGFsZUs5OG4zUUNjUjdicmlQdktILWpPVDdqMXlmazlxSklRVnFaV0IyU3lwN1otOV9WOTc3QW1XSFJBd3lxZGdJSE0ybTRCZHRCS0I3S1AydFdjb1hHd0NEeGVwQzRqTS1xYURSQzd0Ql95VnpTc2NBck1kRWZ0RmJidFY1YnZtNTE1OEd6Y19kbmJvaGE0RjM2ZVI5NFdoU29WX01WVmFFTm9YY2JwVFEifSwibm9uY2UiOiJrbGdXY25uSlh5Vl9uSlJaRGhaSXBjQ2JwRVJIZ1FXV1VLel94VlR3OFBRIn0","payload":"eyJyZXNvdXJjZSI6Im5ldy1yZWciLCJjb250YWN0IjpbIm1haWx0bzp0ZXN0QGV4YW1wbGUub3JnIl19","signature":"FbqYHs7cimAaZg8B3CiQZ4RKGSuBqHbWfFuftmppql5jMZwuA2Sre8xLl0ciZHNEtKUeCoBlCgOo4HjHVb1rLbc9LuI6brBsXHnvZEmpnn6nDUbGNIGwBH1JLg_aDDYBmuciWd98J_sy6KejXDQ9rGnU1razIL73P8j0PF7Lb3rgK6AmRZKlSktVtbDmKpaHhqQzK0Nnojo-7XkGhzToXcb8EzZdMAgI3exNZ-RC8uZNhPlFhoayZGUNcHbDkW0qLQOphWHgFCAj65AeByKa9kY93MGsvd_hM1XA4ElM09KtXxWSSCkSqqlvnL4tm14sEaV6WjN-AemDoS9JNiLYEA"}'
+    headers:
+      User-Agent:
+      - Acme::Client v0.4.0 (https://github.com/unixcharles/acme-client)
+  response:
+    status:
+      code: 201
+      message: 
+    headers:
+      boulder-request-id:
+      - zeVzwwKq-pCplb4_b2XargDz_DgPlYw4av3K3JvmHp4
+      boulder-requester:
+      - '2'
+      cache-control:
+      - public, max-age=0, no-cache
+      content-type:
+      - application/json
+      link:
+      - <http://127.0.0.1:4000/acme/new-authz>;rel="next", <http://boulder:4000/terms/v1>;rel="terms-of-service"
+      location:
+      - http://127.0.0.1:4000/acme/reg/2
+      replay-nonce:
+      - 8CIxjwXKXLwNwGtqiBiTBe4NA2jIjsqd8eSu2wHuYTw
+      date:
+      - Sat, 20 Aug 2016 17:17:16 GMT
+      content-length:
+      - '546'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "id": 2,
+          "key": {
+            "kty": "RSA",
+            "n": "q3uOk33tXHVd5C-nWh2MQcP5e-ev_0g1RgeOajsnvLuituiuBcchgzF2I3bORsvGFgTaZdU8H1xh9fzgqZo53BThhgzDD4bxsVadjLWh9ljU8uiY8kx8PzUQ_wu20Mb9bry0vKj0HhbAdbuLsHINQn-YFpcqBXFr9vGcR321t1eiLaleK98n3QCcR7briPvKH-jOT7j1yfk9qJIQVqZWB2Syp7Z-9_V977AmWHRAwyqdgIHM2m4BdtBKB7KP2tWcoXGwCDxepC4jM-qaDRC7tB_yVzSscArMdEftFbbtV5bvm5158Gzc_dnboha4F36eR94WhSoV_MVVaENoXcbpTQ",
+            "e": "AQAB"
+          },
+          "contact": [
+            "mailto:test@example.org"
+          ],
+          "initialIp": "172.17.0.1",
+          "createdAt": "2016-08-20T17:17:16.569351605Z"
+        }
+    http_version: 
+  recorded_at: Sat, 20 Aug 2016 17:17:16 GMT
+- request:
+    method: post
+    uri: http://127.0.0.1:4000/acme/reg/2
+    body:
+      encoding: UTF-8
+      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJxM3VPazMzdFhIVmQ1Qy1uV2gyTVFjUDVlLWV2XzBnMVJnZU9hanNudkx1aXR1aXVCY2NoZ3pGMkkzYk9Sc3ZHRmdUYVpkVThIMXhoOWZ6Z3FabzUzQlRoaGd6REQ0YnhzVmFkakxXaDlsalU4dWlZOGt4OFB6VVFfd3UyME1iOWJyeTB2S2owSGhiQWRidUxzSElOUW4tWUZwY3FCWEZyOXZHY1IzMjF0MWVpTGFsZUs5OG4zUUNjUjdicmlQdktILWpPVDdqMXlmazlxSklRVnFaV0IyU3lwN1otOV9WOTc3QW1XSFJBd3lxZGdJSE0ybTRCZHRCS0I3S1AydFdjb1hHd0NEeGVwQzRqTS1xYURSQzd0Ql95VnpTc2NBck1kRWZ0RmJidFY1YnZtNTE1OEd6Y19kbmJvaGE0RjM2ZVI5NFdoU29WX01WVmFFTm9YY2JwVFEifSwibm9uY2UiOiI4Q0l4andYS1hMd053R3RxaUJpVEJlNE5BMmpJanNxZDhlU3Uyd0h1WVR3In0","payload":"eyJyZXNvdXJjZSI6InJlZyIsImFncmVlbWVudCI6Imh0dHA6Ly9ib3VsZGVyOjQwMDAvdGVybXMvdjEifQ","signature":"OgjNp9B_80_smOD7sqcwe4XuZ8ZXl9K14eCsZW6nre82oBw6sr1LL7zyHpYYDgDz7jo90kOlP_mUUZJ2Nfb1yTiUnKYjsGpWaYnahVKL9Cs9ifQkIt26h_uNaByO8Ry0F4Kg1qlTR83TKXX4EYQQX6guCobNDclC-hLwHPZ6Qn51xqk3Jlo8YRFE-oJJm0wwVWyot9evl1YOjJQM-m1rl63bjwLR2x1vyFOLHMyXU_y8fphQNCE5VF5siSwA7FfJRt0ohkc_1F8FGR_kSMDTEtYuJGt65LAa9yWUxnF31fYA8urAnYDH1YSE4vxtAr2YARUPm0FdYElgWAwc18Y2wQ"}'
+    headers:
+      User-Agent:
+      - Acme::Client v0.4.0 (https://github.com/unixcharles/acme-client)
+  response:
+    status:
+      code: 202
+      message: 
+    headers:
+      boulder-request-id:
+      - oxrwgfMcbJIIHuNDNIklbySABdOT49op9EnisGUc_2U
+      boulder-requester:
+      - '2'
+      cache-control:
+      - public, max-age=0, no-cache
+      content-type:
+      - application/json
+      link:
+      - <http://127.0.0.1:4000/acme/new-authz>;rel="next", <http://boulder:4000/terms/v1>;rel="terms-of-service"
+      replay-nonce:
+      - CKlS7ewSWqLI2cA5pcVAVRzybK5KizlMgbRihq5VQp8
+      date:
+      - Sat, 20 Aug 2016 17:17:16 GMT
+      content-length:
+      - '583'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "id": 2,
+          "key": {
+            "kty": "RSA",
+            "n": "q3uOk33tXHVd5C-nWh2MQcP5e-ev_0g1RgeOajsnvLuituiuBcchgzF2I3bORsvGFgTaZdU8H1xh9fzgqZo53BThhgzDD4bxsVadjLWh9ljU8uiY8kx8PzUQ_wu20Mb9bry0vKj0HhbAdbuLsHINQn-YFpcqBXFr9vGcR321t1eiLaleK98n3QCcR7briPvKH-jOT7j1yfk9qJIQVqZWB2Syp7Z-9_V977AmWHRAwyqdgIHM2m4BdtBKB7KP2tWcoXGwCDxepC4jM-qaDRC7tB_yVzSscArMdEftFbbtV5bvm5158Gzc_dnboha4F36eR94WhSoV_MVVaENoXcbpTQ",
+            "e": "AQAB"
+          },
+          "contact": [
+            "mailto:test@example.org"
+          ],
+          "agreement": "http://boulder:4000/terms/v1",
+          "initialIp": "172.17.0.1",
+          "createdAt": "2016-08-20T17:17:16Z"
+        }
+    http_version: 
+  recorded_at: Sat, 20 Aug 2016 17:17:16 GMT
+- request:
+    method: post
+    uri: http://172.17.0.1:4000/acme/new-authz
+    body:
+      encoding: UTF-8
+      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJxM3VPazMzdFhIVmQ1Qy1uV2gyTVFjUDVlLWV2XzBnMVJnZU9hanNudkx1aXR1aXVCY2NoZ3pGMkkzYk9Sc3ZHRmdUYVpkVThIMXhoOWZ6Z3FabzUzQlRoaGd6REQ0YnhzVmFkakxXaDlsalU4dWlZOGt4OFB6VVFfd3UyME1iOWJyeTB2S2owSGhiQWRidUxzSElOUW4tWUZwY3FCWEZyOXZHY1IzMjF0MWVpTGFsZUs5OG4zUUNjUjdicmlQdktILWpPVDdqMXlmazlxSklRVnFaV0IyU3lwN1otOV9WOTc3QW1XSFJBd3lxZGdJSE0ybTRCZHRCS0I3S1AydFdjb1hHd0NEeGVwQzRqTS1xYURSQzd0Ql95VnpTc2NBck1kRWZ0RmJidFY1YnZtNTE1OEd6Y19kbmJvaGE0RjM2ZVI5NFdoU29WX01WVmFFTm9YY2JwVFEifSwibm9uY2UiOiJDS2xTN2V3U1dxTEkyY0E1cGNWQVZSenliSzVLaXpsTWdiUmlocTVWUXA4In0","payload":"eyJyZXNvdXJjZSI6Im5ldy1hdXRoeiIsImlkZW50aWZpZXIiOnsidHlwZSI6ImRucyIsInZhbHVlIjoiZXhhbXBsZS5jb20ifX0","signature":"YAdvtgsWr1it4yE6dtSHEda0ZGWH6USspbOWvSWkXG5EjUXkArIpgikp6kp04DJFYEygjV7ZCDU3W6m9wxeSO6Fo425jYy-_Kwuk-_ljAYEP1l76aC9YRqTY6LfQ_AAWOzkIkNBGsVzTkRk3BVXBdwNcAcjzrpJdXBUGYy7PAC28B66zocQLWlD7e25OxsmATboA_-h5g9S3JhC4oEkLXjp8-hdBPzJi2md5nQnmE48PJDXk3LE-h01uftZXHKFzCgOWAZa5Cz6UbjuRSgkb0UQJWCWWiSjgOUNxFF7XbtmMqRznqOmNXluVWtXXSZaX2dLdPv1OgvTv8kZVzaLntQ"}'
+    headers:
+      User-Agent:
+      - Acme::Client v0.4.0 (https://github.com/unixcharles/acme-client)
+  response:
+    status:
+      code: 201
+      message: 
+    headers:
+      boulder-request-id:
+      - MBOBZta1sD0_54uLj65-ImoRUHU9dYkhlj9X-pQuGfc
+      boulder-requester:
+      - '2'
+      cache-control:
+      - public, max-age=0, no-cache
+      content-type:
+      - application/json
+      link:
+      - <http://127.0.0.1:4000/acme/new-cert>;rel="next"
+      location:
+      - http://127.0.0.1:4000/acme/authz/0sXoRhKeWuAuYGiHSKQRKmvRcHOe1VaEq26XC5OnOc8
+      replay-nonce:
+      - S92fGMNCb_mnfVjYmhJQFZt7xrpjDbF46FWJ-JY4iN0
+      date:
+      - Sat, 20 Aug 2016 17:17:16 GMT
+      content-length:
+      - '927'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "identifier": {
+            "type": "dns",
+            "value": "example.com"
+          },
+          "status": "pending",
+          "expires": "2016-08-27T17:17:16.721145055Z",
+          "challenges": [
+            {
+              "type": "dns-01",
+              "status": "pending",
+              "uri": "http://127.0.0.1:4000/acme/challenge/0sXoRhKeWuAuYGiHSKQRKmvRcHOe1VaEq26XC5OnOc8/4",
+              "token": "4_sjZnwCfPeRi0D2cVFQiWZaOgM58BRbezDsB8AGPfk"
+            },
+            {
+              "type": "tls-sni-01",
+              "status": "pending",
+              "uri": "http://127.0.0.1:4000/acme/challenge/0sXoRhKeWuAuYGiHSKQRKmvRcHOe1VaEq26XC5OnOc8/5",
+              "token": "DSYR9QJD7FFWqnZFWqFjWg4nVR2JAQlJO8XUU1FvhUY"
+            },
+            {
+              "type": "http-01",
+              "status": "pending",
+              "uri": "http://127.0.0.1:4000/acme/challenge/0sXoRhKeWuAuYGiHSKQRKmvRcHOe1VaEq26XC5OnOc8/6",
+              "token": "-cRlWAujodcq-jsebwhv0-nVU0U8kGGW-Vpig69Tk_A"
+            }
+          ],
+          "combinations": [
+            [
+              1
+            ],
+            [
+              2
+            ],
+            [
+              0
+            ]
+          ]
+        }
+    http_version: 
+  recorded_at: Sat, 20 Aug 2016 17:17:16 GMT
+recorded_with: VCR 3.0.3

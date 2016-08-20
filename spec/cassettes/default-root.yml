@@ -1,0 +1,41 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: http://172.17.0.1:4000/acme/new-authz
+    body:
+      encoding: UTF-8
+      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJyOVVtSWhReUc1Yk50eEM3X1diRllhd3Zqekl1dGlqR3VQS1lhT05IUXF5ZEpra05fV3UwV0pyVkNZczc3b0RaeVc0T0VmVkxMLVBDTDkyU2xMRTlqSUdFcG0zRkNWTEpaUWR2bGxCRVNJUUFVNzd5NjhjdnhVYjRWa2ZYRVQ2MFFYQWZsMW5HSGhmUURlZUQ3OVhyQnYtcC1JTUY2VExjYlNsM1U1OTY0dnJOY3NZMGNsc1g4dXZ4SWVYSHRnaW5MVTFGRmh6M0lCSUNRd0RGcTVET3NSU3V0UGtHeWoyUzZMR3dHSlFnUVpncjdVd3ozaFlaVkkyNnBRdV9zMTM2Ui14cy04UEgxRU9HT01reDhOSGF4OUxVdUFMU2llWDdLTnIzNjJBLS1fRElzZTlRWmxEdnRxcDRaVEFqZGJuZHFQY3l3STZKS3RmZ0NZQ2ctWi1wdi1SdHV1YmRWZllMVXBvU0tSeEwxUGRud3l1aDRyT0FWTGNqdFludC1NemIya1MydkZURWM0cEdUZVZueW5DOV9zY1lzMXIxdzdtY0UtemI3U1RoUEo4eS01RkpwU0ZLelE1YlBfb3NKV05ySXpoRHNBQVlXSU12SS1PWFBKRWJKUmhMS0N3Y0x2M2Z1ZlpmTTJuR203eDRYUDl1S1ZrQ0s4NVRWWjdfcnlwVlZzNGpjRHhFTUR0TVVZLV9HbFZNN05kY0w4dzRydmkzTUhLNGJPUXBJcV9GeXhsTDF4cVBVaWlvWnZSZFJSX2NtQzN3UERVMDRuWGJuMmVFcWtkYS01M3F2cElUVGlPRFpmVm10ZWxUUzB6ek1QM3c1aFR6YktuempMb3Zsc3lPWlFMUFJDZHB3LUNGX3BnQVlFQ2EtWDhOS1hGMktmNjZwVGJKemNFRVVBRSJ9LCJub25jZSI6IjBvWEx1dk5GWmdQS2l3QmdnTC1pMnNUUUFvRVc5VnFQZ3VFa0REVExRbzgifQ","payload":"eyJyZXNvdXJjZSI6Im5ldy1hdXRoeiIsImlkZW50aWZpZXIiOnsidHlwZSI6ImRucyIsInZhbHVlIjoiZXhhbXBsZS5jb20ifX0","signature":"OTTAELGYl_2RjB4vwlMA8iDSRpdz_BcRxKR335F_01AZ6Lyor59pM6pPnBczwUXg3ZnVyBcjqKcwFcq7Jh-QWStncyU_xKV1fXQy0lltRDx1wcY_Ltb9zy0ziYIx9bQJ1kKptO5UbbO-ZUQsWv8brWnRrm6osCixFzXVXjsJMGGM5N-LC75UrUud5NPQJnfx2tslQJnEio9DoP0PB3f7K95_Nr0psOLTdGzEjLOuqASR52fu7KuP-bqhsUd3q5v__PFOmpazot1xbcSGPD0aMjw3jBortQwSzO08LJLXPU2vX5DYxC2CiBpmGaXRwTtMtpI-djFsAeLmmW2-odSXqoY0LnMXQgqUDfVLMZhjVaWBMD4-Imo0xBf0Ambs9OEEc6s3yfHAqNhJQdja1W0hyjL7lgIppYyP6vUxvqbCJzQfVexboUyaTkWiR5oTOa2urnPMgxra7ZLEzyz_XiIq628iZlIoJq27G4oNUJdJsDfF9yRyhNNaBPg-agXkUFyD8nWzSMxAxQg2S2W-xKwwxgdunJYIoTID75D1rcSP5RFudrUxGdZhGqWC1OJtSu1b8tAKqcC8eaj6ZsD2UPpuvRdXqa472HwBH2I6hMFzJzSX0VxtImu9A-b8MQGwwlAsayG_N1h1Zf6K7LqDhaFzXL_oMH0qBnz7GD0EAu6gtr8"}'
+    headers:
+      User-Agent:
+      - Acme::Client v0.4.0 (https://github.com/unixcharles/acme-client)
+  response:
+    status:
+      code: 403
+      message: 
+    headers:
+      boulder-request-id:
+      - iNT7WDAWpO-giQrzuyW1lNXG8Hp2Ffcc2NhJsAu6DlE
+      cache-control:
+      - public, max-age=0, no-cache
+      content-type:
+      - application/problem+json
+      replay-nonce:
+      - sBgbo9XIzWmaZ7q1zp_iqG7fLbIOQDapq5dFKh2f-zo
+      date:
+      - Sat, 20 Aug 2016 17:17:16 GMT
+      content-length:
+      - '120'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "type": "urn:acme:error:unauthorized",
+          "detail": "No registration exists matching provided key",
+          "status": 403
+        }
+    http_version: 
+  recorded_at: Sat, 20 Aug 2016 17:17:16 GMT
+recorded_with: VCR 3.0.3
