@@ -75,13 +75,13 @@ module LetsCert
 
       csr = Acme::Client::CertificateRequest.new(names: options[:roots].keys,
                                                  private_key: key)
-      cert = client.new_certificate(csr)
+      @cert = client.new_certificate(csr)
 
       options[:files] ||= []
       options[:files].each do |plugname|
         IOPlugin.registered[plugname].save(account_key: client.private_key,
-                                           key: key, cert: cert.x509,
-                                           chain: cert.x509_chain)
+                                           key: key, cert: @cert.x509,
+                                           chain: @cert.x509_chain)
       end
     end
 
