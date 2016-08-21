@@ -77,6 +77,7 @@ module LetsCert
                                                  private_key: key)
       cert = client.new_certificate(csr)
 
+      options[:files] ||= []
       options[:files].each do |plugname|
         IOPlugin.registered[plugname].save(account_key: client.private_key,
                                            key: key, cert: cert.x509,
