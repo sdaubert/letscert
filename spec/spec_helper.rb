@@ -10,6 +10,11 @@ require 'vcr'
 require 'faraday'
 require 'fileutils'
 
+require_relative 'http_helper'
+
+RSpec.configure do |c|
+  c.include HttpHelper
+end
 
 VCR.configure do |config|
   config.cassette_library_dir = "spec/cassettes"
