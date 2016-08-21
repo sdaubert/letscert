@@ -1,3 +1,5 @@
+require 'tmpdir'
+require 'webrick'
 require_relative 'spec_helper'
 
 module LetsCert
@@ -34,6 +36,14 @@ module LetsCert
 
       # minimum size accepted by ACME server
       @account_key2048 = OpenSSL::PKey::RSA.new(2048)
+
+      # Create temporary directory
+      @tmpdir = Dir.mktmpdir('test_letscert')
+    end
+
+    after(:all) do
+      # Remove temporary directory
+      system "rm -rf #@tmpdir"
     end
 
     let(:certificate) { Certificate.new(@cert) }
@@ -132,7 +142,23 @@ module LetsCert
         end
       end
 
-      it 'responds to HTTP-01 challenge'
+      it 'responds to HTTP-01 challenge' do
+        options = {
+          roots: { 'example.com' => @tmpdir },
+          server: TEST_SERVER,
+          email: 'test@example.org',
+          cert_key_size: 2048,
+        }
+
+        VCR.use_cassette('http-01-challenge') do
+          serve_files_from @tmpdir do
+            certificate.get_acme_client(@account_key2048, options)
+            expect { certificate.get(@account_key2048, nil, options) }.
+              to_not raise_error
+          end
+        end
+        expect(certificate.cert).to_not eq(@cert)
+      end
 
       it 'raises if HTTP-01 challenge is unavailable' do
         options = {
