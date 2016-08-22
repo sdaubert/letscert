@@ -159,7 +159,34 @@ module LetsCert
         end
       end
 
-      it 'reuses existing private key if --reuse-key is present'
+      it 'creates a new private key if --reuse-key is not present' do
+        options[:files] = %w(fake)
+        key = OpenSSL::PKey::RSA.new(TEST_KEY_LENGTH)
+
+        VCR.use_cassette('http-01-challenge') do
+          serve_files_from @tmpdir do
+            expect { certificate.get(@account_key2048, key, options) }.
+              to_not raise_error
+          end
+        end
+        expect(certificate.cert).to_not eq(@cert)
+        expect(IOPluginHelper::FakeIOPlugin.saved_data[:key]).to_not eq(key)
+      end
+
+      it 'reuses existing private key if --reuse-key is present' do
+        options[:files] = %w(fake)
+        options[:reuse_key] = true
+        key = OpenSSL::PKey::RSA.new(TEST_KEY_LENGTH)
+
+        VCR.use_cassette('http-01-challenge') do
+          serve_files_from @tmpdir do
+            expect { certificate.get(@account_key2048, key, options) }.
+              to_not raise_error
+          end
+        end
+        expect(certificate.cert).to_not eq(@cert)
+        expect(IOPluginHelper::FakeIOPlugin.saved_data[:key]).to eq(key)
+      end
 
     end
 
