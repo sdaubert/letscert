@@ -5,6 +5,7 @@ require_relative 'spec_helper'
 module LetsCert
 
   TEST_SERVER = 'http://172.17.0.1:4000'
+  TEST_KEY_LENGTH = 512
 
 
   describe Certificate do
@@ -12,11 +13,11 @@ module LetsCert
     before(:all) { Certificate.logger = Logger.new('/dev/null') }
 
     before(:all) do
-      root_key = OpenSSL::PKey::RSA.new(512)
+      root_key = OpenSSL::PKey::RSA.new(TEST_KEY_LENGTH)
 
       @domains = %w(example.org www.example.org)
 
-      key = OpenSSL::PKey::RSA.new(512)
+      key = OpenSSL::PKey::RSA.new(TEST_KEY_LENGTH)
       @cert = OpenSSL::X509::Certificate.new
       @cert.version = 2
       @cert.serial = 2
@@ -47,6 +48,10 @@ module LetsCert
     end
 
     let(:certificate) { Certificate.new(@cert) }
+    let(:options) { { roots: { 'example.com' => @tmpdir },
+                      server: TEST_SERVER,
+                      email: 'test@example.org',
+                      cert_key_size: 2048 } }
 
     context '#get' do
 
@@ -89,36 +94,31 @@ module LetsCert
       end
 
       it 'uses existing account key' do
-        options = { roots: { 'example.com' => '/var/www/html' } }
+        opts = { roots: options[:roots] }
 
         VCR.use_cassette('no-server') do
           # Connection error: no server to connect to
-          expect { certificate.get(@account_key2048, nil, options) }.
+          expect { certificate.get(@account_key2048, nil, opts) }.
             to raise_error(Faraday::ConnectionFailed)
         end
         expect(certificate.client.private_key).to eq(@account_key2048)
       end
 
-      it 'creates an ACME account key if non exists' do
-        options = {
-          roots: { 'example.com' => '/var/www/html' },
+      it 'creates an ACME account key if none exists' do
+        opts = {
+          roots: options[:roots],
           account_key_size: 128,
         }
 
         VCR.use_cassette('no-server') do
           # Connection error: no server to connect to
-          expect { certificate.get(nil, nil, options) }.
+          expect { certificate.get(nil, nil, opts) }.
             to raise_error(Faraday::ConnectionFailed)
         end
         expect(certificate.client.private_key).to be_a(OpenSSL::PKey::RSA)
       end
 
       it 'creates an ACME client with provided account key and end point' do
-        options = {
-          roots: { 'example.com' => '/var/www/html' },
-          server: TEST_SERVER,
-        }
-
         VCR.use_cassette('create-acme-client') do
           # Acme error: not valid e-mail address
           expect { certificate.get(@account_key2048, nil, options) }.
@@ -129,11 +129,7 @@ module LetsCert
       end
 
       it 'raises when register without e-mail' do
-        options = {
-          roots: { 'example.com' => '/var/www/html' },
-          server: TEST_SERVER,
-        }
-
+        options.delete :email
         VCR.use_cassette('create-acme-client-but-bad-email') do
           # Acme error: not valid e-mail address
           expect { certificate.get(@account_key2048, nil, options) }.
@@ -143,13 +139,6 @@ module LetsCert
       end
 
       it 'responds to HTTP-01 challenge' do
-        options = {
-          roots: { 'example.com' => @tmpdir },
-          server: TEST_SERVER,
-          email: 'test@example.org',
-          cert_key_size: 2048,
-        }
-
         VCR.use_cassette('http-01-challenge') do
           serve_files_from @tmpdir do
             certificate.get_acme_client(@account_key2048, options)
@@ -161,12 +150,6 @@ module LetsCert
       end
 
       it 'raises if HTTP-01 challenge is unavailable' do
-        options = {
-          roots: { 'example.com' => '/var/www/html' },
-          server: TEST_SERVER,
-          email: 'test@example.org',
-        }
-
         VCR.use_cassette('no-http-01-challenge') do
           certificate.get_acme_client(@account_key2048, options) do |client|
             client.connection.builder.insert 0, RemoveHttp01Middleware
