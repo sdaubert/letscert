@@ -11,6 +11,7 @@ require 'faraday'
 require 'fileutils'
 
 require_relative 'http_helper'
+require_relative 'io_plugin_helper'
 
 RSpec.configure do |c|
   c.include HttpHelper
