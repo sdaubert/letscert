@@ -141,7 +141,6 @@ module LetsCert
       it 'responds to HTTP-01 challenge' do
         VCR.use_cassette('http-01-challenge') do
           serve_files_from @tmpdir do
-            certificate.get_acme_client(@account_key2048, options)
             expect { certificate.get(@account_key2048, nil, options) }.
               to_not raise_error
           end
