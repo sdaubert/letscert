@@ -193,6 +193,18 @@ module LetsCert
         end
       end
 
+      it 'saves certificate and chain on success' do
+        options[:files] = %w(fake)
+
+        VCR.use_cassette('http-01-challenge') do
+          serve_files_from @tmpdir do
+            certificate.get(@account_key2048, nil, options)
+          end
+        end
+        expect(IOPluginHelper::FakeIOPlugin.saved_data[:cert]).to eq(certificate.cert)
+        expect(IOPluginHelper::FakeIOPlugin.saved_data[:chain]).to eq(certificate.chain)
+      end
+
     end
 
     context '#revoke' do

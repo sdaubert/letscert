@@ -31,6 +31,9 @@ module LetsCert
 
     # @return [OpenSSL::X509::Certificate,nil]
     attr_reader :cert
+    # Certification chain. Only set by {#get}.
+    # @return [Array<OpenSSL::X509::Certificate>]
+    attr_reader :chain
     # @return [Acme::Client,nil]
     attr_reader :client
 
@@ -38,6 +41,7 @@ module LetsCert
     # @param [OpenSSL::X509::Certificate,nil] cert
     def initialize(cert)
       @cert = cert
+      @chain = []
     end
 
     # Get a new certificate, or renew an existing one
@@ -77,13 +81,15 @@ module LetsCert
 
       csr = Acme::Client::CertificateRequest.new(names: options[:roots].keys,
                                                  private_key: key)
-      @cert = client.new_certificate(csr)
+      acme_cert = client.new_certificate(csr)
+      @cert = acme_cert.x509
+      @chain = acme_cert.x509_chain
 
       options[:files] ||= []
       options[:files].each do |plugname|
         IOPlugin.registered[plugname].save(account_key: client.private_key,
-                                           key: key, cert: @cert.x509,
-                                           chain: @cert.x509_chain)
+                                           key: key, cert: @cert,
+                                           chain: @chain)
       end
     end
 
