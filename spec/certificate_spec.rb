@@ -179,12 +179,20 @@ module LetsCert
 
         VCR.use_cassette('http-01-challenge') do
           serve_files_from @tmpdir do
-            expect { certificate.get(@account_key2048, key, options) }.
-              to_not raise_error
+            certificate.get(@account_key2048, key, options)
           end
         end
         expect(certificate.cert).to_not eq(@cert)
         expect(IOPluginHelper::FakeIOPlugin.saved_data[:key]).to eq(key)
+      end
+
+      it 'raises if challenge is not verified' do
+        key = OpenSSL::PKey::RSA.new(TEST_KEY_LENGTH)
+
+        VCR.use_cassette('http-01-challenge-not-verified') do
+          expect { certificate.get(@account_key2048, key, options) }.
+            to raise_error(Acme::Client::Error, /creating new cert/)
+        end
       end
 
     end
