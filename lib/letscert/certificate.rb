@@ -119,7 +119,8 @@ module LetsCert
     # Check if certificate is still valid for at least +valid_min+ seconds.
     # Also checks that +domains+ are certified by certificate.
     # @param [Array<String>] domains list of certificate domains
-    # @param [Integer] valid_min
+    # @param [Integer] valid_min minimum number of seconds of validity under which
+    #  a renewal is necessary.
     # @return [Boolean]
     def valid?(domains, valid_min=0)
       if @cert.nil?
