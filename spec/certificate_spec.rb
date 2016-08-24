@@ -202,7 +202,15 @@ module LetsCert
           to raise_error(LetsCert::Error)
       end
 
-      it 'revokes an existing certificate'
+      it 'revokes an existing certificate' do
+        VCR.use_cassette('revoke') do
+          serve_files_from @tmpdir do
+            certificate.get(@account_key2048, nil, options)
+            expect(certificate.cert).to be_a(OpenSSL::X509::Certificate)
+            expect(certificate.revoke @account_key2048, options).to be(true)
+          end
+        end
+      end
     end
 
     context '#valid?' do
