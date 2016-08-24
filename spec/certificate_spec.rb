@@ -141,8 +141,7 @@ module LetsCert
       it 'responds to HTTP-01 challenge' do
         VCR.use_cassette('http-01-challenge') do
           serve_files_from @tmpdir do
-            expect { certificate.get(@account_key2048, nil, options) }.
-              to_not raise_error
+            certificate.get(@account_key2048, nil, options)
           end
         end
         expect(certificate.cert).to_not eq(@cert)
@@ -164,8 +163,7 @@ module LetsCert
 
         VCR.use_cassette('http-01-challenge') do
           serve_files_from @tmpdir do
-            expect { certificate.get(@account_key2048, key, options) }.
-              to_not raise_error
+            certificate.get(@account_key2048, key, options)
           end
         end
         expect(certificate.cert).to_not eq(@cert)
