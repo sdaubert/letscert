@@ -207,6 +207,10 @@ module LetsCert
 
     context '#valid?' do
 
+      it 'returns false when there is no certificate' do
+        expect(Certificate.new(nil).valid?('example.com')).to be(false)
+      end
+
       it 'checks whether a certificate is valid given a minimum valid duration' do
         expect(certificate.valid?(@domains)).to be(true)
         expect(certificate.valid?(@domains, 19)).to be(true)
