@@ -18,8 +18,6 @@ module LetsCert
       names = %w(account_key.json key.pem key.der chain.pem fullchain.pem)
       names += %w(cert.pem cert.der)
 
-      expect(IOPlugin.registered.size).to eq(names.size)
-
       names.each do |name|
         expect(IOPlugin.registered.keys).to include(name)
       end
