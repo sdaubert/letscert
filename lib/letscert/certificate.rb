@@ -57,6 +57,8 @@ module LetsCert
     #    values
     # @option options [String] :server ACME servel URL
     # @return [void]
+    # @raise [Acme::Client::Error] error in protocol ACME with server
+    # @raise [Error] issue with domain name, challenge fails,...
     def get(account_key, key, options)
       logger.info {"create key/cert/chain..." }
       check_roots(options[:roots])
@@ -92,6 +94,7 @@ module LetsCert
     # @option options [String] :email e-mail used as ACME account
     # @option options [String] :server ACME servel URL
     # @return [Boolean]
+    # @raise [Error] no certificate to revole.
     def revoke(account_key, options={})
       if @cert.nil?
         raise Error, 'no certification data to revoke'
