@@ -130,6 +130,7 @@ module LetsCert
         domains: [],
         files: [],
         cert_key_size: 2048,
+        cert_key_size_ecdsa: 256,
         valid_min: ValidTime.new('30d'),
         account_key_size: 4096,
         tos_sha256: '33d233c8ab558ba6c8ebc370a509acdded8b80e5d587aa5d192193f35226540f',
@@ -258,10 +259,25 @@ module LetsCert
           @options[:files] << file
         end
 
-        opts.on('--cert-key-size BITS', Integer,
-                'Certificate key size in bits',
+        opts.on('--cert-ecdsa BITS', Integer,
+                'Generate ECDSA certificate with a BITS-bit key',
+                "(default: #{@options[:cert_key_size_ecdsa]})") do |bits|
+          @options[:cert_key_size] = bits
+          @options[:sig_scheme] = :ecdsa
+        end
+
+        opts.on('--cert-rsa BITS', Integer,
+                'Generate RSA certificate with a BITS-bit key',
                 "(default: #{@options[:cert_key_size]})") do |bits|
           @options[:cert_key_size] = bits
+          @options[:sig_scheme] = :rsa
+        end
+        opts.on('--cert-key-size BITS', Integer,
+                'Certificate key size in bits',
+                '(equivalent to --cert-rsa)',
+                "(default: #{@options[:cert_key_size]})") do |bits|
+          @options[:cert_key_size] = bits
+          @options[:sig_scheme] = :rsa
         end
 
         opts.accept(ValidTime) do |valid_time|
