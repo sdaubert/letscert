@@ -73,7 +73,7 @@ module LetsCert
 
       it '--valid-min option accepts minute format' do
         minutes = 156
-        ARGV << '--valid-min' << "#{minutes}m"
+        add_option 'valid-min', "#{minutes}m"
 
         runner.parse_options
         expect(runner.options[:valid_min].to_seconds).to eq(minutes * 60)
@@ -81,7 +81,7 @@ module LetsCert
 
       it '--valid-min option accepts hour format' do
         hours = 4
-        ARGV << '--valid-min' << "#{hours}h"
+        add_option 'valid-min', "#{hours}h"
 
         runner.parse_options
         expect(runner.options[:valid_min].to_seconds).to eq(hours * 3600)
@@ -89,7 +89,7 @@ module LetsCert
 
       it '--valid-min option accepts day format' do
         days = 20
-        ARGV << '--valid-min' << "#{days}d"
+        add_option 'valid-min', "#{days}d"
 
         runner.parse_options
         expect(runner.options[:valid_min].to_seconds).to eq(days * 24 * 3600)
@@ -109,7 +109,7 @@ module LetsCert
           ARGV.clear
           runner.options[:files] = []
           0.upto(nb) do |i|
-            ARGV << '-f' << needed[i]
+            add_option 'f', needed[i]
           end
           runner.parse_options
 
