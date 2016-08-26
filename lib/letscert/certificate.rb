@@ -76,7 +76,7 @@ module LetsCert
         logger.info { 'Reuse existing private key' }
       else
         logger.info { 'Generate new private key' }
-        key = OpenSSL::PKey::RSA.generate(options[:cert_key_size])
+        key = generate_key(options)
       end
 
       csr = Acme::Client::CertificateRequest.new(names: options[:roots].keys,
@@ -290,6 +290,46 @@ module LetsCert
                      " (relative to #{now})" }
 
       diff < valid_min
+    end
+
+    # Generate a key from options
+    # @param [Hash] options +:cert_ecdsa+ and +:cert_rsa+ are mutually exclusive.
+    #  +:cert_rsa+ is taken first if +:cert_key_size+ is also defined.
+    # @option options [Integer] cert_ecdsa key size to generate a ECDSA key
+    # @option options [Integer] cert_rsa key size to generate a RSA key
+    # @option options [Integer] cert_key_size key size to generate a RSA key
+    # @return [OpenSSL::Pkey::PKey]
+    # @raise [Error]
+    def generate_key(options)
+      if options[:cert_ecdsa] and (options[:cert_rsa] or options[:cert_key_size])
+        raise Error, 'cannot generate a ECDSA key and a RSA key in one shot'
+      end
+
+      if options[:cert_ecdsa]
+        begin
+          key = OpenSSL::PKey::EC.new
+          key.group = OpenSSL::PKey::EC::Group.new options[:cert_ecdsa]
+          key.generate_key
+          key
+        rescue OpenSSL::PKey::ECError => ex
+          if ex.message =~ /^unknown curve/
+            msg = "unknown curve. Supported curves are:\n"
+            fmt_curves = OpenSSL::PKey::EC.builtin_curves.map { |ary| "%-20s%s\n" % ary }
+            # Remove all binary curves, and prime curves which field is less than 256 bits
+            fmt_curves.reject! do |el|
+              el =~ /binary/ or (el =~ /(\d+) bit/ and $1.to_i < 256)
+            end
+            msg << fmt_curves.join
+            raise Error, msg
+          else
+            raise
+          end
+        end
+      elsif options[:cert_rsa]
+        OpenSSL::PKey::RSA.generate(options[:cert_rsa])
+      else
+        OpenSSL::PKey::RSA.generate(options[:cert_key_size])
+      end
     end
 
   end
