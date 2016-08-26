@@ -205,6 +205,19 @@ module LetsCert
         expect(IOPluginHelper::FakeIOPlugin.saved_data[:chain]).to eq(certificate.chain)
       end
 
+      it 'generates a certificate for a ECDSA key' do
+        options[:cert_key_size] = nil
+        options[:cert_ecdsa] = 'prime256v1'
+
+        VCR.use_cassette('http-01-challenge-ecdsa') do
+          serve_files_from @tmpdir do
+            certificate.get(@account_key2048, nil, options)
+          end
+        end
+        p certificate.cert.signature_algorihm
+        expect(IOPluginHelper::FakeIOPlugin.saved_data[:cert]).to eq(certificate.cert)
+      end
+
     end
 
     context '#revoke' do
