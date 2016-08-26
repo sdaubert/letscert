@@ -11,7 +11,7 @@ module LetsCert
     context '#parse_options' do
 
       it 'accepts --domain with DOMAIN only' do
-        ARGV << '--domain' << 'example.com'
+        add_option 'domain', 'example.com'
 
         runner.parse_options
         expect(runner.options[:domains]).to be_a(Array)
@@ -20,7 +20,7 @@ module LetsCert
       end
 
       it 'accepts --domain with DOMAIN:PATH' do
-        ARGV << '--domain' << 'example.com:/var/www/html'
+        add_option 'domain', 'example.com:/var/www/html'
 
         runner.parse_options
         expect(runner.options[:domains]).to be_a(Array)
@@ -29,9 +29,9 @@ module LetsCert
       end
 
       it 'accepts multiple domains with --domain option' do
-        ARGV << '--domain' << 'example.com'
-        ARGV << '--domain' << 'www.example.com'
-        ARGV << '--domain' << 'www2.example.com'
+        add_option 'domain', 'example.com'
+        add_option 'domain', 'www.example.com'
+        add_option 'domain', 'www2.example.com'
 
         runner.parse_options
         expect(runner.options[:domains]).to be_a(Array)
@@ -42,9 +42,9 @@ module LetsCert
       end
 
       it 'sets default root path with --default-root for domains without PATH' do
-        ARGV << '--domain' << 'example.com'
-        ARGV << '--domain' << 'another-example.com:/var/www/html'
-        ARGV << '--default-root' << '/opt/www'
+        add_option 'domain', 'example.com'
+        add_option 'domain', 'another-example.com:/var/www/html'
+        add_option 'default-root', '/opt/www'
 
         runner.parse_options
         expect(runner.options[:default_root]).to eq('/opt/www')
@@ -54,8 +54,8 @@ module LetsCert
       end
 
       it 'accepts multiples files with --file option' do
-        ARGV << '--file' << 'key.pem'
-        ARGV << '-f' << 'cert.pem'
+        add_option 'file', 'key.pem'
+        add_option 'f', 'cert.pem'
         
         runner.parse_options
         expect(runner.options[:files]).to be_a(Array)
@@ -65,7 +65,7 @@ module LetsCert
       end
 
       it 'sets minimum validity time with --valid-min option' do
-        ARGV << '--valid-min' << '30000'
+        add_option 'valid-min', '30000'
 
         runner.parse_options
         expect(runner.options[:valid_min].to_seconds).to eq(30000)

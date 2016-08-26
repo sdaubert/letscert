@@ -51,3 +51,8 @@ def change_dir_to(new_dir)
     FileUtils.cd old_dir
   end
 end
+
+def add_option(option, value)
+dash = option.size == 1 ? '-' : '--'
+  ARGV << "#{dash}#{option}"  << value.to_s
+end
