@@ -66,9 +66,16 @@ module LetsCert
 
       it 'sets minimum validity time with --valid-min option' do
         add_option 'valid-min', '30000'
-
         runner.parse_options
         expect(runner.options[:valid_min].to_seconds).to eq(30000)
+
+        ARGV.clear
+        add_option 'valid-min', '300n'
+        expect { runner.parse_options }.to raise_error(OptionParser::InvalidArgument)
+
+        ARGV.clear
+        add_option 'valid-min', 's'
+        expect { runner.parse_options }.to raise_error(OptionParser::InvalidArgument)
       end
 
       it '--valid-min option accepts minute format' do
