@@ -52,7 +52,8 @@ def change_dir_to(new_dir)
   end
 end
 
-def add_option(option, value)
-dash = option.size == 1 ? '-' : '--'
-  ARGV << "#{dash}#{option}"  << value.to_s
+def add_option(option, value=nil)
+  dash = option.size == 1 ? '-' : '--'
+  ARGV << "#{dash}#{option}"
+  ARGV << value.to_s unless value.nil?
 end
