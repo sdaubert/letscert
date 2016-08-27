@@ -13,14 +13,16 @@ in Ruby.
 With full chain support (`fullchain.pem` file will contain all certificates):
 
 ```bash
-letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld -f account_key.json -f key.pem -f fullchain.pem
+letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld \
+  -f account_key.json -f key.pem -f fullchain.pem
 ```
 
 else (certificate for example.com is in `cert.pem` file, rest of certification chain
 is in `chain.pem`):
 
 ```bash
-letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld -f account_key.json -f key.pem -f cert.pem -f chain.pem
+letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld \
+  -f account_key.json -f key.pem -f cert.pem -f chain.pem
 ```
 
 Commands are the sames for certificate renewal.
@@ -30,7 +32,8 @@ Commands are the sames for certificate renewal.
 Generate a single certificate for `example.com` and `www.example.com`:
 
 ```bash
-letscert -d example.com -d www.example.com --default-root /var/www/html --email my.name@domain.tld -f account_key.json -f key.pem -f fullchain.pem
+letscert -d example.com -d www.example.com --default-root /var/www/html \
+  --email my.name@domain.tld -f account_key.json -f key.pem -f fullchain.pem
 ```
 
 Command is the same for certificate renewal.
@@ -40,7 +43,8 @@ Command is the same for certificate renewal.
 In this example, `xx` is 10:
 
 ```bash
-letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld -f account_key.json -f key.pem -f cert.pem -f chain.pem --valid-min 10d
+letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld \
+  -f account_key.json -f key.pem -f cert.pem -f chain.pem --valid-min 10d
 ```
 
 Valid time may also be set as number of hours (`h` suffix), minutes (`m` suffix) or
