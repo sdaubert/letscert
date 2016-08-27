@@ -130,6 +130,7 @@ module LetsCert
     end
 
     context '#run' do
+
       it 'stops and print help with --help' do
         add_option 'help'
         expect do
@@ -142,6 +143,49 @@ module LetsCert
         expect do
           expect { Runner.run }.to output(/^letscert #{LetsCert::VERSION}/).to_stdout
         end.to exit_with_code(1)
+      end
+
+      it 'arises log level with occurences of --verbose option' do
+        logger = instance_double('Logger')
+        runner = Runner.new
+        runner.logger = logger
+
+        runner.parse_options
+        expect(logger).to receive(:level=).with(Logger::Severity::WARN)
+        expect(logger).to receive(:debug)
+        expect(logger).to receive(:error)
+        expect { runner.run }.to output.to_stdout
+
+        add_option 'verbose'
+        runner = Runner.new
+        runner.logger = logger
+        runner.parse_options
+        expect(logger).to receive(:level=).with(Logger::Severity::INFO)
+        expect(logger).to receive(:debug)
+        expect(logger).to receive(:error)
+        expect { runner.run }.to output.to_stdout
+
+        add_option 'verbose'
+        add_option 'verbose'
+        runner = Runner.new
+        runner.logger = logger
+        runner.parse_options
+        expect(logger).to receive(:level=).with(Logger::Severity::DEBUG)
+        expect(logger).to receive(:debug)
+        expect(logger).to receive(:error)
+        expect { runner.run }.to output.to_stdout
+
+        add_option 'verbose'
+        add_option 'verbose'
+        add_option 'verbose'
+        runner = Runner.new
+        runner.logger = logger
+        runner.parse_options
+        expect(logger).to receive(:level=).with(Logger::Severity::DEBUG)
+        expect(logger).to receive(:debug)
+        expect(logger).to receive(:error)
+        expect { runner.run }.to output.to_stdout
+        expect(runner.options[:verbose]).to eq(3)
       end
     end
 
