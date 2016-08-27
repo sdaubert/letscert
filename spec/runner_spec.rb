@@ -129,6 +129,22 @@ module LetsCert
       end
     end
 
+    context '#run' do
+      it 'stops and print help with --help' do
+        add_option 'help'
+        expect do
+          expect { Runner.run }.to output(/^Usage/).to_stdout
+        end.to exit_with_code(1)
+      end
+
+      it 'stops and show version with --version' do
+        add_option 'version'
+        expect do
+          expect { Runner.run }.to output(/^letscert #{LetsCert::VERSION}/).to_stdout
+        end.to exit_with_code(1)
+      end
+    end
+
   end
 
 end
