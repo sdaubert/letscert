@@ -34,6 +34,8 @@ module LetsCert
     # Get options
     # @return [Hash]
     attr_reader :options
+    # @return [Logger]
+    attr_accessor :logger
 
     # Custom logger formatter
     class LoggerFormatter < Logger::Formatter
