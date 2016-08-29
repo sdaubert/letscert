@@ -25,86 +25,14 @@ require 'fileutils'
 
 require_relative 'io_plugin'
 require_relative 'certificate'
+require_relative 'runner/logger_formatter'
+require_relative 'runner/valid_time'
 
 module LetsCert
 
   # Runner class: analyse and execute CLI commands.
   # @author Sylvain Daubert
   class Runner
-    # Get options
-    # @return [Hash]
-    attr_reader :options
-    # @return [Logger]
-    attr_accessor :logger
-
-    # Custom logger formatter
-    class LoggerFormatter < Logger::Formatter
-
-      # @private log format
-      FORMAT = "[%s] %5s: %s\n"
-
-      # @param [String] severity
-      # @param [Datetime] time
-      # @param [nil,String] progname
-      # @param [String] msg
-      # @return [String]
-      def call(severity, time, progname, msg)
-        FORMAT % [format_datetime(time), severity, msg2str(msg)]
-      end
-
-
-      private
-
-      # @private simple datetime formatter
-      # @param [DateTime] time
-      # @return [String]
-      def format_datetime(time)
-        time.strftime("%Y-%m-%d %H:%M:%S")
-      end
-
-    end
-
-    # Class used to process validation time from String.
-    # @author Sylvain Daubert
-    class ValidTime
-
-      # @param [String] str time string. May be:
-      #   * an integer -> time in seconds
-      #   * an integer plus a letter:
-      #     * 30m: 30 minutes,
-      #     * 30h: 30 hours,
-      #     * 30d: 30 days.
-      def initialize(str)
-        m = str.match(/^(\d+)([mhd])?$/)
-        if m
-          case m[2]
-          when nil
-            @seconds = m[1].to_i
-          when 'm'
-            @seconds = m[1].to_i * 60
-          when 'h'
-            @seconds = m[1].to_i * 60 * 60
-          when 'd'
-            @seconds = m[1].to_i * 24 * 60 * 60
-          end
-        else
-          raise OptionParser::InvalidArgument, "invalid argument: --valid-min #{str}"
-        end
-        @string = str
-      end
-
-      # Get time in seconds
-      # @return [Integer]
-      def to_seconds
-        @seconds
-      end
-
-      # Get time as string
-      # @return [String]
-      def to_s
-        @string
-      end
-    end
 
     # Exit value for OK
     RETURN_OK = 1
@@ -113,6 +41,12 @@ module LetsCert
     # Exit value for error(s)
     RETURN_ERROR = 2
     
+    # Get options
+    # @return [Hash]
+    attr_reader :options
+    # @return [Logger]
+    attr_accessor :logger
+
     # @return [Logger]
     attr_reader :logger
 
