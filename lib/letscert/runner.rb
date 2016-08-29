@@ -202,7 +202,7 @@ module LetsCert
         end
         opts.on('--valid-min TIME', ValidTime, 'Renew existing certificate if validity',
                 'is lesser than TIME',
-                "(default: #{@options[:valid_min].to_s})") do |vt|
+                "(default: #{@options[:valid_min]})") do |vt|
           @options[:valid_min] = vt
         end
 
@@ -259,7 +259,7 @@ module LetsCert
       persisted = IOPlugin.empty_data
 
       @options[:files].each do |file|
-        persisted.merge!(IOPlugin.registered[file].persisted) do |k, oldv, newv|
+        persisted.merge!(IOPlugin.registered[file].persisted) do |_k, oldv, newv|
           oldv || newv
         end
       end
@@ -291,7 +291,7 @@ module LetsCert
 
         # Merge data into all_data. New value replace old one only if old one was
         # not defined
-        all_data.merge!(data) do |key, oldval, newval|
+        all_data.merge!(data) do |_key, oldval, newval|
           oldval || newval
         end
       end

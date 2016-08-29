@@ -9,10 +9,10 @@ module LetsCert
 
       # @param [String] severity
       # @param [Datetime] time
-      # @param [nil,String] progname
+      # @param [nil,String] _progname
       # @param [String] msg
       # @return [String]
-      def call(severity, time, progname, msg)
+      def call(severity, time, _progname, msg)
         FORMAT % [format_datetime(time), severity, msg2str(msg)]
       end
 

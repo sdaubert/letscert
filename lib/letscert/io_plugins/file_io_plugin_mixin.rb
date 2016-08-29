@@ -23,9 +23,9 @@ module LetsCert
     end
 
     # @abstract
-    # @param [String] content
+    # @param [String] _content
     # @return [Hash]
-    def load_from_content(content)
+    def load_from_content(_content)
       raise NotImplementedError
     end
 
