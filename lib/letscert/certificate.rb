@@ -187,7 +187,6 @@ module LetsCert
         #    if tos_digest != @options[:tos_sha256]
         #      raise Error, 'Terms Of Service mismatch'
         #    end
-        
              @logger.debug { 'agree terms of service' }
              registration.agree_terms
         #  end
@@ -196,7 +195,6 @@ module LetsCert
 
       @client
     end
-
 
     private
 
@@ -231,18 +229,7 @@ module LetsCert
     # @param [Hash] roots
     def do_challenges(client, roots)
       logger.debug { 'Get authorization for all domains' }
-      challenges = {}
-
-      roots.keys.each do |domain|
-        authorization = client.authorize(domain: domain)
-        challenges[domain] = authorization ? authorization.http01 : nil
-      end
-
-      logger.debug { 'Check all challenges are HTTP-01' }
-      if challenges.values.any?(&:nil?)
-        raise Error, 'CA did not offer http-01-only challenge. ' \
-                     'This client is unable to solve any other challenges.'
-      end
+      challenges = get_challenges(client, roots)
 
       challenges.each do |domain, challenge|
         begin
@@ -257,20 +244,44 @@ module LetsCert
         File.write path, challenge.file_content
 
         challenge.request_verification
-
-        status = 'pending'
-        while status == 'pending'
-          sleep(1)
-          status = challenge.verify_status
-        end
-
-        if status != 'valid'
-          logger.warn { "#{domain} was not successfully verified!" }
-        else
-          logger.info { "#{domain} was successfully verified." }
-        end
+        wait_for_verification challenge, domain
 
         File.unlink path
+      end
+    end
+
+    # Get challenges
+    # @param [Acme::Client] client
+    # @param [Hash] roots
+    # @return [Hash] key: domain, value: authorization
+    # @raise [Error] if any challenges does not support HTTP-01
+    def get_challenges(client, roots)
+      challenges = {}
+      roots.keys.each do |domain|
+        authorization = client.authorize(domain: domain)
+        challenges[domain] = authorization ? authorization.http01 : nil
+      end
+
+      logger.debug { 'Check all challenges are HTTP-01' }
+      if challenges.values.any?(&:nil?)
+        raise Error, 'CA did not offer http-01-only challenge. ' \
+                     'This client is unable to solve any other challenges.'
+      end
+
+      challenges
+    end
+
+    def wait_for_verification(challenge, domain)
+      status = 'pending'
+      while status == 'pending'
+        sleep(1)
+        status = challenge.verify_status
+      end
+
+      if status != 'valid'
+        logger.warn { "#{domain} was not successfully verified!" }
+      else
+        logger.info { "#{domain} was successfully verified." }
       end
     end
 
