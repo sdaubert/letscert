@@ -139,7 +139,7 @@ module LetsCert
         server: 'https://acme-v01.api.letsencrypt.org/directory',
       }
 
-      @logger = Logger.new(STDOUT)
+      @logger = Logger.new($stdout)
       @logger.formatter = LoggerFormatter.new
     end
 
@@ -208,7 +208,7 @@ module LetsCert
         msg = ex.message
         msg = "[Acme] #{msg}" if ex.is_a?(Acme::Client::Error)
         @logger.error msg
-        puts "Error: #{msg}"
+        $stderr.puts "Error: #{msg}"
         RETURN_ERROR
       end
     end

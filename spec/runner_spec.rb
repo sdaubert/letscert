@@ -154,7 +154,7 @@ module LetsCert
         expect(logger).to receive(:level=).with(Logger::Severity::WARN)
         expect(logger).to receive(:debug)
         expect(logger).to receive(:error)
-        expect { runner.run }.to output.to_stdout
+        expect { runner.run }.to output.to_stderr
 
         add_option 'verbose'
         runner = Runner.new
@@ -163,7 +163,7 @@ module LetsCert
         expect(logger).to receive(:level=).with(Logger::Severity::INFO)
         expect(logger).to receive(:debug)
         expect(logger).to receive(:error)
-        expect { runner.run }.to output.to_stdout
+        expect { runner.run }.to output.to_stderr
 
         add_option 'verbose'
         add_option 'verbose'
@@ -173,7 +173,7 @@ module LetsCert
         expect(logger).to receive(:level=).with(Logger::Severity::DEBUG)
         expect(logger).to receive(:debug)
         expect(logger).to receive(:error)
-        expect { runner.run }.to output.to_stdout
+        expect { runner.run }.to output.to_stderr
 
         add_option 'verbose'
         add_option 'verbose'
@@ -184,8 +184,14 @@ module LetsCert
         expect(logger).to receive(:level=).with(Logger::Severity::DEBUG)
         expect(logger).to receive(:debug)
         expect(logger).to receive(:error)
-        expect { runner.run }.to output.to_stdout
+        expect { runner.run }.to output.to_stderr
         expect(runner.options[:verbose]).to eq(3)
+      end
+
+      it 'stop with error when no --domain is given' do
+        expect do
+          expect { Runner.run }.to output(/^\[/).to_stdout
+        end.to output("Error: At leat one domain must be given with --domain option.\nTry 'letscert --help' for more information.\n").to_stderr
       end
     end
 
