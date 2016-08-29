@@ -1,7 +1,8 @@
-require 'rubygems/package_task'
-require_relative '../lib/letscert.rb'
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'letscert/version'
 
-spec = Gem::Specification.new do |s|
+Gem::Specification.new do |s|
   s.name = 'letscert'
   s.version = LetsCert::VERSION
   s.license = 'MIT'
@@ -15,26 +16,21 @@ EOF
   s.email = 'sylvain.daubert@laposte.net'
   s.homepage = 'https://github.com/sdaubert/letscert'
 
-  files = Dir['{spec,lib,bin,tasks}/**/*']
-  files += ['README.md', 'LICENSE', 'Rakefile']
-  # For now, device is not in gem.
-  s.files = files
+  s.files = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   s.executables = ['letscert']
+  s.require_paths = ["lib"]
 
   s.required_ruby_version = '>= 2.1.0'
 
   s.add_dependency 'acme-client', '~>0.4.0'
-  s.add_dependency 'json', '~>1.8.3'
 
+  s.add_development_dependency "bundler", "~> 1.12"
+  s.add_development_dependency "rake", "~> 10.0"
   s.add_development_dependency 'rspec', '~>3.4'
   s.add_development_dependency 'vcr', '~>3.0'
-  s.add_development_dependency 'faraday', '~>0.9'
   s.add_development_dependency 'yard', '~>0.8'
-  s.add_development_dependency 'simplecov'
-end
+  s.add_development_dependency 'simplecov', '~>0.12'
 
-
-Gem::PackageTask.new(spec) do |pkg|
-  pkg.need_zip = false
-  pkg.need_tar = false
+  s.cert_chain = [File.join(__dir__, 'certs/gem-public_cert.pem')]
+  s.signing_key = File.expand_path('~/.ssh/gem-private_key.pem')
 end

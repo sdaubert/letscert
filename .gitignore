@@ -8,6 +8,7 @@
 /spec/reports/
 /spec/examples.txt
 /tmp/
+Gemfile.lock
 
 ## Documentation cache and generated files:
 /.yardoc/
