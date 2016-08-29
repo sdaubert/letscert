@@ -47,9 +47,6 @@ module LetsCert
     # @return [Logger]
     attr_accessor :logger
 
-    # @return [Logger]
-    attr_reader :logger
-
     # Run LetsCert
     # @return [Integer]
     # @see #run
