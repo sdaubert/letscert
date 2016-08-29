@@ -41,8 +41,8 @@ module LetsCert
     module ClassMethods
 
       # @private hook called when a subclass is created.
-      #  Take care of all subclasses to later properly set @logger class instance
-      #  variable.
+      #  Take care of all subclasses to later properly set @logger class
+      #  instance variable.
       # @param [Class] subclass
       # @return [void]
       def inherited(subclass)
@@ -69,5 +69,4 @@ module LetsCert
     end
 
   end
-
 end
