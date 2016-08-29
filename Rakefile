@@ -9,4 +9,4 @@ YARD::Rake::YardocTask.new do |t|
   t.files = ['lib/**/*.rb', '-', 'LICENSE']
 end
 
-task :default => :spec
+task default: :spec
