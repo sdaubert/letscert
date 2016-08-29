@@ -31,4 +31,7 @@ EOF
   s.add_development_dependency 'vcr', '~>3.0'
   s.add_development_dependency 'yard', '~>0.8'
   s.add_development_dependency 'simplecov', '~>0.12'
+
+  s.cert_chain = [File.join(__dir__, 'certs/gem-public_cert.pem')]
+  s.signing_key = File.expand_path('~/.ssh/gem-private_key.pem')
 end
