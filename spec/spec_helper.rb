@@ -40,24 +40,6 @@ class RemoveHttp01Middleware < Faraday::Middleware
   end
 end
 
-
-def change_dir_to(new_dir)
-  old_dir = FileUtils.pwd
-  FileUtils.cd new_dir
-
-  begin
-    yield if block_given?
-  ensure
-    FileUtils.cd old_dir
-  end
-end
-
-def add_option(option, value=nil)
-  dash = option.size == 1 ? '-' : '--'
-  ARGV << "#{dash}#{option}"
-  ARGV << value.to_s unless value.nil?
-end
-
 RSpec::Matchers.define :exit_with_code do |exp_code|
   supports_block_expectations
 
@@ -83,4 +65,27 @@ RSpec::Matchers.define :exit_with_code do |exp_code|
   description do
     "expect block to call exit(#{exp_code})"
   end
+end
+
+def change_dir_to(new_dir)
+  old_dir = FileUtils.pwd
+  FileUtils.cd new_dir
+
+  begin
+    yield if block_given?
+  ensure
+    FileUtils.cd old_dir
+  end
+end
+
+def add_option(option, value=nil)
+  dash = option.size == 1 ? '-' : '--'
+  ARGV << "#{dash}#{option}"
+  ARGV << value.to_s unless value.nil?
+end
+
+def ensure_file_is_deleted(file)
+  yield
+ensure
+  File.unlink file
 end
