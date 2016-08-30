@@ -5,7 +5,10 @@ module LetsCert
     class LoggerFormatter < Logger::Formatter
 
       # @private log format
-      FORMAT = "[%s] %5s: %s\n"
+      FORMAT = "[%s] %5s: %s\n".freeze
+
+      # @private time format string
+      TIME_FORMAT = '%Y-%m-%d %H:%M:%S'.freeze
 
       # @param [String] severity
       # @param [Datetime] time
@@ -16,14 +19,13 @@ module LetsCert
         FORMAT % [format_datetime(time), severity, msg2str(msg)]
       end
 
-
       private
 
       # @private simple datetime formatter
       # @param [DateTime] time
       # @return [String]
       def format_datetime(time)
-        time.strftime("%Y-%m-%d %H:%M:%S")
+        time.strftime TIME_FORMAT
       end
 
     end
