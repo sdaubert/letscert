@@ -214,14 +214,8 @@ module LetsCert
     # Check all components are covered by plugins
     # @raise [Error]
     def check_persisted
-      persisted = IOPlugin.empty_data
-
-      @options[:files].each do |file|
-        persisted.merge!(IOPlugin.registered[file].persisted) do |_k, oldv, newv|
-          oldv || newv
-        end
-      end
-      not_persisted = persisted.keys.find_all { |k| !persisted[k] }
+      persisted = persisted_data
+      not_persisted = persisted.keys.find_all { |k| persisted[k].nil? }
 
       unless not_persisted.empty?
         raise Error, 'Selected IO plugins do not cover following components: ' +
@@ -296,6 +290,7 @@ module LetsCert
 
     # Create/update a certificate
     # @return [Integer] exit status
+    # rubocop:disable Style/AccessorMethodName
     def get_certificate
       data = load_data_from_disk(@options[:files])
 
@@ -353,6 +348,17 @@ module LetsCert
       end
 
       @options[:roots] = roots
+    end
+
+    def persisted_data
+      persisted = IOPlugin.empty_data
+      @options[:files].each do |file|
+        ioplugin = IOPlugin.registered[file]
+        persisted.merge!(ioplugin.persisted) do |_k, oldv, newv|
+          oldv || newv
+        end
+      end
+      persisted
     end
 
   end
