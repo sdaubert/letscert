@@ -14,7 +14,7 @@ module LetsCert
       when :pem
       when :der
       else
-        raise ArgumentError, "type should be :pem or :der"
+        raise ArgumentError, 'type should be :pem or :der'
       end
 
       @type = type
@@ -39,7 +39,7 @@ module LetsCert
         key.to_der
       end
     end
-    alias :dump_cert :dump_key
+    alias dump_cert dump_key
 
     # Load certificate from raw +data+
     # @param [String] data
@@ -47,7 +47,6 @@ module LetsCert
     def load_cert(data)
       OpenSSL::X509::Certificate.new data
     end
-
 
     private
 
@@ -57,7 +56,7 @@ module LetsCert
     def split_pems(data)
       my_data = data
       m = my_data.match(PEM_RE)
-      while (m) do
+      while m
         yield m[0]
         my_data = my_data[m.end(0)..-1]
         m = my_data.match(PEM_RE)

@@ -1,7 +1,7 @@
 require 'base64'
 
 module LetsCert
-  
+
   # Mixin for IOPlugin subclasses that handle JWK
   # @author Sylvain Daubert
   module JWKIOPluginMixin
@@ -59,7 +59,7 @@ module LetsCert
           h['q'] = urlsafe_encode64(key.q.to_s(2))
         end
       else
-        raise Error, "only RSA keys are supported"
+        raise Error, 'only RSA keys are supported'
       end
       h.to_json
     end
