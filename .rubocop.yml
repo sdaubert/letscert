@@ -22,6 +22,10 @@ Metrics/ModuleLength:
 Metrics/MethodLength:
   Max: 20
 
+# don't understand this metric
+Metrics/AbcSize:
+  Enabled: false
+
 AllCops:
   Exclude:
     - 'spec/**/*'
