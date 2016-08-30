@@ -32,6 +32,7 @@ module LetsCert
 
   # Runner class: analyse and execute CLI commands.
   # @author Sylvain Daubert
+  # rubocop:disable Metrics/ClassLength
   class Runner
 
     # Exit value for OK
@@ -64,9 +65,10 @@ module LetsCert
         cert_key_size: 2048,
         valid_min: ValidTime.new('30d'),
         account_key_size: 4096,
-        tos_sha256: '33d233c8ab558ba6c8ebc370a509acdded8b80e5d587aa5d192193f35226540f',
+        tos_sha256: '33d233c8ab558ba6c8ebc370a509acdded8b80e5d587aa5d192193f3' \
+                    '5226540f',
         user_agent: "letscert/#{VERSION.gsub(/\..*/, '')}",
-        server: 'https://acme-v01.api.letsencrypt.org/directory',
+        server: 'https://acme-v01.api.letsencrypt.org/directory'
       }
 
       @logger = Logger.new($stdout)
@@ -103,6 +105,7 @@ module LetsCert
     # Parse line command options
     # @raise [OptionParser::InvalidOption] on unrecognized or malformed option
     # @return [void]
+    # rubocop:disable Metrics/MethodLength
     def parse_options
       @opt_parser = OptionParser.new do |opts|
         opts.banner = 'Usage: lestcert [options]'
@@ -227,6 +230,7 @@ module LetsCert
 
     # Print help and exit, if +:print_help+ option is set
     # @return [void]
+    # rubocop:disable Style/GuardClause
     def print_help_if_needed
       if @options[:print_help]
         puts @opt_parser
