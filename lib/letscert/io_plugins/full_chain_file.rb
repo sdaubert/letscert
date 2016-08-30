@@ -21,7 +21,8 @@ module LetsCert
         chain = data[:chain]
       end
 
-      { account_key: data[:account_key], key: data[:key], cert: cert, chain: chain }
+      { account_key: data[:account_key], key: data[:key], cert: cert,
+        chain: chain }
     end
 
     # Save fullchain.

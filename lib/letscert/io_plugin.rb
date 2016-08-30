@@ -32,9 +32,8 @@ module LetsCert
     # @return [String]
     attr_reader :name
 
-
     # Registered plugins
-    @@registered = {}
+    @registered = {}
 
     # Get empty data
     # @return [Hash] +{ account_key: nil, key: nil, cert: nil, chain: nil }+
@@ -48,19 +47,19 @@ module LetsCert
     # @return [IOPlugin]
     def self.register(klass, *args)
       plugin = klass.new(*args)
-      if plugin.name =~ /[\/\\]/ or ['.', '..'].include?(plugin.name)
-        raise Error, "plugin name should just be a file name, without path"
+      if plugin.name =~ %r{[/\\]} or ['.', '..'].include?(plugin.name)
+        raise Error, 'plugin name should just be a file name, without path'
       end
 
-      @@registered[plugin.name] = plugin
-
+      @registered[plugin.name] = plugin
       klass
     end
 
     # Get registered plugins
-    # @return [Hash] keys are filenames and keys are instances of IOPlugin subclasses.
+    # @return [Hash] keys are filenames and keys are instances of IOPlugin
+    #  subclasses.
     def self.registered
-      @@registered
+      @registered
     end
 
     # @param [String] name

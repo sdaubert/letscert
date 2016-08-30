@@ -142,12 +142,8 @@ module LetsCert
     it "#save account key to account_key.json file" do
       data = { account_key: OpenSSL::PKey::RSA.new(1024) }
       ak.save(data)
-      begin
+      ensure_file_is_deleted('account_key.json') do
         expect(File.exist?('account_key.json')).to be_truthy
-      rescue Exception
-        raise
-      ensure
-        File.unlink('account_key.json')
       end
     end
 
@@ -174,15 +170,10 @@ module LetsCert
     it '#save private key to key.pem file' do
       data = { key: OpenSSL::PKey::RSA.new(512) }
       keypem.save data
-      begin
+      ensure_file_is_deleted('key.pem') do
         expect(File.exist? 'key.pem').to be(true)
-
         data2 = keypem.load
         expect(data2[:key].params['d'].to_i).to eq(data[:key].params['d'].to_i)
-      rescue Exception
-        raise
-      ensure
-        File.unlink 'key.pem'
       end
     end
 
@@ -197,15 +188,10 @@ module LetsCert
     it '#save private key to key.der file' do
       data = { key: OpenSSL::PKey::RSA.new(512) }
       keyder.save data
-      begin
+      ensure_file_is_deleted('key.der') do
         expect(File.exist? 'key.der').to be(true)
-
         data2 = keyder.load
         expect(data2[:key].params['d'].to_i).to eq(data[:key].params['d'].to_i)
-      rescue Exception
-        raise
-      ensure
-        File.unlink 'key.der'
       end
     end
   end
@@ -238,17 +224,12 @@ module LetsCert
 
       chain.save data
 
-      begin
+      ensure_file_is_deleted('chain.pem') do
         expect(File.exist? 'chain.pem').to be(true)
-
         data2 = chain.load
         data2[:chain].each_with_index do |cert, i|
           expect(cert.to_pem).to eq(data[:chain][i].to_pem)
         end
-      rescue Exception
-        raise
-      ensure
-        File.unlink 'chain.pem'
       end
     end
 
@@ -287,7 +268,7 @@ module LetsCert
 
       fullchain.save data
 
-      begin
+      ensure_file_is_deleted('fullchain.pem') do
         expect(File.exist? 'fullchain.pem').to be(true)
 
         data2 = fullchain.load
@@ -295,10 +276,6 @@ module LetsCert
         data2[:chain].each_with_index do |cert, i|
           expect(cert.to_pem).to eq(data[:chain][i].to_pem)
         end
-      rescue Exception
-        raise
-      ensure
-        File.unlink 'fullchain.pem'
       end
     end
 
@@ -340,15 +317,10 @@ module LetsCert
 
       certpem.save data
 
-      begin
+      ensure_file_is_deleted('cert.pem') do
         expect(File.exist? 'cert.pem').to be(true)
-
         data2 = certpem.load
         expect(data2[:cert].to_pem).to eq(data[:cert].to_pem)
-      rescue Exception
-        raise
-      ensure
-        File.unlink 'cert.pem'
       end
     end
 
@@ -362,15 +334,10 @@ module LetsCert
 
       certder.save data
 
-      begin
+      ensure_file_is_deleted('cert.der') do
         expect(File.exist? 'cert.der').to be(true)
-
         data2 = certder.load
         expect(data2[:cert].to_pem).to eq(data[:cert].to_pem)
-      rescue Exception
-        raise
-      ensure
-        File.unlink 'cert.der'
       end
     end
   end

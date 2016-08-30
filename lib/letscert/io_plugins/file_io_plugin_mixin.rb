@@ -7,13 +7,13 @@ module LetsCert
     # Load data from file named +#name+
     # @return [Hash]
     def load
-      logger.debug { "Loading #@name" }
+      logger.debug { "Loading #{@name}" }
 
       begin
         content = File.read(@name)
       rescue SystemCallError => ex
         if ex.is_a? Errno::ENOENT
-          logger.info { "no #@name file" }
+          logger.info { "no #{@name} file" }
           return self.class.empty_data
         end
         raise
@@ -23,9 +23,9 @@ module LetsCert
     end
 
     # @abstract
-    # @param [String] content
+    # @param [String] _content
     # @return [Hash]
-    def load_from_content(content)
+    def load_from_content(_content)
       raise NotImplementedError
     end
 
@@ -35,14 +35,14 @@ module LetsCert
     def save_to_file(data)
       return if data.nil?
 
-      logger.info { "saving #@name" }
+      logger.info { "saving #{@name}" }
       begin
         File.open(name, 'w') do |f|
           f.write(data)
         end
       rescue Errno => ex
         @logger.error { ex.message }
-        raise Error, "Error when saving #@name"
+        raise Error, "Error when saving #{@name}"
       end
     end
 

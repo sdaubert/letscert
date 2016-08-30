@@ -40,7 +40,7 @@ module LetsCert
     RETURN_OK_CERT = 0
     # Exit value for error(s)
     RETURN_ERROR = 2
-    
+
     # Get options
     # @return [Hash]
     attr_reader :options
@@ -55,7 +55,6 @@ module LetsCert
       runner.parse_options
       runner.run
     end
-
 
     def initialize
       @options = {
@@ -79,62 +78,19 @@ module LetsCert
     #   * 1 if renewal was not necessery
     #   * 2 in case of errors
     def run
-      if @options[:print_help]
-        puts @opt_parser
-        exit RETURN_OK
-      end
-
-      if @options[:show_version]
-        puts "letscert #{LetsCert::VERSION}"
-        puts "Copyright (c) 2016 Sylvain Daubert"
-        puts "License MIT: see http://opensource.org/licenses/MIT"
-        exit RETURN_OK
-      end
-
-      case @options[:verbose]
-      when 0
-        @logger.level = Logger::Severity::WARN
-      when 1
-        @logger.level = Logger::Severity::INFO
-      when 2..5
-        @logger.level = Logger::Severity::DEBUG
-      end
-
-      @logger.debug { "options are: #{@options.inspect}" }
-
-      IOPlugin.logger = @logger
-      Certificate.logger = @logger
+      print_help_if_needed
+      show_version_if_needed
+      set_logger_level
+      set_logger
 
       begin
-        if @options[:domains].empty?
-          raise Error, "At leat one domain must be given with --domain option.\n" +
-                       "Try 'letscert --help' for more information."
-        end
-
+        check_domains
         if @options[:revoke]
-          data = load_data_from_disk(IOPlugin.registered.keys)
-          certificate = Certificate.new(data[:cert])
-          if certificate.revoke(data[:account_key], @options)
-            RETURN_OK
-          else
-            RETURN_ERROR
-          end
+          revoke
         else
           check_persisted
-
-          data = load_data_from_disk(@options[:files])
-
-          certificate = Certificate.new(data[:cert])
-          if certificate.valid?(@options[:domains], @options[:valid_min].to_seconds)
-            @logger.info { 'no need to update cert' }
-            RETURN_OK
-          else
-            # update/create cert
-            certificate.get data[:account_key], data[:key], @options
-            RETURN_OK_CERT
-          end
+          get_certificate
         end
-
       rescue Error, Acme::Client::Error => ex
         msg = ex.message
         msg = "[Acme] #{msg}" if ex.is_a?(Acme::Client::Error)
@@ -144,13 +100,12 @@ module LetsCert
       end
     end
 
-
     # Parse line command options
     # @raise [OptionParser::InvalidOption] on unrecognized or malformed option
     # @return [void]
     def parse_options
       @opt_parser = OptionParser.new do |opts|
-        opts.banner = "Usage: lestcert [options]"
+        opts.banner = 'Usage: lestcert [options]'
 
         opts.separator('')
 
@@ -160,8 +115,9 @@ module LetsCert
         opts.on('-V', '--version', 'Show version and exit') do |v|
           @options[:show_version] = v
         end
-        opts.on('-v', '--verbose', 'Run verbosely') { |v| @options[:verbose] += 1 if v }
-
+        opts.on('-v', '--verbose', 'Run verbosely') do |v|
+          @options[:verbose] += 1 if v
+        end
 
         opts.separator("\nWebroot manager:")
 
@@ -183,7 +139,7 @@ module LetsCert
           @options[:revoke] = revoke
         end
 
-        opts.on("-f", "--file FILE", 'Input/output file.',
+        opts.on('-f', '--file FILE', 'Input/output file.',
                 'Can be specified multiple times',
                 'Allowed values: account_key.json, cert.der,',
                 'cert.pem, chain.pem, full.pem,',
@@ -200,9 +156,10 @@ module LetsCert
         opts.accept(ValidTime) do |valid_time|
           ValidTime.new(valid_time)
         end
-        opts.on('--valid-min TIME', ValidTime, 'Renew existing certificate if validity',
+        opts.on('--valid-min TIME', ValidTime,
+                'Renew existing certificate if validity',
                 'is lesser than TIME',
-                "(default: #{@options[:valid_min].to_s})") do |vt|
+                "(default: #{@options[:valid_min]})") do |vt|
           @options[:valid_min] = vt
         end
 
@@ -211,12 +168,13 @@ module LetsCert
         end
 
         opts.separator("\nRegistration:")
-        opts.separator("  Automatically register an account with he ACME CA specified" +
-                       " by --server")
+        opts.separator('  Automatically register an account with he ACME CA' \
+                       ' specified  by --server')
         opts.separator('')
 
         opts.on('--account-key-size BITS', Integer,
-                "Account key size (default: #{@options[:account_key_size]})") do |bits|
+                'Account key size (default: ' \
+                "#{@options[:account_key_size]})") do |bits|
           @options[:account_key_size] = bits
         end
 
@@ -242,7 +200,7 @@ module LetsCert
                 "(default: #{@options[:user_agent]})") do |ua|
           @options[:user_agent] = ua
         end
-        
+
         opts.on('--server URI', 'URI for the CA ACME API endpoint',
                 "(default: #{@options[:server]})") do |uri|
           @options[:server] = uri
@@ -259,7 +217,7 @@ module LetsCert
       persisted = IOPlugin.empty_data
 
       @options[:files].each do |file|
-        persisted.merge!(IOPlugin.registered[file].persisted) do |k, oldv, newv|
+        persisted.merge!(IOPlugin.registered[file].persisted) do |_k, oldv, newv|
           oldv || newv
         end
       end
@@ -271,8 +229,87 @@ module LetsCert
       end
     end
 
-
     private
+
+    # Print help and exit, if +:print_help+ option is set
+    # @return [void]
+    def print_help_if_needed
+      if @options[:print_help]
+        puts @opt_parser
+        exit RETURN_OK
+      end
+    end
+
+    # Show version and exit, if +:show_version+ option is set
+    # @return [void]
+    def show_version_if_needed
+      if @options[:show_version]
+        puts "letscert #{LetsCert::VERSION}"
+        puts 'Copyright (c) 2016 Sylvain Daubert'
+        puts 'License MIT: see http://opensource.org/licenses/MIT'
+        exit RETURN_OK
+      end
+    end
+
+    # Set logger level from +:verbose+ option
+    # @return [void]
+    def set_logger_level
+      case @options[:verbose]
+      when 0
+        @logger.level = Logger::Severity::WARN
+      when 1
+        @logger.level = Logger::Severity::INFO
+      when 2..5
+        @logger.level = Logger::Severity::DEBUG
+      end
+    end
+
+    # Set logger for IOPlugin and Certificate classes.
+    # @return [void]
+    def set_logger
+      @logger.debug { "options are: #{@options.inspect}" }
+      IOPlugin.logger = @logger
+      Certificate.logger = @logger
+    end
+
+    # Check at least on domain is given.
+    # @return [void]
+    # @raise [Error] no domain given
+    def check_domains
+      if @options[:domains].empty?
+        raise Error, 'At leat one domain must be given with --domain ' \
+                     "option.\nTry 'letscert --help' for more information."
+      end
+    end
+
+    # Revoke a certificate
+    # @return [Integer] exit status
+    def revoke
+      data = load_data_from_disk(IOPlugin.registered.keys)
+      certificate = Certificate.new(data[:cert])
+      if certificate.revoke(data[:account_key], @options)
+        RETURN_OK
+      else
+        RETURN_ERROR
+      end
+    end
+
+    # Create/update a certificate
+    # @return [Integer] exit status
+    def get_certificate
+      data = load_data_from_disk(@options[:files])
+
+      certificate = Certificate.new(data[:cert])
+      min_time = @options[:valid_min].to_seconds
+      if certificate.valid?(@options[:domains], min_time)
+        @logger.info { 'no need to update cert' }
+        RETURN_OK
+      else
+        # update/create cert
+        certificate.get data[:account_key], data[:key], @options
+        RETURN_OK_CERT
+      end
+    end
 
     # Load existing data from disk
     # @param [Array<String>] files
@@ -289,9 +326,9 @@ module LetsCert
         end
         raise Error unless test
 
-        # Merge data into all_data. New value replace old one only if old one was
-        # not defined
-        all_data.merge!(data) do |key, oldval, newval|
+        # Merge data into all_data. New value replace old one only if old
+        # one was not defined
+        all_data.merge!(data) do |_key, oldval, newval|
           oldval || newval
         end
       end
