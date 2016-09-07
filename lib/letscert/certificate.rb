@@ -104,9 +104,7 @@ module LetsCert
     # @return [Boolean]
     # @raise [Error] no certificate to revole.
     def revoke(account_key, options = {})
-      if @cert.nil?
-        raise Error, 'no certification data to revoke'
-      end
+      raise Error, 'no certification data to revoke' if @cert.nil?
 
       client = get_acme_client(account_key, options)
       result = client.revoke_certificate(@cert)
