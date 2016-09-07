@@ -67,7 +67,6 @@ module LetsCert
         account_key_size: 4096,
         tos_sha256: '33d233c8ab558ba6c8ebc370a509acdded8b80e5d587aa5d192193f3' \
                     '5226540f',
-        user_agent: "letscert/#{VERSION.gsub(/\..*/, '')}",
         server: 'https://acme-v01.api.letsencrypt.org/directory'
       }
 
@@ -198,11 +197,6 @@ module LetsCert
         opts.separator("\nHTTP:")
         opts.separator('  Configure properties of HTTP requests and responses.')
         opts.separator('')
-
-        opts.on('--user-agent NAME', 'User-Agent sent in all HTTP requests',
-                "(default: #{@options[:user_agent]})") do |ua|
-          @options[:user_agent] = ua
-        end
 
         opts.on('--server URI', 'URI for the CA ACME API endpoint',
                 "(default: #{@options[:server]})") do |uri|
