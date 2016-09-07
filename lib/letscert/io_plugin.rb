@@ -35,31 +35,33 @@ module LetsCert
     # Registered plugins
     @registered = {}
 
-    # Get empty data
-    # @return [Hash] +{ account_key: nil, key: nil, cert: nil, chain: nil }+
-    def self.empty_data
-      { account_key: nil, key: nil, cert: nil, chain: nil }
-    end
+    class << self
 
-    # Register a plugin
-    # @param [Class] klass
-    # @param [Array] args args to pass to +klass+ constructor
-    # @return [IOPlugin]
-    def self.register(klass, *args)
-      plugin = klass.new(*args)
-      if plugin.name =~ %r{[/\\]} or ['.', '..'].include?(plugin.name)
-        raise Error, 'plugin name should just be a file name, without path'
+      # Get registered plugins
+      # @return [Hash] keys are filenames and keys are instances of IOPlugin
+      #  subclasses.
+      attr_reader :registered
+
+      # Get empty data
+      # @return [Hash] +{ account_key: nil, key: nil, cert: nil, chain: nil }+
+      def empty_data
+        { account_key: nil, key: nil, cert: nil, chain: nil }
       end
 
-      @registered[plugin.name] = plugin
-      klass
-    end
+      # Register a plugin
+      # @param [Class] klass
+      # @param [Array] args args to pass to +klass+ constructor
+      # @return [IOPlugin]
+      def register(klass, *args)
+        plugin = klass.new(*args)
+        if plugin.name =~ %r{[/\\]} or ['.', '..'].include?(plugin.name)
+          raise Error, 'plugin name should just be a file name, without path'
+        end
 
-    # Get registered plugins
-    # @return [Hash] keys are filenames and keys are instances of IOPlugin
-    #  subclasses.
-    def self.registered
-      @registered
+        @registered[plugin.name] = plugin
+        klass
+      end
+
     end
 
     # @param [String] name
