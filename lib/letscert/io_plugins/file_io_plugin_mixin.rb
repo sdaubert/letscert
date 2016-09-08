@@ -11,12 +11,9 @@ module LetsCert
 
       begin
         content = File.read(@name)
-      rescue SystemCallError => ex
-        if ex.is_a? Errno::ENOENT
-          logger.info { "no #{@name} file" }
-          return self.class.empty_data
-        end
-        raise
+      rescue Errno::ENOENT => ex
+        logger.info { "no #{@name} file" }
+        return self.class.empty_data
       end
 
       load_from_content(content)
