@@ -243,9 +243,7 @@ module LetsCert
         end.to output(/^Error: root for the following domain/).to_stderr
       end
 
-      it 'returns 0 when there is no error and certificate is still valid'
-
-      it 'returns 1 when there is no error and a new certificate is created' do
+      it 'returns 1 when there is no error and certificate is still valid' do
         cert, = generate_signed_cert
         Dir.mktmpdir('test_letscert') do |dir|
           change_dir_to dir do
@@ -254,7 +252,7 @@ module LetsCert
             add_option 'domain', 'example.org'
             add_option 'domain', 'www.example.org'
             add_option 'default-root', '/tmp'
-            add_option 'valid-min', 3600   # Vaid for at least one hour
+            add_option 'valid-min', 3600   # Valid for at least one hour
             add_option 'email', 'webmaster@example.org'
             add_option 'file', 'account_key.json'
             add_option 'file', 'key.der'
@@ -265,7 +263,9 @@ module LetsCert
         end
       end
 
-      it 'returns 1 when there is no error and a certificate is renewed'
+
+      it 'returns 0 when there is no error and a new certificate is created'
+      it 'returns 0 when there is no error and a certificate is renewed'
 
       it 'returns 2 on error' do
         return_value = 0
