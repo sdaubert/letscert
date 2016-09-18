@@ -73,23 +73,20 @@ module LetsCert
 
       do_challenges client, options[:roots]
 
-      if options[:reuse_key] and !key.nil?
-        logger.info { 'Reuse existing private key' }
-      else
-        logger.info { 'Generate new private key' }
-        key = OpenSSL::PKey::RSA.generate(options[:cert_key_size])
-      end
-
-      csr = Acme::Client::CertificateRequest.new(names: options[:roots].keys,
-                                                 private_key: key)
-      acme_cert = client.new_certificate(csr)
-      @cert = acme_cert.x509
-      @chain = acme_cert.x509_chain
+      pkey = if options[:reuse_key]
+               raise Error, 'cannot reuse a non-existing key' if key.nil?
+               logger.info { 'Reuse existing private key' }
+               generate_certificate_from_pkey options[:roots].keys, key
+             else
+               logger.info { 'Generate new private key' }
+               generate_certificate options[:roots].keys,
+                                    options[:cert_key_size]
+             end
 
       options[:files] ||= []
       options[:files].each do |plugname|
         IOPlugin.registered[plugname].save(account_key: client.private_key,
-                                           key: key, cert: @cert,
+                                           key: pkey, cert: @cert,
                                            chain: @chain)
       end
     end
@@ -293,6 +290,29 @@ module LetsCert
                      " (relative to #{now})" }
 
       diff < valid_min
+    end
+
+    # Generate new certificate for given domains with existing private key
+    # @param [Array<String>] domains
+    # @param [OpenSSL::PKey::PKey] pkey private key to use
+    # @return [OpenSSL::PKey::PKey] +pkey+
+    def generate_certificate_from_pkey(domains, pkey)
+      csr = Acme::Client::CertificateRequest.new(names: domains,
+                                                 private_key: pkey)
+      acme_cert = client.new_certificate(csr)
+      @cert = acme_cert.x509
+      @chain = acme_cert.x509_chain
+
+      pkey
+    end
+
+    # Generate new certificate for given domains
+    # @param [Array<String>] domains
+    # @param [Integer] pkey_size size in bits for private key to generate
+    # @return [OpenSSL::PKey::PKey] generated private key
+    def generate_certificate(domains, pkey_size)
+      pkey = OpenSSL::PKey::RSA.generate(pkey_size)
+      generate_certificate_from_pkey domains, pkey
     end
 
   end
