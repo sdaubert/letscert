@@ -137,8 +137,8 @@ module LetsCert
 
       # Check all domains are subjects of certificate
       unless domains.all? { |domain| subjects.include? domain }
-        msg = 'At least one domain is not declared as a certificate subject.' \
-              'Backup and remove existing cert if you want to proceed'
+        msg = 'At least one domain is not declared as a certificate subject. ' \
+              'Backup and remove existing cert if you want to proceed.'
         raise Error, msg
       end
 
