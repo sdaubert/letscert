@@ -5,7 +5,6 @@ require_relative 'spec_helper'
 module LetsCert
 
   TEST_SERVER = 'http://172.17.0.1:4000'
-  TEST_KEY_LENGTH = 512
 
 
   describe Certificate do
@@ -13,27 +12,8 @@ module LetsCert
     before(:all) { Certificate.logger = Logger.new('/dev/null') }
 
     before(:all) do
-      root_key = OpenSSL::PKey::RSA.new(TEST_KEY_LENGTH)
-
-      @domains = %w(example.org www.example.org)
-
-      key = OpenSSL::PKey::RSA.new(TEST_KEY_LENGTH)
-      @cert = OpenSSL::X509::Certificate.new
-      @cert.version = 2
-      @cert.serial = 2
-      @cert.issuer = OpenSSL::X509::Name.parse "/DC=letscert/CN=CA"
-      @cert.public_key = key.public_key
-      @cert.not_before = Time.now
-      # 20 days validity
-      @cert.not_after = @cert.not_before + 20 * 24 * 60 * 60
-      ef = OpenSSL::X509::ExtensionFactory.new
-      ef.subject_certificate = @cert
-      @domains.each do |domain|
-        @cert.add_extension(ef.create_extension('subjectAltName',
-                                                "DNS:#{domain}",
-                                                false))
-      end
-      @cert.sign(root_key, OpenSSL::Digest::SHA256.new)
+      # Generate a signed certtificate and its associated domains
+      @cert, @domains = generate_signed_cert
 
       # minimum size accepted by ACME server
       @account_key2048 = OpenSSL::PKey::RSA.new(2048)
