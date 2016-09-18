@@ -246,7 +246,14 @@ module LetsCert
       it 'returns 0 when there is no error and certificate is still valid'
       it 'returns 1 when there is no error and a new certificate is created'
       it 'returns 1 when there is no error and a certificate is renewed'
-      it 'returns 2 on error'
+
+      it 'returns 2 on error' do
+        return_value = 0
+        expect do
+          expect { return_value = Runner.run }.to output(/^\[/).to_stdout
+        end.to output.to_stderr
+        expect(return_value).to eq(2)
+      end
 
     end
 
