@@ -40,6 +40,12 @@ class RemoveHttp01Middleware < Faraday::Middleware
   end
 end
 
+module LetsCert::TEST
+  # RSA key length for test.
+  # Use minimal key length to speed up tests.
+  KEY_LENGTH = 512
+end
+
 RSpec::Matchers.define :exit_with_code do |exp_code|
   supports_block_expectations
 

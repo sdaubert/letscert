@@ -159,7 +159,7 @@ module LetsCert
 
       it 'creates a new private key if --reuse-key is not present' do
         options[:files] = %w(fake)
-        key = OpenSSL::PKey::RSA.new(TEST_KEY_LENGTH)
+        key = OpenSSL::PKey::RSA.new(LetsCert::TEST::KEY_LENGTH)
 
         VCR.use_cassette('http-01-challenge') do
           serve_files_from @tmpdir do
@@ -173,7 +173,7 @@ module LetsCert
       it 'reuses existing private key if --reuse-key is present' do
         options[:files] = %w(fake)
         options[:reuse_key] = true
-        key = OpenSSL::PKey::RSA.new(TEST_KEY_LENGTH)
+        key = OpenSSL::PKey::RSA.new(LetsCert::TEST::KEY_LENGTH)
 
         VCR.use_cassette('http-01-challenge') do
           serve_files_from @tmpdir do
@@ -185,7 +185,7 @@ module LetsCert
       end
 
       it 'raises if challenge is not verified' do
-        key = OpenSSL::PKey::RSA.new(TEST_KEY_LENGTH)
+        key = OpenSSL::PKey::RSA.new(LetsCert::TEST::KEY_LENGTH)
 
         VCR.use_cassette('http-01-challenge-not-verified') do
           expect { certificate.get(@account_key2048, key, options) }.
