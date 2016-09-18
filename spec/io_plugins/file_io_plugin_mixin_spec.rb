@@ -44,10 +44,7 @@ module LetsCert
 
       expect(File.read(tmpfile)).to eq(content)
 
-      begin
-      ensure
-        File.unlink tmpfile if File.exist? tmpfile
-      end
+      File.unlink tmpfile if File.exist? tmpfile
     end
     
   end
