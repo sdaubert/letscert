@@ -242,6 +242,12 @@ module LetsCert
           expect { Runner.run }.to output(/^\[/).to_stdout
         end.to output(/^Error: root for the following domain/).to_stderr
       end
+
+      it 'returns 0 when there is no error and certificate is still valid'
+      it 'returns 1 when there is no error and a new certificate is created'
+      it 'returns 1 when there is no error and a certificate is renewed'
+      it 'returns 2 on error'
+
     end
 
   end
