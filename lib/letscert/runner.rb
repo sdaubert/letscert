@@ -352,6 +352,7 @@ module LetsCert
       persisted = IOPlugin.empty_data
       @options[:files].each do |file|
         ioplugin = IOPlugin.registered[file]
+        next if ioplugin.nil?
         persisted.merge!(ioplugin.persisted) do |_k, oldv, newv|
           oldv || newv
         end

@@ -188,10 +188,59 @@ module LetsCert
         expect(runner.options[:verbose]).to eq(3)
       end
 
-      it 'stop with error when no --domain is given' do
+      it 'stops with error when no --domain is given' do
         expect do
           expect { Runner.run }.to output(/^\[/).to_stdout
         end.to output("Error: At leat one domain must be given with --domain option.\nTry 'letscert --help' for more information.\n").to_stderr
+      end
+
+      it 'stops with error when not enough --file options is given' do
+        add_option 'domain', 'example.org'
+        expect do
+          expect { Runner.run }.to output(/^\[/).to_stdout
+        end.to output(/^Error: Selected IO plugins do not cover/).to_stderr
+
+        add_option 'domain', 'example.org'
+        add_option 'file', 'account_key.json'
+        expect do
+          expect { Runner.run }.to output(/^\[/).to_stdout
+        end.to output(/^Error: Selected IO plugins do not cover/).to_stderr
+
+        add_option 'domain', 'example.org'
+        add_option 'file', 'account_key.json'
+        add_option 'file', 'key.der'
+        expect do
+          expect { Runner.run }.to output(/^\[/).to_stdout
+        end.to output(/^Error: Selected IO plugins do not cover/).to_stderr
+
+        add_option 'domain', 'example.org'
+        add_option 'file', 'account_key.json'
+        add_option 'file', 'key.der'
+        add_option 'file', 'cert.der'
+        expect do
+          expect { Runner.run }.to output(/^\[/).to_stdout
+        end.to output(/^Error: Selected IO plugins do not cover/).to_stderr
+
+        add_option 'domain', 'example.org'
+        add_option 'file', 'account_key.json'
+        add_option 'file', 'key.der'
+        add_option 'file', 'cert.der'
+        add_option 'file', 'chain.pem'
+        # Plugins cover all components: this error is next check after
+        # persisted_check
+        expect do
+          expect { Runner.run }.to output(/^\[/).to_stdout
+        end.to output(/^Error: root for the following domain/).to_stderr
+
+        add_option 'domain', 'example.org'
+        add_option 'file', 'account_key.json'
+        add_option 'file', 'key.der'
+        add_option 'file', 'fullchain.pem'
+        # Plugins cover all components: this error is next check after
+        # persisted_check
+        expect do
+          expect { Runner.run }.to output(/^\[/).to_stdout
+        end.to output(/^Error: root for the following domain/).to_stderr
       end
     end
 
