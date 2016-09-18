@@ -24,6 +24,13 @@ module LetsCert
       end
     end
 
+    it '#load from non-existing file initializes chain to empty array' do
+      data = fullchain.load
+      expect(data[:cert]).to be_nil
+      expect(data[:chain]).to be_a(Array)
+      expect(data[:chain].size).to eq(0)
+    end
+
     it '#save cert and chain to fullchain.pem file' do
       data = nil
 
