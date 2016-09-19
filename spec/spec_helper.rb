@@ -44,6 +44,9 @@ module LetsCert::TEST
   # RSA key length for test.
   # Use minimal key length to speed up tests.
   KEY_LENGTH = 512
+
+  # URI to ACME test server
+  SERVER = 'http://172.17.0.1:4000'
 end
 
 RSpec::Matchers.define :exit_with_code do |exp_code|

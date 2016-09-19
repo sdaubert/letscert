@@ -4,9 +4,6 @@ require_relative 'spec_helper'
 
 module LetsCert
 
-  TEST_SERVER = 'http://172.17.0.1:4000'
-
-
   describe Certificate do
 
     before(:all) { Certificate.logger = Logger.new('/dev/null') }
@@ -29,7 +26,7 @@ module LetsCert
 
     let(:certificate) { Certificate.new(@cert) }
     let(:options) { { roots: { 'example.com' => @tmpdir },
-                      server: TEST_SERVER,
+                      server: LetsCert::TEST::SERVER,
                       email: 'test@example.org',
                       cert_key_size: 2048 } }
 
@@ -40,7 +37,7 @@ module LetsCert
         ARGV.clear
 
         ARGV << '-d' << 'example.com:/var/ww/html'
-        ARGV << '--server' << TEST_SERVER
+        ARGV << '--server' << LetsCert::TEST::SERVER
         runner.parse_options
         VCR.use_cassette('single-domain') do
           # raise error because no e-mail address was given
@@ -51,7 +48,7 @@ module LetsCert
         ARGV.clear
         ARGV << '-d' << 'example.com:/var/www/html'
         ARGV << '-d' << 'www.example.com'
-        ARGV << '--server' << TEST_SERVER
+        ARGV << '--server' << LetsCert::TEST::SERVER
         runner.options[:domains] = []
         runner.parse_options
         expect { certificate.get(nil, nil, runner.options) }.
@@ -62,7 +59,7 @@ module LetsCert
         ARGV << '-d' << 'example.com:/var/www/html'
         ARGV << '-d' << 'www.example.com'
         ARGV << '--default-root' << '/opt/www'
-        ARGV << '--server' << TEST_SERVER
+        ARGV << '--server' << LetsCert::TEST::SERVER
         runner.parse_options
         VCR.use_cassette('default-root') do
           # raise error because no e-mail address was given
