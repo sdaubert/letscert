@@ -1,3 +1,4 @@
+require 'webrick'
 require_relative 'spec_helper'
 
 module LetsCert
@@ -275,7 +276,39 @@ module LetsCert
       end
 
 
-      it 'returns 0 when there is no error and a new certificate is created'
+      it 'returns 0 when there is no error and a new certificate is created' do
+        add_option 'domain', 'example.com'
+        add_option 'file', 'account_key.json'
+        add_option 'file', 'key.der'
+        add_option 'file', 'chain.pem'
+        add_option 'file', 'cert.pem'
+        add_option 'email', 'webmaster@example.com'
+        add_option 'server', LetsCert::TEST::SERVER
+
+        Dir.mktmpdir('test_lestcert_runner') do |tmpdir|
+          add_option 'default-root', tmpdir
+
+          change_dir_to tmpdir do
+            expect(File.exist? 'account_key.json').to be(false)
+            expect(File.exist? 'key.der').to be(false)
+            expect(File.exist? 'cert.pem').to be(false)
+            expect(File.exist? 'chain.pem').to be(false)
+
+            ret = -1
+            VCR.use_cassette('complete-run-to-generate-new-cert') do
+              serve_files_from tmpdir do
+                ret = Runner.run
+              end
+            end
+            expect(ret).to eq(0)
+            expect(File.exist? 'account_key.json').to be(true)
+            expect(File.exist? 'key.der').to be(true)
+            expect(File.exist? 'cert.pem').to be(true)
+            expect(File.exist? 'chain.pem').to be(true)
+          end
+        end
+      end
+
       it 'returns 0 when there is no error and a certificate is renewed'
 
       it 'returns 2 on error' do
