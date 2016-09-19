@@ -188,6 +188,17 @@ module LetsCert
         expect(runner.options[:verbose]).to eq(3)
       end
 
+      it 'does not raise when an unknown --file is passed' do
+        add_option 'domain', 'example.org'
+        add_option 'file', 'account_key.json'
+        add_option 'file', 'key.der'
+        add_option 'file', 'cert.der'
+        add_option 'file', 'unknown.file'
+        expect do
+          expect { Runner.run }.to output(/^\[/).to_stdout
+        end.to output(/^Error: Selected IO plugins do not cover/).to_stderr
+      end
+
       it 'stops with error when no --domain is given' do
         expect do
           expect { Runner.run }.to output(/^\[/).to_stdout
