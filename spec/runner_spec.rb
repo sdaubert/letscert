@@ -285,6 +285,7 @@ module LetsCert
         add_option 'file', 'cert.pem'
         add_option 'email', 'webmaster@example.com'
         add_option 'server', LetsCert::TEST::SERVER
+        add_option 'cert-key-size', LetsCert::TEST::KEY_LENGTH
 
         Dir.mktmpdir('test_lestcert_runner') do |tmpdir|
           add_option 'default-root', tmpdir
