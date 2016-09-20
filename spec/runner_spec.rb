@@ -3,6 +3,8 @@ require_relative 'spec_helper'
 
 module LetsCert
 
+  TEST_FILES = %w(account_key.json key.der cert.pem chain.pem)
+
   describe Runner do
 
     before(:each) { ARGV.clear }
@@ -275,7 +277,6 @@ module LetsCert
         end
       end
 
-
       it 'returns 0 when there is no error and a new certificate is created' do
         add_option 'domain', 'example.com'
         add_option 'file', 'account_key.json'
@@ -289,10 +290,7 @@ module LetsCert
           add_option 'default-root', tmpdir
 
           change_dir_to tmpdir do
-            expect(File.exist? 'account_key.json').to be(false)
-            expect(File.exist? 'key.der').to be(false)
-            expect(File.exist? 'cert.pem').to be(false)
-            expect(File.exist? 'chain.pem').to be(false)
+            TEST_FILES.each { |file| expect(File.exist? file).to be(false) }
 
             ret = -1
             VCR.use_cassette('complete-run-to-generate-new-cert') do
@@ -301,10 +299,7 @@ module LetsCert
               end
             end
             expect(ret).to eq(0)
-            expect(File.exist? 'account_key.json').to be(true)
-            expect(File.exist? 'key.der').to be(true)
-            expect(File.exist? 'cert.pem').to be(true)
-            expect(File.exist? 'chain.pem').to be(true)
+            TEST_FILES.each { |file| expect(File.exist? file).to be(true) }
           end
         end
       end
