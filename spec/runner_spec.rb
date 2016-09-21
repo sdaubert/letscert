@@ -279,10 +279,7 @@ module LetsCert
 
       it 'returns 0 when there is no error and a new certificate is created' do
         add_option 'domain', 'example.com'
-        add_option 'file', 'account_key.json'
-        add_option 'file', 'key.der'
-        add_option 'file', 'chain.pem'
-        add_option 'file', 'cert.pem'
+        TEST_FILES.each { |file| add_option 'file', file }
         add_option 'email', 'webmaster@example.com'
         add_option 'server', LetsCert::TEST::SERVER
         add_option 'cert-key-size', LetsCert::TEST::KEY_LENGTH
