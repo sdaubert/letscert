@@ -298,11 +298,41 @@ module LetsCert
             end
             expect(ret).to eq(0)
             TEST_FILES.each { |file| expect(File.exist? file).to be(true) }
-          end
+         end
         end
       end
 
-      it 'returns 0 when there is no error and a certificate is renewed'
+      it 'returns 0 when there is no error and a certificate is renewed' do
+        Dir.mktmpdir('test_lestcert_runner') do |tmpdir|
+          change_dir_to tmpdir do
+            TEST_FILES.each do |file|
+              f = File.join(__dir__, 'io_plugins', file)
+              FileUtils.cp f, '.'
+            end
+
+            timestamps = TEST_FILES[1..-1].map { |file| File::Stat.new(file).mtime }
+
+            add_option 'domain', 'example.com'
+            TEST_FILES.each { |file| add_option 'file', file }
+            add_option 'email', 'webmaster@example.com'
+            add_option 'server', LetsCert::TEST::SERVER
+            add_option 'cert-key-size', LetsCert::TEST::KEY_LENGTH
+            add_option 'default-root', tmpdir
+            add_option 'valid-min', 3600*24*31*3 # 3 months to force update
+
+            ret = -1
+            VCR.use_cassette('complete-run-to-renew-cert') do
+              serve_files_from tmpdir do
+                ret = Runner.run
+              end
+            end
+            expect(ret).to eq(0)
+            TEST_FILES[1..-1].each_with_index do |file, i|
+              expect(File::Stat.new(file).mtime).to be > timestamps[i]
+            end
+          end
+        end
+      end
 
       it 'returns 2 on error' do
         return_value = 0
