@@ -67,11 +67,12 @@ module LetsCert
     # @param [OpenSSL::PKey] key
     # @return [String]
     def dump_jwk(key)
-      return {}.to_json if key.nil?
+      h = {}
+      return h.to_json if key.nil?
 
-      h = { 'kty' => 'RSA' }
       case key
       when OpenSSL::PKey::RSA
+        h['kty'] = 'RSA'
         h['e'] = urlsafe_encode64(key.e.to_s(2)) if key.e
         h['n'] = urlsafe_encode64(key.n.to_s(2)) if key.n
         if key.private?
