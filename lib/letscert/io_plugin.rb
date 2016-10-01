@@ -70,11 +70,13 @@ module LetsCert
     end
 
     # @abstract This method must be overriden in subclasses
+    # Load data from disk
     def load
       raise NotImplementedError
     end
 
     # @abstract This method must be overriden in subclasses
+    # Save data to disk
     def save
       raise NotImplementedError
     end

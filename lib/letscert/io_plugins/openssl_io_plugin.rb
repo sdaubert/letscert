@@ -30,6 +30,7 @@ module LetsCert
 
     # @param [String] name filename
     # @param [:pem,:der] type
+    # @raise [ArgumentError] unsupported type
     def initialize(name, type)
       case type
       when :pem

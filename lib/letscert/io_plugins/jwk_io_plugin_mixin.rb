@@ -43,7 +43,8 @@ module LetsCert
 
     # Load crypto data from JSON-encoded file
     # @param [String] data JSON-encoded data
-    # @return [OpenSSL::PKey::PKey]
+    # @return [OpenSSL::PKey::PKey,nil]
+    # @raise [Error] unsupported key type
     def load_jwk(data)
       return nil if data.empty?
 
@@ -66,6 +67,7 @@ module LetsCert
     # Dump crypto data (key) to a JSON-encoded string
     # @param [OpenSSL::PKey] key
     # @return [String]
+    # @raise [Error] unsupported key type
     def dump_jwk(key)
       h = {}
       return h.to_json if key.nil?

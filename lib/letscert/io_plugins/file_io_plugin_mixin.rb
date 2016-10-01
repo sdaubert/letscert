@@ -50,6 +50,7 @@ module LetsCert
     # Save data to file +#name+
     # @param [Hash] data
     # @return [void]
+    # @raise [Error] IO error
     def save_to_file(data)
       return if data.nil?
 
