@@ -42,16 +42,14 @@ module LetsCert
         chain = data[:chain]
       end
 
-      { account_key: data[:account_key], key: data[:key], cert: cert,
-        chain: chain }
+      { cert: cert, chain: chain }
     end
 
     # Save fullchain.
     # @param [Hash] data
     # @return [void]
     def save(data)
-      super(account_key: data[:account_key], key: data[:key], cert: nil,
-            chain: [data[:cert]] + data[:chain])
+      super(cert: nil, chain: [data[:cert]] + data[:chain])
     end
 
   end
