@@ -11,7 +11,7 @@ module LetsCert
 
       begin
         content = File.read(@name)
-      rescue Errno::ENOENT => ex
+      rescue Errno::ENOENT
         logger.info { "no #{@name} file" }
         return self.class.empty_data
       end
