@@ -1,6 +1,9 @@
+require 'webrick'
 require_relative 'spec_helper'
 
 module LetsCert
+
+  TEST_FILES = %w(account_key.json key.der cert.pem chain.pem)
 
   describe Runner do
 
@@ -188,11 +191,157 @@ module LetsCert
         expect(runner.options[:verbose]).to eq(3)
       end
 
-      it 'stop with error when no --domain is given' do
+      it 'does not raise when an unknown --file is passed' do
+        add_option 'domain', 'example.org'
+        add_option 'file', 'account_key.json'
+        add_option 'file', 'key.der'
+        add_option 'file', 'cert.der'
+        add_option 'file', 'unknown.file'
+        expect do
+          expect { Runner.run }.to output(/^\[/).to_stdout
+        end.to output(/^Error: Selected IO plugins do not cover/).to_stderr
+      end
+
+      it 'stops with error when no --domain is given' do
         expect do
           expect { Runner.run }.to output(/^\[/).to_stdout
         end.to output("Error: At leat one domain must be given with --domain option.\nTry 'letscert --help' for more information.\n").to_stderr
       end
+
+      it 'stops with error when not enough --file options is given' do
+        add_option 'domain', 'example.org'
+        expect do
+          expect { Runner.run }.to output(/^\[/).to_stdout
+        end.to output(/^Error: Selected IO plugins do not cover/).to_stderr
+
+        add_option 'domain', 'example.org'
+        add_option 'file', 'account_key.json'
+        expect do
+          expect { Runner.run }.to output(/^\[/).to_stdout
+        end.to output(/^Error: Selected IO plugins do not cover/).to_stderr
+
+        add_option 'domain', 'example.org'
+        add_option 'file', 'account_key.json'
+        add_option 'file', 'key.der'
+        expect do
+          expect { Runner.run }.to output(/^\[/).to_stdout
+        end.to output(/^Error: Selected IO plugins do not cover/).to_stderr
+
+        add_option 'domain', 'example.org'
+        add_option 'file', 'account_key.json'
+        add_option 'file', 'key.der'
+        add_option 'file', 'cert.der'
+        expect do
+          expect { Runner.run }.to output(/^\[/).to_stdout
+        end.to output(/^Error: Selected IO plugins do not cover/).to_stderr
+
+        add_option 'domain', 'example.org'
+        add_option 'file', 'account_key.json'
+        add_option 'file', 'key.der'
+        add_option 'file', 'cert.der'
+        add_option 'file', 'chain.pem'
+        # Plugins cover all components: this error is next check after
+        # persisted_check
+        expect do
+          expect { Runner.run }.to output(/^\[/).to_stdout
+        end.to output(/^Error: root for the following domain/).to_stderr
+
+        add_option 'domain', 'example.org'
+        add_option 'file', 'account_key.json'
+        add_option 'file', 'key.der'
+        add_option 'file', 'fullchain.pem'
+        # Plugins cover all components: this error is next check after
+        # persisted_check
+        expect do
+          expect { Runner.run }.to output(/^\[/).to_stdout
+        end.to output(/^Error: root for the following domain/).to_stderr
+      end
+
+      it 'returns 1 when there is no error and certificate is still valid' do
+        cert, = generate_signed_cert
+        Dir.mktmpdir('test_letscert') do |dir|
+          change_dir_to dir do
+            File.write 'cert.pem', cert.to_pem
+
+            add_option 'domain', 'example.org'
+            add_option 'domain', 'www.example.org'
+            add_option 'default-root', '/tmp'
+            add_option 'valid-min', 3600   # Valid for at least one hour
+            add_option 'email', 'webmaster@example.org'
+            add_option 'file', 'account_key.json'
+            add_option 'file', 'key.der'
+            add_option 'file', 'cert.pem'
+            add_option 'file', 'chain.pem'
+            expect(Runner.run).to eq(1)
+          end
+        end
+      end
+
+      it 'returns 0 when there is no error and a new certificate is created' do
+        add_option 'domain', 'example.com'
+        TEST_FILES.each { |file| add_option 'file', file }
+        add_option 'email', 'webmaster@example.com'
+        add_option 'server', LetsCert::TEST::SERVER
+        add_option 'cert-key-size', LetsCert::TEST::KEY_LENGTH
+
+        Dir.mktmpdir('test_lestcert_runner') do |tmpdir|
+          add_option 'default-root', tmpdir
+
+          change_dir_to tmpdir do
+            TEST_FILES.each { |file| expect(File.exist? file).to be(false) }
+
+            ret = -1
+            VCR.use_cassette('complete-run-to-generate-new-cert') do
+              serve_files_from tmpdir do
+                ret = Runner.run
+              end
+            end
+            expect(ret).to eq(0)
+            TEST_FILES.each { |file| expect(File.exist? file).to be(true) }
+         end
+        end
+      end
+
+      it 'returns 0 when there is no error and a certificate is renewed' do
+        Dir.mktmpdir('test_lestcert_runner') do |tmpdir|
+          change_dir_to tmpdir do
+            TEST_FILES.each do |file|
+              f = File.join(__dir__, 'io_plugins', file)
+              FileUtils.cp f, '.'
+            end
+
+            timestamps = TEST_FILES[1..-1].map { |file| File::Stat.new(file).mtime }
+
+            add_option 'domain', 'example.com'
+            TEST_FILES.each { |file| add_option 'file', file }
+            add_option 'email', 'webmaster@example.com'
+            add_option 'server', LetsCert::TEST::SERVER
+            add_option 'cert-key-size', LetsCert::TEST::KEY_LENGTH
+            add_option 'default-root', tmpdir
+            add_option 'valid-min', 3600*24*31*3 # 3 months to force update
+
+            ret = -1
+            VCR.use_cassette('complete-run-to-renew-cert') do
+              serve_files_from tmpdir do
+                ret = Runner.run
+              end
+            end
+            expect(ret).to eq(0)
+            TEST_FILES[1..-1].each_with_index do |file, i|
+              expect(File::Stat.new(file).mtime).to be > timestamps[i]
+            end
+          end
+        end
+      end
+
+      it 'returns 2 on error' do
+        return_value = 0
+        expect do
+          expect { return_value = Runner.run }.to output(/^\[/).to_stdout
+        end.to output.to_stderr
+        expect(return_value).to eq(2)
+      end
+
     end
 
   end

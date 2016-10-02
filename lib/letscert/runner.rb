@@ -25,86 +25,15 @@ require 'fileutils'
 
 require_relative 'io_plugin'
 require_relative 'certificate'
+require_relative 'runner/logger_formatter'
+require_relative 'runner/valid_time'
 
 module LetsCert
 
   # Runner class: analyse and execute CLI commands.
   # @author Sylvain Daubert
+  # rubocop:disable Metrics/ClassLength
   class Runner
-    # Get options
-    # @return [Hash]
-    attr_reader :options
-    # @return [Logger]
-    attr_accessor :logger
-
-    # Custom logger formatter
-    class LoggerFormatter < Logger::Formatter
-
-      # @private log format
-      FORMAT = "[%s] %5s: %s\n"
-
-      # @param [String] severity
-      # @param [Datetime] time
-      # @param [nil,String] progname
-      # @param [String] msg
-      # @return [String]
-      def call(severity, time, progname, msg)
-        FORMAT % [format_datetime(time), severity, msg2str(msg)]
-      end
-
-
-      private
-
-      # @private simple datetime formatter
-      # @param [DateTime] time
-      # @return [String]
-      def format_datetime(time)
-        time.strftime("%Y-%m-%d %H:%M:%S")
-      end
-
-    end
-
-    # Class used to process validation time from String.
-    # @author Sylvain Daubert
-    class ValidTime
-
-      # @param [String] str time string. May be:
-      #   * an integer -> time in seconds
-      #   * an integer plus a letter:
-      #     * 30m: 30 minutes,
-      #     * 30h: 30 hours,
-      #     * 30d: 30 days.
-      def initialize(str)
-        m = str.match(/^(\d+)([mhd])?$/)
-        if m
-          case m[2]
-          when nil
-            @seconds = m[1].to_i
-          when 'm'
-            @seconds = m[1].to_i * 60
-          when 'h'
-            @seconds = m[1].to_i * 60 * 60
-          when 'd'
-            @seconds = m[1].to_i * 24 * 60 * 60
-          end
-        else
-          raise OptionParser::InvalidArgument, "invalid argument: --valid-min #{str}"
-        end
-        @string = str
-      end
-
-      # Get time in seconds
-      # @return [Integer]
-      def to_seconds
-        @seconds
-      end
-
-      # Get time as string
-      # @return [String]
-      def to_s
-        @string
-      end
-    end
 
     # Exit value for OK
     RETURN_OK = 1
@@ -116,8 +45,11 @@ module LetsCert
     # Default key size for RSA certificates
     RSA_DEFAULT_KEY_SIZE = 2048
 
+    # Get options
+    # @return [Hash]
+    attr_reader :options
     # @return [Logger]
-    attr_reader :logger
+    attr_accessor :logger
 
     # Run LetsCert
     # @return [Integer]
@@ -128,7 +60,6 @@ module LetsCert
       runner.run
     end
 
-
     def initialize
       @options = {
         verbose: 0,
@@ -136,9 +67,9 @@ module LetsCert
         files: [],
         valid_min: ValidTime.new('30d'),
         account_key_size: 4096,
-        tos_sha256: '33d233c8ab558ba6c8ebc370a509acdded8b80e5d587aa5d192193f35226540f',
-        user_agent: "letscert/#{VERSION.gsub(/\..*/, '')}",
-        server: 'https://acme-v01.api.letsencrypt.org/directory',
+        tos_sha256: '33d233c8ab558ba6c8ebc370a509acdded8b80e5d587aa5d192193f3' \
+                    '5226540f',
+        server: 'https://acme-v01.api.letsencrypt.org/directory'
       }
 
       @logger = Logger.new($stdout)
@@ -150,62 +81,19 @@ module LetsCert
     #   * 1 if renewal was not necessery
     #   * 2 in case of errors
     def run
-      if @options[:print_help]
-        puts @opt_parser
-        exit RETURN_OK
-      end
-
-      if @options[:show_version]
-        puts "letscert #{LetsCert::VERSION}"
-        puts "Copyright (c) 2016 Sylvain Daubert"
-        puts "License MIT: see http://opensource.org/licenses/MIT"
-        exit RETURN_OK
-      end
-
-      case @options[:verbose]
-      when 0
-        @logger.level = Logger::Severity::WARN
-      when 1
-        @logger.level = Logger::Severity::INFO
-      when 2..5
-        @logger.level = Logger::Severity::DEBUG
-      end
-
-      @logger.debug { "options are: #{@options.inspect}" }
-
-      IOPlugin.logger = @logger
-      Certificate.logger = @logger
+      print_help_if_needed
+      show_version_if_needed
+      set_logger_level
+      set_logger
 
       begin
-        if @options[:domains].empty?
-          raise Error, "At leat one domain must be given with --domain option.\n" +
-                       "Try 'letscert --help' for more information."
-        end
-
+        check_domains
         if @options[:revoke]
-          data = load_data_from_disk(IOPlugin.registered.keys)
-          certificate = Certificate.new(data[:cert])
-          if certificate.revoke(data[:account_key], @options)
-            RETURN_OK
-          else
-            RETURN_ERROR
-          end
+          revoke
         else
           check_persisted
-
-          data = load_data_from_disk(@options[:files])
-
-          certificate = Certificate.new(data[:cert])
-          if certificate.valid?(@options[:domains], @options[:valid_min].to_seconds)
-            @logger.info { 'no need to update cert' }
-            RETURN_OK
-          else
-            # update/create cert
-            certificate.get data[:account_key], data[:key], @options
-            RETURN_OK_CERT
-          end
+          get_certificate
         end
-
       rescue Error, Acme::Client::Error => ex
         msg = ex.message
         msg = "[Acme] #{msg}" if ex.is_a?(Acme::Client::Error)
@@ -215,13 +103,13 @@ module LetsCert
       end
     end
 
-
     # Parse line command options
     # @raise [OptionParser::InvalidOption] on unrecognized or malformed option
     # @return [void]
+    # rubocop:disable Metrics/MethodLength
     def parse_options
       @opt_parser = OptionParser.new do |opts|
-        opts.banner = "Usage: lestcert [options]"
+        opts.banner = 'Usage: lestcert [options]'
 
         opts.separator('')
 
@@ -231,8 +119,9 @@ module LetsCert
         opts.on('-V', '--version', 'Show version and exit') do |v|
           @options[:show_version] = v
         end
-        opts.on('-v', '--verbose', 'Run verbosely') { |v| @options[:verbose] += 1 if v }
-
+        opts.on('-v', '--verbose', 'Run verbosely') do |v|
+          @options[:verbose] += 1 if v
+        end
 
         opts.separator("\nWebroot manager:")
 
@@ -254,7 +143,7 @@ module LetsCert
           @options[:revoke] = revoke
         end
 
-        opts.on("-f", "--file FILE", 'Input/output file.',
+        opts.on('-f', '--file FILE', 'Input/output file.',
                 'Can be specified multiple times',
                 'Allowed values: account_key.json, cert.der,',
                 'cert.pem, chain.pem, full.pem,',
@@ -284,9 +173,10 @@ module LetsCert
         opts.accept(ValidTime) do |valid_time|
           ValidTime.new(valid_time)
         end
-        opts.on('--valid-min TIME', ValidTime, 'Renew existing certificate if validity',
+        opts.on('--valid-min TIME', ValidTime,
+                'Renew existing certificate if validity',
                 'is lesser than TIME',
-                "(default: #{@options[:valid_min].to_s})") do |vt|
+                "(default: #{@options[:valid_min]})") do |vt|
           @options[:valid_min] = vt
         end
 
@@ -295,12 +185,13 @@ module LetsCert
         end
 
         opts.separator("\nRegistration:")
-        opts.separator("  Automatically register an account with he ACME CA specified" +
-                       " by --server")
+        opts.separator('  Automatically register an account with he ACME CA' \
+                       ' specified  by --server')
         opts.separator('')
 
         opts.on('--account-key-size BITS', Integer,
-                "Account key size (default: #{@options[:account_key_size]})") do |bits|
+                'Account key size (default: ' \
+                "#{@options[:account_key_size]})") do |bits|
           @options[:account_key_size] = bits
         end
 
@@ -322,11 +213,6 @@ module LetsCert
         opts.separator('  Configure properties of HTTP requests and responses.')
         opts.separator('')
 
-        opts.on('--user-agent NAME', 'User-Agent sent in all HTTP requests',
-                "(default: #{@options[:user_agent]})") do |ua|
-          @options[:user_agent] = ua
-        end
-        
         opts.on('--server URI', 'URI for the CA ACME API endpoint',
                 "(default: #{@options[:server]})") do |uri|
           @options[:server] = uri
@@ -341,14 +227,8 @@ module LetsCert
     # Check all components are covered by plugins
     # @raise [Error]
     def check_persisted
-      persisted = IOPlugin.empty_data
-
-      @options[:files].each do |file|
-        persisted.merge!(IOPlugin.registered[file].persisted) do |k, oldv, newv|
-          oldv || newv
-        end
-      end
-      not_persisted = persisted.keys.find_all { |k| !persisted[k] }
+      persisted = persisted_data
+      not_persisted = persisted.keys.find_all { |k| persisted[k].nil? }
 
       unless not_persisted.empty?
         raise Error, 'Selected IO plugins do not cover following components: ' +
@@ -356,8 +236,89 @@ module LetsCert
       end
     end
 
-
     private
+
+    # Print help and exit, if +:print_help+ option is set
+    # @return [void]
+    # rubocop:disable Style/GuardClause
+    def print_help_if_needed
+      if @options[:print_help]
+        puts @opt_parser
+        exit RETURN_OK
+      end
+    end
+
+    # Show version and exit, if +:show_version+ option is set
+    # @return [void]
+    def show_version_if_needed
+      if @options[:show_version]
+        puts "letscert #{LetsCert::VERSION}"
+        puts 'Copyright (c) 2016 Sylvain Daubert'
+        puts 'License MIT: see http://opensource.org/licenses/MIT'
+        exit RETURN_OK
+      end
+    end
+
+    # Set logger level from +:verbose+ option
+    # @return [void]
+    def set_logger_level
+      case @options[:verbose]
+      when 0
+        @logger.level = Logger::Severity::WARN
+      when 1
+        @logger.level = Logger::Severity::INFO
+      when 2..5
+        @logger.level = Logger::Severity::DEBUG
+      end
+    end
+
+    # Set logger for IOPlugin and Certificate classes.
+    # @return [void]
+    def set_logger
+      @logger.debug { "options are: #{@options.inspect}" }
+      IOPlugin.logger = @logger
+      Certificate.logger = @logger
+    end
+
+    # Check at least on domain is given.
+    # @return [void]
+    # @raise [Error] no domain given
+    def check_domains
+      if @options[:domains].empty?
+        raise Error, 'At leat one domain must be given with --domain ' \
+                     "option.\nTry 'letscert --help' for more information."
+      end
+    end
+
+    # Revoke a certificate
+    # @return [Integer] exit status
+    def revoke
+      data = load_data_from_disk(IOPlugin.registered.keys)
+      certificate = Certificate.new(data[:cert])
+      if certificate.revoke(data[:account_key], @options)
+        RETURN_OK
+      else
+        RETURN_ERROR
+      end
+    end
+
+    # Create/update a certificate
+    # @return [Integer] exit status
+    # rubocop:disable Style/AccessorMethodName
+    def get_certificate
+      data = load_data_from_disk(@options[:files])
+
+      certificate = Certificate.new(data[:cert])
+      min_time = @options[:valid_min].to_seconds
+      if certificate.valid?(@options[:domains], min_time)
+        @logger.info { 'no need to update cert' }
+        RETURN_OK
+      else
+        # update/create cert
+        certificate.get data[:account_key], data[:key], @options
+        RETURN_OK_CERT
+      end
+    end
 
     # Load existing data from disk
     # @param [Array<String>] files
@@ -374,9 +335,9 @@ module LetsCert
         end
         raise Error unless test
 
-        # Merge data into all_data. New value replace old one only if old one was
-        # not defined
-        all_data.merge!(data) do |key, oldval, newval|
+        # Merge data into all_data. New value replace old one only if old
+        # one was not defined
+        all_data.merge!(data) do |_key, oldval, newval|
           oldval || newval
         end
       end
@@ -408,6 +369,18 @@ module LetsCert
          @options[:cert_key_size].nil?
         @options[:cert_key_size] = RSA_DEFAULT_KEY_SIZE
       end
+    end
+
+    def persisted_data
+      persisted = IOPlugin.empty_data
+      @options[:files].each do |file|
+        ioplugin = IOPlugin.registered[file]
+        next if ioplugin.nil?
+        persisted.merge!(ioplugin.persisted) do |_k, oldv, newv|
+          oldv || newv
+        end
+      end
+      persisted
     end
 
   end

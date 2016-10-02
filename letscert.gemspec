@@ -16,16 +16,17 @@ EOF
   s.email = 'sylvain.daubert@laposte.net'
   s.homepage = 'https://github.com/sdaubert/letscert'
 
-  s.files = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  files = `git ls-files -z`.split("\x0")
+  s.files = files.reject { |f| f.match(%r{^(test|spec|features)/}) }
   s.executables = ['letscert']
-  s.require_paths = ["lib"]
+  s.require_paths = ['lib']
 
   s.required_ruby_version = '>= 2.1.0'
 
   s.add_dependency 'acme-client', '~>0.4.0'
 
-  s.add_development_dependency "bundler", "~> 1.12"
-  s.add_development_dependency "rake", "~> 10.0"
+  s.add_development_dependency 'bundler', '~> 1.12'
+  s.add_development_dependency 'rake', '~> 10.0'
   s.add_development_dependency 'rspec', '~>3.4'
   s.add_development_dependency 'vcr', '~>3.0'
   s.add_development_dependency 'yard', '~>0.8'

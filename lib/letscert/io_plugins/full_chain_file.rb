@@ -19,54 +19,40 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
-# Namespace for all letcert's classes.
-# @author Sylvain Daubert
 module LetsCert
 
-  # Mixin module to add loggability to a class.
+  # Fullchain file plugin
   # @author Sylvain Daubert
-  module Loggable
+  class FullChainFile < ChainFile
 
-    # Hook called when {Loggable} is included in a class or a module.
-    # This hook adds methods from {ClassMethods} as class methods to +mod+.
-    # @param [Module] mod
+    # @return [Hash] always get +true+ for +:cert+ and +:chain+ keys
+    def persisted
+      @persisted ||= { cert: true, chain: true }
+    end
+
+    # Load full certificate chain
+    # @return [Hash]
+    def load
+      data = super
+      if data[:chain].nil? or data[:chain].empty?
+        cert = nil
+        chain = []
+      else
+        cert = data[:chain].shift
+        chain = data[:chain]
+      end
+
+      { cert: cert, chain: chain }
+    end
+
+    # Save fullchain.
+    # @param [Hash] data
     # @return [void]
-    def self.included(mod)
-      mod.extend(ClassMethods)
-    end
-
-    # Class methods from {Loggable} module to include in target classes.
-    # @author Sylvain Daubert
-    module ClassMethods
-
-      # @private hook called when a subclass is created.
-      #  Take care of all subclasses to later properly set @logger class
-      #  instance variable.
-      # @param [Class] subclass
-      # @return [void]
-      def inherited(subclass)
-        @@subclasses ||= []
-        @@subclasses << subclass
-      end
-
-      # Set logger
-      # @param [Logger] logger
-      # @return [void]
-      def logger=(logger)
-        @logger = logger
-        @@subclasses.each do |subclass|
-          subclass.instance_variable_set(:@logger, logger)
-        end
-      end
-
-    end
-
-    # Get logger instance
-    # @return [Logger]
-    def logger
-      @logger ||= self.class.instance_variable_get(:@logger)
+    def save(data)
+      super(cert: nil, chain: [data[:cert]] + data[:chain])
     end
 
   end
+
+  IOPlugin.register(FullChainFile, 'fullchain.pem', :pem)
 end

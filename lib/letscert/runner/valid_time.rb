@@ -19,53 +19,50 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
-# Namespace for all letcert's classes.
-# @author Sylvain Daubert
 module LetsCert
+  class Runner
 
-  # Mixin module to add loggability to a class.
-  # @author Sylvain Daubert
-  module Loggable
-
-    # Hook called when {Loggable} is included in a class or a module.
-    # This hook adds methods from {ClassMethods} as class methods to +mod+.
-    # @param [Module] mod
-    # @return [void]
-    def self.included(mod)
-      mod.extend(ClassMethods)
-    end
-
-    # Class methods from {Loggable} module to include in target classes.
+    # Class used to process validation time from String.
     # @author Sylvain Daubert
-    module ClassMethods
+    class ValidTime
 
-      # @private hook called when a subclass is created.
-      #  Take care of all subclasses to later properly set @logger class
-      #  instance variable.
-      # @param [Class] subclass
-      # @return [void]
-      def inherited(subclass)
-        @@subclasses ||= []
-        @@subclasses << subclass
-      end
-
-      # Set logger
-      # @param [Logger] logger
-      # @return [void]
-      def logger=(logger)
-        @logger = logger
-        @@subclasses.each do |subclass|
-          subclass.instance_variable_set(:@logger, logger)
+      # @param [String] str time string. May be:
+      #   * an integer -> time in seconds
+      #   * an integer plus a letter:
+      #     * 30m: 30 minutes,
+      #     * 30h: 30 hours,
+      #     * 30d: 30 days.
+      def initialize(str)
+        m = str.match(/^(\d+)([mhd])?$/)
+        if m
+          @seconds = case m[2]
+                     when nil
+                       m[1].to_i
+                     when 'm'
+                       m[1].to_i * 60
+                     when 'h'
+                       m[1].to_i * 60 * 60
+                     when 'd'
+                       m[1].to_i * 24 * 60 * 60
+                     end
+        else
+          raise OptionParser::InvalidArgument,
+                "invalid argument: --valid-min #{str}"
         end
+        @string = str
       end
 
-    end
+      # Get time in seconds
+      # @return [Integer]
+      def to_seconds
+        @seconds
+      end
 
-    # Get logger instance
-    # @return [Logger]
-    def logger
-      @logger ||= self.class.instance_variable_get(:@logger)
+      # Get time as string
+      # @return [String]
+      def to_s
+        @string
+      end
     end
 
   end

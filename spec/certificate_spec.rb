@@ -4,36 +4,13 @@ require_relative 'spec_helper'
 
 module LetsCert
 
-  TEST_SERVER = 'http://172.17.0.1:4000'
-  TEST_KEY_LENGTH = 512
-
-
   describe Certificate do
 
     before(:all) { Certificate.logger = Logger.new('/dev/null') }
 
     before(:all) do
-      root_key = OpenSSL::PKey::RSA.new(TEST_KEY_LENGTH)
-
-      @domains = %w(example.org www.example.org)
-
-      key = OpenSSL::PKey::RSA.new(TEST_KEY_LENGTH)
-      @cert = OpenSSL::X509::Certificate.new
-      @cert.version = 2
-      @cert.serial = 2
-      @cert.issuer = OpenSSL::X509::Name.parse "/DC=letscert/CN=CA"
-      @cert.public_key = key.public_key
-      @cert.not_before = Time.now
-      # 20 days validity
-      @cert.not_after = @cert.not_before + 20 * 24 * 60 * 60
-      ef = OpenSSL::X509::ExtensionFactory.new
-      ef.subject_certificate = @cert
-      @domains.each do |domain|
-        @cert.add_extension(ef.create_extension('subjectAltName',
-                                                "DNS:#{domain}",
-                                                false))
-      end
-      @cert.sign(root_key, OpenSSL::Digest::SHA256.new)
+      # Generate a signed certtificate and its associated domains
+      @cert, @domains = generate_signed_cert
 
       # minimum size accepted by ACME server
       @account_key2048 = OpenSSL::PKey::RSA.new(2048)
@@ -49,7 +26,7 @@ module LetsCert
 
     let(:certificate) { Certificate.new(@cert) }
     let(:options) { { roots: { 'example.com' => @tmpdir },
-                      server: TEST_SERVER,
+                      server: LetsCert::TEST::SERVER,
                       email: 'test@example.org',
                       cert_key_size: 2048 } }
 
@@ -60,7 +37,7 @@ module LetsCert
         ARGV.clear
 
         ARGV << '-d' << 'example.com:/var/ww/html'
-        ARGV << '--server' << TEST_SERVER
+        ARGV << '--server' << LetsCert::TEST::SERVER
         runner.parse_options
         VCR.use_cassette('single-domain') do
           # raise error because no e-mail address was given
@@ -71,7 +48,7 @@ module LetsCert
         ARGV.clear
         ARGV << '-d' << 'example.com:/var/www/html'
         ARGV << '-d' << 'www.example.com'
-        ARGV << '--server' << TEST_SERVER
+        ARGV << '--server' << LetsCert::TEST::SERVER
         runner.options[:domains] = []
         runner.parse_options
         expect { certificate.get(nil, nil, runner.options) }.
@@ -82,7 +59,7 @@ module LetsCert
         ARGV << '-d' << 'example.com:/var/www/html'
         ARGV << '-d' << 'www.example.com'
         ARGV << '--default-root' << '/opt/www'
-        ARGV << '--server' << TEST_SERVER
+        ARGV << '--server' << LetsCert::TEST::SERVER
         runner.parse_options
         VCR.use_cassette('default-root') do
           # raise error because no e-mail address was given
@@ -159,7 +136,7 @@ module LetsCert
 
       it 'creates a new private key if --reuse-key is not present' do
         options[:files] = %w(fake)
-        key = OpenSSL::PKey::RSA.new(TEST_KEY_LENGTH)
+        key = OpenSSL::PKey::RSA.new(LetsCert::TEST::KEY_LENGTH)
 
         VCR.use_cassette('http-01-challenge') do
           serve_files_from @tmpdir do
@@ -173,7 +150,7 @@ module LetsCert
       it 'reuses existing private key if --reuse-key is present' do
         options[:files] = %w(fake)
         options[:reuse_key] = true
-        key = OpenSSL::PKey::RSA.new(TEST_KEY_LENGTH)
+        key = OpenSSL::PKey::RSA.new(LetsCert::TEST::KEY_LENGTH)
 
         VCR.use_cassette('http-01-challenge') do
           serve_files_from @tmpdir do
@@ -185,7 +162,7 @@ module LetsCert
       end
 
       it 'raises if challenge is not verified' do
-        key = OpenSSL::PKey::RSA.new(TEST_KEY_LENGTH)
+        key = OpenSSL::PKey::RSA.new(LetsCert::TEST::KEY_LENGTH)
 
         VCR.use_cassette('http-01-challenge-not-verified') do
           expect { certificate.get(@account_key2048, key, options) }.

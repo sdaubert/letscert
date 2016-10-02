@@ -19,54 +19,32 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
-# Namespace for all letcert's classes.
-# @author Sylvain Daubert
 module LetsCert
 
-  # Mixin module to add loggability to a class.
+  # Key file plugin
   # @author Sylvain Daubert
-  module Loggable
+  class KeyFile < OpenSSLIOPlugin
+    include FileIOPluginMixin
 
-    # Hook called when {Loggable} is included in a class or a module.
-    # This hook adds methods from {ClassMethods} as class methods to +mod+.
-    # @param [Module] mod
+    # @return [Hash] always get +true+ for +:key+ key
+    def persisted
+      @persisted ||= { key: true }
+    end
+
+    # @return [Hash]
+    def load_from_content(content)
+      { key: load_key(content) }
+    end
+
+    # Save private key.
+    # @param [Hash] data
     # @return [void]
-    def self.included(mod)
-      mod.extend(ClassMethods)
-    end
-
-    # Class methods from {Loggable} module to include in target classes.
-    # @author Sylvain Daubert
-    module ClassMethods
-
-      # @private hook called when a subclass is created.
-      #  Take care of all subclasses to later properly set @logger class
-      #  instance variable.
-      # @param [Class] subclass
-      # @return [void]
-      def inherited(subclass)
-        @@subclasses ||= []
-        @@subclasses << subclass
-      end
-
-      # Set logger
-      # @param [Logger] logger
-      # @return [void]
-      def logger=(logger)
-        @logger = logger
-        @@subclasses.each do |subclass|
-          subclass.instance_variable_set(:@logger, logger)
-        end
-      end
-
-    end
-
-    # Get logger instance
-    # @return [Logger]
-    def logger
-      @logger ||= self.class.instance_variable_get(:@logger)
+    def save(data)
+      save_to_file(dump_key(data[:key]))
     end
 
   end
+
+  IOPlugin.register(KeyFile, 'key.pem', :pem)
+  IOPlugin.register(KeyFile, 'key.der', :der)
 end
