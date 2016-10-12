@@ -17,6 +17,14 @@ module LetsCert
 
       # Create temporary directory
       @tmpdir = Dir.mktmpdir('test_letscert')
+
+      # Define expected exception when no server defined
+      @no_server_exception = case RUBY_VERSION.sub(/\.\d+$/, '')
+                             when '2.1'
+                               URI::InvalidURIError
+                             else
+                               Faraday::ConnectionFailed
+                             end
     end
 
     after(:all) do
@@ -76,7 +84,7 @@ module LetsCert
         VCR.use_cassette('no-server') do
           # Connection error: no server to connect to
           expect { certificate.get(@account_key2048, nil, opts) }.
-            to raise_error(Faraday::ConnectionFailed)
+            to raise_error(@no_server_exception)
         end
         expect(certificate.client.private_key).to eq(@account_key2048)
       end
@@ -90,7 +98,7 @@ module LetsCert
         VCR.use_cassette('no-server') do
           # Connection error: no server to connect to
           expect { certificate.get(nil, nil, opts) }.
-            to raise_error(Faraday::ConnectionFailed)
+            to raise_error(@no_server_exception)
         end
         expect(certificate.client.private_key).to be_a(OpenSSL::PKey::RSA)
       end
