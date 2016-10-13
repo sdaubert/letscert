@@ -41,8 +41,8 @@ module LetsCert
       # Ruby < 2.3.0 urlsafe_decode64 use struct_decode64. So the string
       # is rejected if padding is removed (which JWK do)
       # So, we have to reinject padding
-      if !data.end_with?("=") && data.length % 4 != 0
-        data = data.ljust((data.length + 3) & ~3, "=")
+      if !data.end_with?('=') && (data.length % 4).nonzero?
+        data = data.ljust((data.length + 3) & ~3, '=')
       end
       Base64.urlsafe_decode64(data)
     end
