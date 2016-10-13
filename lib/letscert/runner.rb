@@ -227,6 +227,7 @@ module LetsCert
     # rubocop:disable Style/GuardClause
     def print_help_if_needed
       if @options[:print_help]
+        show_version
         puts @opt_parser
         exit RETURN_OK
       end
@@ -236,11 +237,15 @@ module LetsCert
     # @return [void]
     def show_version_if_needed
       if @options[:show_version]
-        puts "letscert #{LetsCert::VERSION}"
-        puts 'Copyright (c) 2016 Sylvain Daubert'
-        puts 'License MIT: see http://opensource.org/licenses/MIT'
+        show_version
         exit RETURN_OK
       end
+    end
+
+    def show_version
+      puts "letscert #{LetsCert::VERSION}"
+      puts 'Copyright (c) 2016 Sylvain Daubert'
+      puts 'License MIT: see http://opensource.org/licenses/MIT'
     end
 
     # Set logger level from +:verbose+ option
