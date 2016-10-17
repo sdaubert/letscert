@@ -3,15 +3,14 @@ SimpleCov.start do
   add_filter "/spec/"
 end
 
-$:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'letscert'
 
 require 'vcr'
 require 'faraday'
 require 'fileutils'
 
-require_relative 'http_helper'
-require_relative 'io_plugin_helper'
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
 RSpec.configure do |c|
   c.include HttpHelper
