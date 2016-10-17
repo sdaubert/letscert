@@ -105,7 +105,7 @@ module LetsCert
 
       it 'creates an ACME client with provided account key and end point' do
         VCR.use_cassette('create-acme-client') do
-          # Acme error: not valid e-mail address
+          # Acme error: e-mail address not valid
           expect { certificate.get(@account_key2048, nil, options) }.
             to raise_error(Acme::Client::Error)
         end
@@ -135,7 +135,7 @@ module LetsCert
       it 'raises if HTTP-01 challenge is unavailable' do
         VCR.use_cassette('no-http-01-challenge') do
           certificate.get_acme_client(@account_key2048, options) do |client|
-            client.connection.builder.insert 0, RemoveHttp01Middleware
+            client.connection.builder.insert 0, HttpHelper::RemoveHttp01Middleware
           end
           expect { certificate.get(@account_key2048, nil, options) }.
             to raise_error(LetsCert::Error).with_message(/not offer http-01/)
