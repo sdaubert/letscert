@@ -20,8 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# Namespace for all letcert's classes.
-# @author Sylvain Daubert
+# rubocop:disable Style/ClassVars
 module LetsCert
 
   # Mixin module to add loggability to a class.
