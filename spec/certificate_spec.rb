@@ -45,7 +45,7 @@ module LetsCert
         ARGV.clear
 
         ARGV << '-d' << 'example.com:/var/ww/html'
-        ARGV << '--server' << LetsCert::TEST::SERVER
+        ARGV << '--server' << TEST::SERVER
         runner.parse_options
         VCR.use_cassette('single-domain') do
           # raise error because no e-mail address was given
@@ -56,7 +56,7 @@ module LetsCert
         ARGV.clear
         ARGV << '-d' << 'example.com:/var/www/html'
         ARGV << '-d' << 'www.example.com'
-        ARGV << '--server' << LetsCert::TEST::SERVER
+        ARGV << '--server' << TEST::SERVER
         runner.options[:domains] = []
         runner.parse_options
         expect { certificate.get(nil, nil, runner.options) }.
@@ -67,7 +67,7 @@ module LetsCert
         ARGV << '-d' << 'example.com:/var/www/html'
         ARGV << '-d' << 'www.example.com'
         ARGV << '--default-root' << '/opt/www'
-        ARGV << '--server' << LetsCert::TEST::SERVER
+        ARGV << '--server' << TEST::SERVER
         runner.parse_options
         VCR.use_cassette('default-root') do
           # raise error because no e-mail address was given
@@ -144,7 +144,7 @@ module LetsCert
 
       it 'creates a new private key if --reuse-key is not present' do
         options[:files] = %w(fake)
-        key = OpenSSL::PKey::RSA.new(LetsCert::TEST::KEY_LENGTH)
+        key = OpenSSL::PKey::RSA.new(TEST::KEY_LENGTH)
 
         VCR.use_cassette('http-01-challenge') do
           serve_files_from @tmpdir do
@@ -158,7 +158,7 @@ module LetsCert
       it 'reuses existing private key if --reuse-key is present' do
         options[:files] = %w(fake)
         options[:reuse_key] = true
-        key = OpenSSL::PKey::RSA.new(LetsCert::TEST::KEY_LENGTH)
+        key = OpenSSL::PKey::RSA.new(TEST::KEY_LENGTH)
 
         VCR.use_cassette('http-01-challenge') do
           serve_files_from @tmpdir do
@@ -170,7 +170,7 @@ module LetsCert
       end
 
       it 'raises if challenge is not verified' do
-        key = OpenSSL::PKey::RSA.new(LetsCert::TEST::KEY_LENGTH)
+        key = OpenSSL::PKey::RSA.new(TEST::KEY_LENGTH)
 
         VCR.use_cassette('http-01-challenge-not-verified') do
           expect { certificate.get(@account_key2048, key, options) }.
