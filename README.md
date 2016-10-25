@@ -1,9 +1,10 @@
 [![Gem Version](https://badge.fury.io/rb/letscert.svg)](https://badge.fury.io/rb/letscert)
+[![Build Status](https://travis-ci.org/sdaubert/letscert.svg?branch=master)](https://travis-ci.org/sdaubert/letscert)
 
 # letscert
 A simple `Let's Encrypt` client in ruby.
 
-I think `simp_le` do it the right way: it is simple, it is safe as it does not need to be
+I think [kuba/simp_le](https://github.com/kuba/simp_le) do it the right way: it is simple, it is safe as it does not need to be
 run as root, but it is Python (no one is perfect :-)) So I started to create a clone, but
 in Ruby.
 
@@ -13,15 +14,15 @@ in Ruby.
 With full chain support (`fullchain.pem` file will contain all certificates):
 
 ```bash
-letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld \
+letscert -d example.org:/var/www/example.org/html --email my.name@example.org \
   -f account_key.json -f key.pem -f fullchain.pem
 ```
 
-else (certificate for example.com is in `cert.pem` file, rest of certification chain
+else (certificate for example.org is in `cert.pem` file, rest of certification chain
 is in `chain.pem`):
 
 ```bash
-letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld \
+letscert -d example.org:/var/www/example.org/html --email my.name@example.org \
   -f account_key.json -f key.pem -f cert.pem -f chain.pem
 ```
 
@@ -29,11 +30,11 @@ Commands are the sames for certificate renewal.
 
 
 ## Generate a key pair and get a signed certificate for multi-domains:
-Generate a single certificate for `example.com` and `www.example.com`:
+Generate a single certificate for `example.org` and `www.example.org`:
 
 ```bash
-letscert -d example.com -d www.example.com --default-root /var/www/html \
-  --email my.name@domain.tld -f account_key.json -f key.pem -f fullchain.pem
+letscert -d example.org -d www.example.org --default-root /var/www/html \
+  --email my.name@example.org -f account_key.json -f key.pem -f fullchain.pem
 ```
 
 Command is the same for certificate renewal.
@@ -43,7 +44,7 @@ Command is the same for certificate renewal.
 In this example, `xx` is 10:
 
 ```bash
-letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld \
+letscert -d example.org:/var/www/example.org/html --email my.name@example.org \
   -f account_key.json -f key.pem -f cert.pem -f chain.pem --valid-min 10d
 ```
 
@@ -54,7 +55,7 @@ seconds (no suffix).
 From directory where are stored `account_key.json` and `cert.pem` or `fullchain.pem`:
 
 ```bash
-letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld --revoke
+letscert -d example.org:/var/www/example.org/html --email my.name@example.org --revoke
 ```
 
 
@@ -69,7 +70,7 @@ letscert -d example.com:/var/www/example.com/html --email my.name@domain.tld --r
 * No configuration file.
 * Support multiple domains with multiple roots. Always create a single certificate per
   run (ie a certificate may have multiple SANs).
-* As `simp_le`, check the exit code to known if a renewal has happened:
+* Check the exit code to known if a renewal has happened:
   * 0 if certificate data was created or updated;
   * 1 if renewal not necessary;
   * 2 in case of errors.

@@ -21,6 +21,7 @@
 # SOFTWARE.
 
 # Namespace for all letcert's classes.
+# @author Sylvain Daubert
 module LetsCert
 
   # Base error class

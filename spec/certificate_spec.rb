@@ -17,6 +17,14 @@ module LetsCert
 
       # Create temporary directory
       @tmpdir = Dir.mktmpdir('test_letscert')
+
+      # Define expected exception when no server defined
+      @no_server_exception = case RUBY_VERSION.sub(/\.\d+$/, '')
+                             when '2.1'
+                               URI::InvalidURIError
+                             else
+                               Faraday::ConnectionFailed
+                             end
     end
 
     after(:all) do
@@ -37,7 +45,7 @@ module LetsCert
         ARGV.clear
 
         ARGV << '-d' << 'example.com:/var/ww/html'
-        ARGV << '--server' << LetsCert::TEST::SERVER
+        ARGV << '--server' << TEST::SERVER
         runner.parse_options
         VCR.use_cassette('single-domain') do
           # raise error because no e-mail address was given
@@ -48,7 +56,7 @@ module LetsCert
         ARGV.clear
         ARGV << '-d' << 'example.com:/var/www/html'
         ARGV << '-d' << 'www.example.com'
-        ARGV << '--server' << LetsCert::TEST::SERVER
+        ARGV << '--server' << TEST::SERVER
         runner.options[:domains] = []
         runner.parse_options
         expect { certificate.get(nil, nil, runner.options) }.
@@ -59,7 +67,7 @@ module LetsCert
         ARGV << '-d' << 'example.com:/var/www/html'
         ARGV << '-d' << 'www.example.com'
         ARGV << '--default-root' << '/opt/www'
-        ARGV << '--server' << LetsCert::TEST::SERVER
+        ARGV << '--server' << TEST::SERVER
         runner.parse_options
         VCR.use_cassette('default-root') do
           # raise error because no e-mail address was given
@@ -76,7 +84,7 @@ module LetsCert
         VCR.use_cassette('no-server') do
           # Connection error: no server to connect to
           expect { certificate.get(@account_key2048, nil, opts) }.
-            to raise_error(Faraday::ConnectionFailed)
+            to raise_error(@no_server_exception)
         end
         expect(certificate.client.private_key).to eq(@account_key2048)
       end
@@ -90,14 +98,14 @@ module LetsCert
         VCR.use_cassette('no-server') do
           # Connection error: no server to connect to
           expect { certificate.get(nil, nil, opts) }.
-            to raise_error(Faraday::ConnectionFailed)
+            to raise_error(@no_server_exception)
         end
         expect(certificate.client.private_key).to be_a(OpenSSL::PKey::RSA)
       end
 
       it 'creates an ACME client with provided account key and end point' do
         VCR.use_cassette('create-acme-client') do
-          # Acme error: not valid e-mail address
+          # Acme error: e-mail address not valid
           expect { certificate.get(@account_key2048, nil, options) }.
             to raise_error(Acme::Client::Error)
         end
@@ -127,7 +135,7 @@ module LetsCert
       it 'raises if HTTP-01 challenge is unavailable' do
         VCR.use_cassette('no-http-01-challenge') do
           certificate.get_acme_client(@account_key2048, options) do |client|
-            client.connection.builder.insert 0, RemoveHttp01Middleware
+            client.connection.builder.insert 0, HttpHelper::RemoveHttp01Middleware
           end
           expect { certificate.get(@account_key2048, nil, options) }.
             to raise_error(LetsCert::Error).with_message(/not offer http-01/)
@@ -136,7 +144,7 @@ module LetsCert
 
       it 'creates a new private key if --reuse-key is not present' do
         options[:files] = %w(fake)
-        key = OpenSSL::PKey::RSA.new(LetsCert::TEST::KEY_LENGTH)
+        key = OpenSSL::PKey::RSA.new(TEST::KEY_LENGTH)
 
         VCR.use_cassette('http-01-challenge') do
           serve_files_from @tmpdir do
@@ -150,7 +158,7 @@ module LetsCert
       it 'reuses existing private key if --reuse-key is present' do
         options[:files] = %w(fake)
         options[:reuse_key] = true
-        key = OpenSSL::PKey::RSA.new(LetsCert::TEST::KEY_LENGTH)
+        key = OpenSSL::PKey::RSA.new(TEST::KEY_LENGTH)
 
         VCR.use_cassette('http-01-challenge') do
           serve_files_from @tmpdir do
@@ -162,7 +170,7 @@ module LetsCert
       end
 
       it 'raises if challenge is not verified' do
-        key = OpenSSL::PKey::RSA.new(LetsCert::TEST::KEY_LENGTH)
+        key = OpenSSL::PKey::RSA.new(TEST::KEY_LENGTH)
 
         VCR.use_cassette('http-01-challenge-not-verified') do
           expect { certificate.get(@account_key2048, key, options) }.

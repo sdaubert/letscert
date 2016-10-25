@@ -22,6 +22,8 @@
 require 'acme-client'
 require_relative 'loggable'
 
+# rubocop:disable Metrics/ClassLength, Style/MultilineBlockLayout
+# rubocop:disable Style/BlockEndNewline, Style/BlockDelimiters
 module LetsCert
 
   # Class to handle ACME operations on certificates
