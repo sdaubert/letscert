@@ -31,22 +31,30 @@ module LetsCert
       expect { Test.new.load_from_content("a") }.to raise_error(NotImplementedError)
     end
 
-    it '#save_to_file' do
-      tmpfile = 'tmpfile43'
-      content = nil
+    context '#save_to_file' do
+      it 'save to file' do
+        tmpfile = 'tmpfile43'
+        content = nil
 
-      change_dir_to File.dirname(__FILE__) do
-        content = test.load
+        change_dir_to File.dirname(__FILE__) do
+          content = test.load
+        end
+
+        test2 = Test2.new(tmpfile)
+        test2.save_to_file(content)
+        expect(File.read(tmpfile)).to eq(content)
+
+        File.unlink tmpfile if File.exist? tmpfile
       end
 
-      test2 = Test2.new(tmpfile)
-      test2.save_to_file(content)
-
-      expect(File.read(tmpfile)).to eq(content)
-
-      File.unlink tmpfile if File.exist? tmpfile
+      it 'does not overwrite a file which content did not change' do
+        change_dir_to File.dirname(__FILE__) do
+          content = test.load
+          mtime = File.stat(test.name).mtime
+          test.save_to_file(content)
+          expect(mtime).to eq(File.stat(test.name).mtime)
+        end
+      end
     end
-    
   end
-
 end
