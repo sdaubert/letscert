@@ -9,7 +9,8 @@ module LetsCert
     class Test; include FileIOPluginMixin; end
     class Test2 < IOPlugin
       include FileIOPluginMixin
-      def load_from_content(content); content; end
+      def load_from_content(content); { test2: content }; end
+      def save(data); save_to_file data[:test2]; end
     end
 
     let(:test) { Test2.new('test.fileioplugin') }
@@ -17,7 +18,7 @@ module LetsCert
     it '#load loads data from a file' do
       change_dir_to File.dirname(__FILE__) do
         content = test.load
-        expect(content).to eq("This is a test!\n")
+        expect(content).to eq({ test2: "This is a test!\n" })
       end
     end
 
@@ -41,8 +42,8 @@ module LetsCert
         end
 
         test2 = Test2.new(tmpfile)
-        test2.save_to_file(content)
-        expect(File.read(tmpfile)).to eq(content)
+        test2.save(content)
+        expect(File.read(tmpfile)).to eq(content[:test2])
 
         File.unlink tmpfile if File.exist? tmpfile
       end
@@ -51,7 +52,7 @@ module LetsCert
         change_dir_to File.dirname(__FILE__) do
           content = test.load
           mtime = File.stat(test.name).mtime
-          test.save_to_file(content)
+          test.save(content)
           expect(mtime).to eq(File.stat(test.name).mtime)
         end
       end
