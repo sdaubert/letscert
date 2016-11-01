@@ -325,7 +325,7 @@ module LetsCert
               end
             end
             expect(ret).to eq(0)
-            TEST::RUNNER_FILES[1..-1].each_with_index do |file, i|
+            TEST::RUNNER_FILES[1..-2].each_with_index do |file, i|
               expect(File::Stat.new(file).mtime).to be > timestamps[i]
             end
           end
@@ -339,9 +339,6 @@ module LetsCert
         end.to output.to_stderr
         expect(return_value).to eq(2)
       end
-
     end
-
   end
-
 end
