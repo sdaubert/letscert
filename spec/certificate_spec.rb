@@ -189,7 +189,6 @@ module LetsCert
         expect(IOPluginHelper::FakeIOPlugin.saved_data[:cert]).to eq(certificate.cert)
         expect(IOPluginHelper::FakeIOPlugin.saved_data[:chain]).to eq(certificate.chain)
       end
-
     end
 
     context '#revoke' do
