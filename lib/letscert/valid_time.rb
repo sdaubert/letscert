@@ -46,7 +46,7 @@ module LetsCert
                    end
       else
         raise OptionParser::InvalidArgument,
-              "invalid argument: --valid-min #{str}"
+              "invalid argument: valid-min #{str}"
       end
       @string = str
     end
