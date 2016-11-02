@@ -4,6 +4,18 @@ module LetsCert
 
   describe ValidTime do
 
+    context '.time_in_words' do
+      it 'converts number of seconds in words' do
+        test_vector = [[58, '58 seconds'],
+                       [305, 'about 5 minutes'],
+                       [3700, 'about 1 hours'],
+                       [180000, 'about 2 days']]
+        test_vector.each do |seconds, str|
+          expect(ValidTime.time_in_words seconds).to eq(str)
+        end
+      end
+    end
+
     context '.new' do
       it 'accepts a String' do
         expect(ValidTime.new('1234')).to be_a(ValidTime)

@@ -25,6 +25,28 @@ module LetsCert
   # @author Sylvain Daubert
   class ValidTime
 
+    # Number of seconds in one minute
+    SECONDS_IN_ONE_MINUTE = 60
+    # Number of seconds in one hour
+    SECONDS_IN_ONE_HOUR = 60 * 60
+    # Number of seconds in one day
+    SECONDS_IN_ONE_DAY = 24 * 60 * 60
+
+    # Get time in words (e.g. xx days or xx hours)
+    # @param [Integer] seconds
+    # @return [String]
+    def self.time_in_words(seconds)
+      if seconds < SECONDS_IN_ONE_MINUTE
+        '%u seconds' % seconds
+      elsif seconds < SECONDS_IN_ONE_HOUR
+        'about %u minutes' % (seconds / SECONDS_IN_ONE_MINUTE)
+      elsif seconds < SECONDS_IN_ONE_DAY
+        'about %u hours' % (seconds / SECONDS_IN_ONE_HOUR)
+      else
+        'about %u days' % (seconds / SECONDS_IN_ONE_DAY)
+      end
+    end
+
     # @param [String] str time string. May be:
     #   * an integer -> time in seconds
     #   * an integer plus a letter:
@@ -38,11 +60,11 @@ module LetsCert
                    when nil
                      m[1].to_i
                    when 'm'
-                     m[1].to_i * 60
+                     m[1].to_i * SECONDS_IN_ONE_MINUTE
                    when 'h'
-                     m[1].to_i * 60 * 60
+                     m[1].to_i * SECONDS_IN_ONE_HOUR
                    when 'd'
-                     m[1].to_i * 24 * 60 * 60
+                     m[1].to_i * SECONDS_IN_ONE_DAY
                    end
       else
         raise OptionParser::InvalidArgument,
