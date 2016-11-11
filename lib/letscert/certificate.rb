@@ -314,7 +314,7 @@ module LetsCert
       end
 
       if options[:cert_ecdsa]
-        generate_ecda_key(options)
+        generate_ecdsa_key(options)
       else
         key_size = options[:cert_rsa] || options[:cert_key_size]
         OpenSSL::PKey::RSA.generate key_size
