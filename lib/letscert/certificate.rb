@@ -288,10 +288,14 @@ module LetsCert
     def renewal_necessary?(valid_min)
       now = Time.now.utc
       diff = (@cert.not_after - now).to_i
-      logger.debug { "Certificate expires in #{diff}s on #{@cert.not_after}" \
-                     " (relative to #{now})" }
 
-      diff < valid_min
+      if diff < valid_min
+        true
+      else
+        logger.info { "Certificate expires in #{ValidTime.time_in_words diff}" \
+                      " on #{@cert.not_after} (relative to #{now})" }
+        false
+      end
     end
 
     # Generate a key from options
