@@ -45,6 +45,6 @@ module LetsCert
 
   end
 
-  IOPlugin.register(KeyFile, 'key.pem', :pem)
-  IOPlugin.register(KeyFile, 'key.der', :der)
+  IOPlugin.register(KeyFile, 'key.pem'.freeze, :pem)
+  IOPlugin.register(KeyFile, 'key.der'.freeze, :der)
 end

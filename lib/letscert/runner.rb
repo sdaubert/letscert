@@ -25,8 +25,8 @@ require 'fileutils'
 
 require_relative 'io_plugin'
 require_relative 'certificate'
+require_relative 'valid_time'
 require_relative 'runner/logger_formatter'
-require_relative 'runner/valid_time'
 
 module LetsCert
 

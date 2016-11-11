@@ -46,5 +46,5 @@ module LetsCert
 
   end
 
-  IOPlugin.register(AccountKey, 'account_key.json')
+  IOPlugin.register(AccountKey, 'account_key.json'.freeze)
 end

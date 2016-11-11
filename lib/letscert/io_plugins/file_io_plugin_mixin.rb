@@ -54,6 +54,12 @@ module LetsCert
     def save_to_file(data)
       return if data.nil?
 
+      # Return if content did not change
+      if File.exist? name
+        old_content = File.read(name)
+        return if old_content == data
+      end
+
       logger.info { "saving #{@name}" }
       begin
         File.open(name, 'w') do |f|

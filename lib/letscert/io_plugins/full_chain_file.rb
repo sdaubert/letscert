@@ -54,5 +54,5 @@ module LetsCert
 
   end
 
-  IOPlugin.register(FullChainFile, 'fullchain.pem', :pem)
+  IOPlugin.register(FullChainFile, 'fullchain.pem'.freeze, :pem)
 end
