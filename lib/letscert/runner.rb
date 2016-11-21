@@ -105,6 +105,7 @@ module LetsCert
     # @raise [OptionParser::InvalidOption] on unrecognized or malformed option
     # @return [void]
     # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/BlockLength
     def parse_options
       @opt_parser = OptionParser.new do |opts|
         opts.banner = 'Usage: lestcert [options]'

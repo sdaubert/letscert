@@ -32,10 +32,7 @@ module LetsCert
     # @param [:pem,:der] type
     # @raise [ArgumentError] unsupported type
     def initialize(name, type)
-      case type
-      when :pem
-      when :der
-      else
+      unless [:pem, :der].include? type
         raise ArgumentError, 'type should be :pem or :der'
       end
 
