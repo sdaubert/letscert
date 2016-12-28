@@ -8,7 +8,7 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - Acme::Client v0.4.0 (https://github.com/unixcharles/acme-client)
+      - Acme::Client v0.5.0 (https://github.com/unixcharles/acme-client)
   response:
     status:
       code: 405
@@ -17,15 +17,15 @@ http_interactions:
       allow:
       - POST
       boulder-request-id:
-      - _d9IjmrPcWcADKsKXw3WSSo6hKNiNuS6du2UB90YV2Y
+      - wXOkW3RIcogILaXDr8cZVor6QUtXH8OoDiX2tNyl5Gk
       cache-control:
       - public, max-age=0, no-cache
       content-type:
       - application/problem+json
       replay-nonce:
-      - 2zpM42NvAviq6GjYf-pb0qmwrEeA-0Zy4vVQ2YC3SI4
+      - Jq_-jnSg6u7WgJNnPuGyOqQJbQUXJn3xL6qp8yCyEmE
       date:
-      - Sun, 21 Aug 2016 18:26:33 GMT
+      - Mon, 21 Nov 2016 19:25:01 GMT
       content-length:
       - '91'
       connection:
@@ -34,99 +34,100 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version: 
-  recorded_at: Sun, 21 Aug 2016 18:26:33 GMT
+  recorded_at: Mon, 21 Nov 2016 19:25:01 GMT
 - request:
     method: post
     uri: http://172.17.0.1:4000/acme/new-reg
     body:
       encoding: UTF-8
-      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJ6SWRnYjYwM3pXekVxS2I1X2d4bVdLT3RZcVN4anBrdEZ5TFlOTGtBWHQxSFVGdTlLWFA0alVaWTU1a3Joa0h1QzNZajBuX1JUUkd6X3d6aGtTX2dUNGRIQy1xM3JHT2FJdnhNZEZUcFNrX2VXRGFsbjgyWVpPM1M1dmx5VDF5ckFNVW5HZVZ5YWlWZGE5WEs1TkZIUGQ4ZE8zU01PNi1FcFdkVkgxZGwwWWxsemlCTmpFYmZwUkxvYlJiRUVRU01CLXlfNEVTRGlFWDJZQWFScG1QY2Q3dTc5aS1FQk5zd0FGM2pHbmxjWDllbExpSkZseXFVMFlvRGV1d2VFUmM0NzFUU2ktOEdoTUVCSmFCMUNXc0NjSFN2UjNoenp3QTctb3pCd0ttN3poOGJlM0tINmtFYUhYTVA2eEVmZnJLTVJjVjRvcW9iU21tUjlEVHdkWVdqTFEifSwibm9uY2UiOiIyenBNNDJOdkF2aXE2R2pZZi1wYjBxbXdyRWVBLTBaeTR2VlEyWUMzU0k0In0","payload":"eyJyZXNvdXJjZSI6Im5ldy1yZWciLCJjb250YWN0IjpbIm1haWx0bzp0ZXN0QGV4YW1wbGUub3JnIl19","signature":"fL2WQXiB5_Ez4wghc0QNqrG0HkqGaXN52ScMnAPb0n8ZL_Ioi2EmzeRwjPhL68SZ96O8pGnZTwq0rtrwofG9d4tZClcsh2QU5PTogEphsKF5bZm2TSwFapTQfITkP82WqICK75WFZC_PQltYKN9O-MEb4rP-xC0rTtlXaoezE1rrbGAC_xSjjynXgrUL8fGj6OLANhwXM7yIQGus-opO3oKlE9ZEZz36lWQKL1SG3PEkhuZNbS2SEmpfAqqvURz0aM7Fa2CAc20xYxeT8B3GT16CkxXqLHmyXbYwXA3_t0LrcjCxf7YK3uJGr3en-46VLw3LtEqjHDIlpx5rzD-trA"}'
+      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJwRXRBdUhGWjNmbEtlei1sSEhjNXlqUmFWWjZrekw5MGRTM0ZRWnk4Tmh1aTFuODNwTDlva2dsUk5OVUpWQk9QTUVxXzJYVzg0V1VfbTByLThXLVZvbzE0cWg3TnM5ME0yMGlxRzlDNmdPcE5qOHUyRjloRDRuR2VVYnpEV29JT0xyT1NVX2lmVzBaZUlxajZNQ2g4WTBZcE1XUHhfMFBIUDBaYlhTRnBiekZUaFAxM1dZV1RXWWtvUk9wSHpNa0tCem9pSHhxLXM4Rlc4aVpoU3JWMWF3anpqblE1UVR2N3d3c05zU1hnbGJrNnFRU2RjWkpaQ003NGM3b0laQVNESVhyc1ZrYVlhOW16QzFjeW9sTXRCbkVhYUVFRzhCY2NhX0JTdmNXdVFVR3ZXeUg0SzRTTWgxMU1KbDlBUVJZdmtqanEtV19nQXFsRmcybzBMV0JybXcifSwibm9uY2UiOiJKcV8tam5TZzZ1N1dnSk5uUHVHeU9xUUpiUVVYSm4zeEw2cXA4eUN5RW1FIn0","payload":"eyJyZXNvdXJjZSI6Im5ldy1yZWciLCJjb250YWN0IjpbIm1haWx0bzp0ZXN0QGV4YW1wbGUub3JnIl19","signature":"mAGPwLO94XI875K5vavNdbwuer2pMp65_wcd6iWt1Fn5bca4HEDCF0ZbayU9aa3J76l4fCf5MoSKlQ6Do5AAbJ7ecP91loDMiK3wUlhVHJyOTmn035fv2JXT_Iq687zK6PJ_3Hvfa-BRI7rFCv1CDYLz5EarrCQE1GuXp3f5zAc-uNnU4EQNbR1g_Nj6v-RL3OKPCv33uHW0h54tP5v4WVx_Q44Rz2kz34cPxmdUWd_CMarWqp-R4jdLr8Dfn0zie4EIxk8VF1zCqK8fd7lSd9RlU2WcnR0fB92uS-ZPuXgACeZn9Wj9f3LZ5VQTcxYhyIirPXU-yKyEyYTxzB7-zA"}'
     headers:
       User-Agent:
-      - Acme::Client v0.4.0 (https://github.com/unixcharles/acme-client)
+      - Acme::Client v0.5.0 (https://github.com/unixcharles/acme-client)
   response:
     status:
       code: 201
       message: 
     headers:
       boulder-request-id:
-      - cN11Zrd1_xQEplPSXcK2m19NPbcacYFtaAIEJsj0Hlk
+      - nwHNrOFYSDfAUDQIVuXHt2dw9eIDcci88ZOr2f8_rgs
       boulder-requester:
-      - '18'
+      - '2'
       cache-control:
       - public, max-age=0, no-cache
       content-type:
       - application/json
       link:
-      - <http://127.0.0.1:4000/acme/new-authz>;rel="next", <http://boulder:4000/terms/v1>;rel="terms-of-service"
+      - <http://172.17.0.1:4000/acme/new-authz>;rel="next", <http://boulder:4000/terms/v1>;rel="terms-of-service"
       location:
-      - http://127.0.0.1:4000/acme/reg/18
+      - http://172.17.0.1:4000/acme/reg/2
       replay-nonce:
-      - bk5eJUzxwGoUL6djG7K_qmRjdPv_z-5gb7agRK6kCm8
+      - kHWCnSTHGNXNgX7apDs2KoSeE_wlxqjel_b9polhlJI
       date:
-      - Sun, 21 Aug 2016 18:26:33 GMT
+      - Mon, 21 Nov 2016 19:25:01 GMT
       content-length:
-      - '547'
+      - '562'
       connection:
       - close
     body:
       encoding: UTF-8
       string: |-
         {
-          "id": 18,
+          "id": 2,
           "key": {
             "kty": "RSA",
-            "n": "zIdgb603zWzEqKb5_gxmWKOtYqSxjpktFyLYNLkAXt1HUFu9KXP4jUZY55krhkHuC3Yj0n_RTRGz_wzhkS_gT4dHC-q3rGOaIvxMdFTpSk_eWDaln82YZO3S5vlyT1yrAMUnGeVyaiVda9XK5NFHPd8dO3SMO6-EpWdVH1dl0YllziBNjEbfpRLobRbEEQSMB-y_4ESDiEX2YAaRpmPcd7u79i-EBNswAF3jGnlcX9elLiJFlyqU0YoDeuweERc471TSi-8GhMEBJaB1CWsCcHSvR3hzzwA7-ozBwKm7zh8be3KH6kEaHXMP6xEffrKMRcV4oqobSmmR9DTwdYWjLQ",
+            "n": "pEtAuHFZ3flKez-lHHc5yjRaVZ6kzL90dS3FQZy8Nhui1n83pL9okglRNNUJVBOPMEq_2XW84WU_m0r-8W-Voo14qh7Ns90M20iqG9C6gOpNj8u2F9hD4nGeUbzDWoIOLrOSU_ifW0ZeIqj6MCh8Y0YpMWPx_0PHP0ZbXSFpbzFThP13WYWTWYkoROpHzMkKBzoiHxq-s8FW8iZhSrV1awjzjnQ5QTv7wwsNsSXglbk6qQSdcZJZCM74c7oIZASDIXrsVkaYa9mzC1cyolMtBnEaaEEG8Bcca_BSvcWuQUGvWyH4K4SMh11MJl9AQRYvkjjq-W_gAqlFg2o0LWBrmw",
             "e": "AQAB"
           },
           "contact": [
             "mailto:test@example.org"
           ],
           "initialIp": "172.17.0.1",
-          "createdAt": "2016-08-21T18:26:33.269356994Z"
+          "createdAt": "2016-11-21T19:25:01.301613311Z",
+          "Status": ""
         }
     http_version: 
-  recorded_at: Sun, 21 Aug 2016 18:26:33 GMT
+  recorded_at: Mon, 21 Nov 2016 19:25:01 GMT
 - request:
     method: post
-    uri: http://127.0.0.1:4000/acme/reg/18
+    uri: http://172.17.0.1:4000/acme/reg/2
     body:
       encoding: UTF-8
-      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJ6SWRnYjYwM3pXekVxS2I1X2d4bVdLT3RZcVN4anBrdEZ5TFlOTGtBWHQxSFVGdTlLWFA0alVaWTU1a3Joa0h1QzNZajBuX1JUUkd6X3d6aGtTX2dUNGRIQy1xM3JHT2FJdnhNZEZUcFNrX2VXRGFsbjgyWVpPM1M1dmx5VDF5ckFNVW5HZVZ5YWlWZGE5WEs1TkZIUGQ4ZE8zU01PNi1FcFdkVkgxZGwwWWxsemlCTmpFYmZwUkxvYlJiRUVRU01CLXlfNEVTRGlFWDJZQWFScG1QY2Q3dTc5aS1FQk5zd0FGM2pHbmxjWDllbExpSkZseXFVMFlvRGV1d2VFUmM0NzFUU2ktOEdoTUVCSmFCMUNXc0NjSFN2UjNoenp3QTctb3pCd0ttN3poOGJlM0tINmtFYUhYTVA2eEVmZnJLTVJjVjRvcW9iU21tUjlEVHdkWVdqTFEifSwibm9uY2UiOiJiazVlSlV6eHdHb1VMNmRqRzdLX3FtUmpkUHZfei01Z2I3YWdSSzZrQ204In0","payload":"eyJyZXNvdXJjZSI6InJlZyIsImFncmVlbWVudCI6Imh0dHA6Ly9ib3VsZGVyOjQwMDAvdGVybXMvdjEifQ","signature":"rMrJS_ZVzhCv80gHbNjXEfgI-tqPIGJqTvBKcHyjM9vIiqeVJe3nkOMXOCZ_MtCLuHbVieZQ_4MJUNv3rK-Ky4A13t45kbP6lBG-4wxa0TfXklYcwgWnhC-EoaQQepYhKIjO8_jKDFLxUAWSAZm7hBiudiAc4_Lka5WPJidGyDbzeE21jHp2wfKiGot1DfR69deNC58By24EaD9LFnSDDTto11i8WK9n3nXXh4qhR3JhdZYi0tIdqc-LvXwzmQQLNPnQL0hOrXj4DWwHvj1z6dnp1T02H-JdiF32zK8diXspiVFW6PhTDOir5kQdcu2K3BwrDZJwwuCoiBMKZmCuSQ"}'
+      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJwRXRBdUhGWjNmbEtlei1sSEhjNXlqUmFWWjZrekw5MGRTM0ZRWnk4Tmh1aTFuODNwTDlva2dsUk5OVUpWQk9QTUVxXzJYVzg0V1VfbTByLThXLVZvbzE0cWg3TnM5ME0yMGlxRzlDNmdPcE5qOHUyRjloRDRuR2VVYnpEV29JT0xyT1NVX2lmVzBaZUlxajZNQ2g4WTBZcE1XUHhfMFBIUDBaYlhTRnBiekZUaFAxM1dZV1RXWWtvUk9wSHpNa0tCem9pSHhxLXM4Rlc4aVpoU3JWMWF3anpqblE1UVR2N3d3c05zU1hnbGJrNnFRU2RjWkpaQ003NGM3b0laQVNESVhyc1ZrYVlhOW16QzFjeW9sTXRCbkVhYUVFRzhCY2NhX0JTdmNXdVFVR3ZXeUg0SzRTTWgxMU1KbDlBUVJZdmtqanEtV19nQXFsRmcybzBMV0JybXcifSwibm9uY2UiOiJrSFdDblNUSEdOWE5nWDdhcERzMktvU2VFX3dseHFqZWxfYjlwb2xobEpJIn0","payload":"eyJyZXNvdXJjZSI6InJlZyIsImFncmVlbWVudCI6Imh0dHA6Ly9ib3VsZGVyOjQwMDAvdGVybXMvdjEifQ","signature":"Fciehz_FLWNHD7CBPyEXWX48AghZ5QmDH4I6DIe0YXpiQrxmFuTJxBvOi9PGnSFZAueVWt2XxgqcziZVX0p8zcs7ckHGUdC5Sp_WprHTmxGT4Jfa28xxeg9OvHpu5iDuMCXE1gaPk7FkwLtLRV10KecvOJwY7-N61fcSDqqUrK-5OKRP8yE8_7mwA5I_4z_Zc37bU9pyQzGkU98ud79UcBNGFhQCDG0QEpuVu4nX7iKIe49zyX2d6ASSFknKBdrSKEPF_-uv9zMySHpQhILwBkr99WEf5I2IfRdO1DagErQ_9SFrd4rFl6y-eXOAY7YotiOzCuyBTu4iKAcGOTnRqg"}'
     headers:
       User-Agent:
-      - Acme::Client v0.4.0 (https://github.com/unixcharles/acme-client)
+      - Acme::Client v0.5.0 (https://github.com/unixcharles/acme-client)
   response:
     status:
       code: 202
       message: 
     headers:
       boulder-request-id:
-      - 3BLw-sbWggF-yQd2CF31EnKlGpx34Ob0OYYlBCgJMQc
+      - 3hhGw_FNP9Ycqd847sFu2AaKvUd395TBkPnFZd-42wA
       boulder-requester:
-      - '18'
+      - '2'
       cache-control:
       - public, max-age=0, no-cache
       content-type:
       - application/json
       link:
-      - <http://127.0.0.1:4000/acme/new-authz>;rel="next", <http://boulder:4000/terms/v1>;rel="terms-of-service"
+      - <http://172.17.0.1:4000/acme/new-authz>;rel="next", <http://boulder:4000/terms/v1>;rel="terms-of-service"
       replay-nonce:
-      - JUO_qDHTI9cDF3RSPF7gZMdSHgU6PlgNNEF16p24VKc
+      - U2fyiSTKji4Dp4PPWLitpMULbMvZ8ArriyTYPggfrmQ
       date:
-      - Sun, 21 Aug 2016 18:26:33 GMT
+      - Mon, 21 Nov 2016 19:25:01 GMT
       content-length:
-      - '584'
+      - '599'
       connection:
       - close
     body:
       encoding: UTF-8
       string: |-
         {
-          "id": 18,
+          "id": 2,
           "key": {
             "kty": "RSA",
-            "n": "zIdgb603zWzEqKb5_gxmWKOtYqSxjpktFyLYNLkAXt1HUFu9KXP4jUZY55krhkHuC3Yj0n_RTRGz_wzhkS_gT4dHC-q3rGOaIvxMdFTpSk_eWDaln82YZO3S5vlyT1yrAMUnGeVyaiVda9XK5NFHPd8dO3SMO6-EpWdVH1dl0YllziBNjEbfpRLobRbEEQSMB-y_4ESDiEX2YAaRpmPcd7u79i-EBNswAF3jGnlcX9elLiJFlyqU0YoDeuweERc471TSi-8GhMEBJaB1CWsCcHSvR3hzzwA7-ozBwKm7zh8be3KH6kEaHXMP6xEffrKMRcV4oqobSmmR9DTwdYWjLQ",
+            "n": "pEtAuHFZ3flKez-lHHc5yjRaVZ6kzL90dS3FQZy8Nhui1n83pL9okglRNNUJVBOPMEq_2XW84WU_m0r-8W-Voo14qh7Ns90M20iqG9C6gOpNj8u2F9hD4nGeUbzDWoIOLrOSU_ifW0ZeIqj6MCh8Y0YpMWPx_0PHP0ZbXSFpbzFThP13WYWTWYkoROpHzMkKBzoiHxq-s8FW8iZhSrV1awjzjnQ5QTv7wwsNsSXglbk6qQSdcZJZCM74c7oIZASDIXrsVkaYa9mzC1cyolMtBnEaaEEG8Bcca_BSvcWuQUGvWyH4K4SMh11MJl9AQRYvkjjq-W_gAqlFg2o0LWBrmw",
             "e": "AQAB"
           },
           "contact": [
@@ -134,40 +135,41 @@ http_interactions:
           ],
           "agreement": "http://boulder:4000/terms/v1",
           "initialIp": "172.17.0.1",
-          "createdAt": "2016-08-21T18:26:33Z"
+          "createdAt": "2016-11-21T19:25:01Z",
+          "Status": ""
         }
     http_version: 
-  recorded_at: Sun, 21 Aug 2016 18:26:33 GMT
+  recorded_at: Mon, 21 Nov 2016 19:25:01 GMT
 - request:
     method: post
     uri: http://172.17.0.1:4000/acme/new-authz
     body:
       encoding: UTF-8
-      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJ6SWRnYjYwM3pXekVxS2I1X2d4bVdLT3RZcVN4anBrdEZ5TFlOTGtBWHQxSFVGdTlLWFA0alVaWTU1a3Joa0h1QzNZajBuX1JUUkd6X3d6aGtTX2dUNGRIQy1xM3JHT2FJdnhNZEZUcFNrX2VXRGFsbjgyWVpPM1M1dmx5VDF5ckFNVW5HZVZ5YWlWZGE5WEs1TkZIUGQ4ZE8zU01PNi1FcFdkVkgxZGwwWWxsemlCTmpFYmZwUkxvYlJiRUVRU01CLXlfNEVTRGlFWDJZQWFScG1QY2Q3dTc5aS1FQk5zd0FGM2pHbmxjWDllbExpSkZseXFVMFlvRGV1d2VFUmM0NzFUU2ktOEdoTUVCSmFCMUNXc0NjSFN2UjNoenp3QTctb3pCd0ttN3poOGJlM0tINmtFYUhYTVA2eEVmZnJLTVJjVjRvcW9iU21tUjlEVHdkWVdqTFEifSwibm9uY2UiOiJKVU9fcURIVEk5Y0RGM1JTUEY3Z1pNZFNIZ1U2UGxnTk5FRjE2cDI0VktjIn0","payload":"eyJyZXNvdXJjZSI6Im5ldy1hdXRoeiIsImlkZW50aWZpZXIiOnsidHlwZSI6ImRucyIsInZhbHVlIjoiZXhhbXBsZS5jb20ifX0","signature":"CT0mUMG7qLUwKlYjlT14btmNUMdfly_-sj4kqzknCxAYnd_sPRziLla7jxkz9kUZXhxyAK0aqyKIV5qitJ8ZjmxyZDFbDOW5iTz-pDbiBzEJwi3P5K4V7tBf816XoEZbyNxfo3_9LzYYn49iJUQBYlVjAFRu1uFWNZ9lKzud9Tb7ZW2m6Uv1F81fibekELBxYkNwyfThP7zk02RmVmDO8xNXJiGJIkuowU1CoL7VW1SWWkscIOMBio3_PwASxXYAOkG2m8kcZg6zCyAcCvElVRjKlfTInun9GgJCg0laBubtn49rNhml32lIaightsC2qYipiBONtx_an3JcRaxTHA"}'
+      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJwRXRBdUhGWjNmbEtlei1sSEhjNXlqUmFWWjZrekw5MGRTM0ZRWnk4Tmh1aTFuODNwTDlva2dsUk5OVUpWQk9QTUVxXzJYVzg0V1VfbTByLThXLVZvbzE0cWg3TnM5ME0yMGlxRzlDNmdPcE5qOHUyRjloRDRuR2VVYnpEV29JT0xyT1NVX2lmVzBaZUlxajZNQ2g4WTBZcE1XUHhfMFBIUDBaYlhTRnBiekZUaFAxM1dZV1RXWWtvUk9wSHpNa0tCem9pSHhxLXM4Rlc4aVpoU3JWMWF3anpqblE1UVR2N3d3c05zU1hnbGJrNnFRU2RjWkpaQ003NGM3b0laQVNESVhyc1ZrYVlhOW16QzFjeW9sTXRCbkVhYUVFRzhCY2NhX0JTdmNXdVFVR3ZXeUg0SzRTTWgxMU1KbDlBUVJZdmtqanEtV19nQXFsRmcybzBMV0JybXcifSwibm9uY2UiOiJVMmZ5aVNUS2ppNERwNFBQV0xpdHBNVUxiTXZaOEFycml5VFlQZ2dmcm1RIn0","payload":"eyJyZXNvdXJjZSI6Im5ldy1hdXRoeiIsImlkZW50aWZpZXIiOnsidHlwZSI6ImRucyIsInZhbHVlIjoiZXhhbXBsZS5jb20ifX0","signature":"X3SGibfBt8BfX88oGQSC-6qyVU-Pi0GLGtvcbHdjAmTCjMjgvXYHSFxsnmDJGcbMakhF8i9IHl0YHUpexma3DmwWq2kPCiNtnMDx6t-GGRgkk5H68vl-qPC0bomKGKAyHxlExlx15-1eirYi9IkJGogc8FBEkvt4p1GcOPpc45P-QsW_3Z4LqxFC9xEVSaBi_4FKSC7JtMCKBsiYod50pvU4jdvd_KOFmWdqb3JYBI-xUH7Mjr0a2abUKFR1oGjR7Ew4K2SpdOe5NlCPG0Zb_nfLng5hribcBe_1qx1oRuM9WtRholSaeFvxEOmNGdBWhq2cMt6HGVOkFMy7MjOOSg"}'
     headers:
       User-Agent:
-      - Acme::Client v0.4.0 (https://github.com/unixcharles/acme-client)
+      - Acme::Client v0.5.0 (https://github.com/unixcharles/acme-client)
   response:
     status:
       code: 201
       message: 
     headers:
       boulder-request-id:
-      - "-cNMbFITcp9Cg4yNoaSwTWhX2sswpu8mnQOZpjyy9AY"
+      - ru02qXq36gGIZkwwH1pNFV2WYbm0Y9Xu6RucaF8kOHE
       boulder-requester:
-      - '18'
+      - '2'
       cache-control:
       - public, max-age=0, no-cache
       content-type:
       - application/json
       link:
-      - <http://127.0.0.1:4000/acme/new-cert>;rel="next"
+      - <http://172.17.0.1:4000/acme/new-cert>;rel="next"
       location:
-      - http://127.0.0.1:4000/acme/authz/VHGNb4XEUPaw1x050wWrOenpTbtlm0YABhXrO7u9wfM
+      - http://172.17.0.1:4000/acme/authz/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8
       replay-nonce:
-      - 4jPQFOIbN0eOVO7Mp3NPwB8iLCzxmp2ymP6Z5XOYBa8
+      - cLRlY5si8qqik-9iOz4R17VqKNrn_zdRETCj4rUZH-8
       date:
-      - Sun, 21 Aug 2016 18:26:33 GMT
+      - Mon, 21 Nov 2016 19:25:01 GMT
       content-length:
       - '930'
       connection:
@@ -181,71 +183,71 @@ http_interactions:
             "value": "example.com"
           },
           "status": "pending",
-          "expires": "2016-08-28T18:26:33.424234688Z",
+          "expires": "2016-11-28T19:25:01.601311177Z",
           "challenges": [
             {
-              "type": "http-01",
+              "type": "dns-01",
               "status": "pending",
-              "uri": "http://127.0.0.1:4000/acme/challenge/VHGNb4XEUPaw1x050wWrOenpTbtlm0YABhXrO7u9wfM/76",
-              "token": "t36nWI5tShQiFmrtSM7_hF3bO3VJKrRdJQfSuPQuUjY"
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/4",
+              "token": "LeSLL1Zh_Z4KlU5wlNUhZ2gxbpG6ZjSua82fKFaHmG4"
             },
             {
               "type": "tls-sni-01",
               "status": "pending",
-              "uri": "http://127.0.0.1:4000/acme/challenge/VHGNb4XEUPaw1x050wWrOenpTbtlm0YABhXrO7u9wfM/77",
-              "token": "kvUgTp4vt9pfJcsx1zctgEVm82YbCl0y0wyPiRtw6ao"
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/5",
+              "token": "TrvZZYFHccpW9IcBw5urlaNgSSMalw8OL6HnhBVL71c"
             },
             {
-              "type": "dns-01",
+              "type": "http-01",
               "status": "pending",
-              "uri": "http://127.0.0.1:4000/acme/challenge/VHGNb4XEUPaw1x050wWrOenpTbtlm0YABhXrO7u9wfM/78",
-              "token": "1JZGw1ZohVvFYvFLrxynHwYpd7ChwoHYrVZ9e3rqdt4"
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/6",
+              "token": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg"
             }
           ],
           "combinations": [
+            [
+              1
+            ],
             [
               2
             ],
             [
               0
-            ],
-            [
-              1
             ]
           ]
         }
     http_version: 
-  recorded_at: Sun, 21 Aug 2016 18:26:33 GMT
+  recorded_at: Mon, 21 Nov 2016 19:25:01 GMT
 - request:
     method: post
-    uri: http://127.0.0.1:4000/acme/challenge/VHGNb4XEUPaw1x050wWrOenpTbtlm0YABhXrO7u9wfM/76
+    uri: http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/6
     body:
       encoding: UTF-8
-      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJ6SWRnYjYwM3pXekVxS2I1X2d4bVdLT3RZcVN4anBrdEZ5TFlOTGtBWHQxSFVGdTlLWFA0alVaWTU1a3Joa0h1QzNZajBuX1JUUkd6X3d6aGtTX2dUNGRIQy1xM3JHT2FJdnhNZEZUcFNrX2VXRGFsbjgyWVpPM1M1dmx5VDF5ckFNVW5HZVZ5YWlWZGE5WEs1TkZIUGQ4ZE8zU01PNi1FcFdkVkgxZGwwWWxsemlCTmpFYmZwUkxvYlJiRUVRU01CLXlfNEVTRGlFWDJZQWFScG1QY2Q3dTc5aS1FQk5zd0FGM2pHbmxjWDllbExpSkZseXFVMFlvRGV1d2VFUmM0NzFUU2ktOEdoTUVCSmFCMUNXc0NjSFN2UjNoenp3QTctb3pCd0ttN3poOGJlM0tINmtFYUhYTVA2eEVmZnJLTVJjVjRvcW9iU21tUjlEVHdkWVdqTFEifSwibm9uY2UiOiI0alBRRk9JYk4wZU9WTzdNcDNOUHdCOGlMQ3p4bXAyeW1QNlo1WE9ZQmE4In0","payload":"eyJyZXNvdXJjZSI6ImNoYWxsZW5nZSIsInR5cGUiOiJodHRwLTAxIiwia2V5QXV0aG9yaXphdGlvbiI6InQzNm5XSTV0U2hRaUZtcnRTTTdfaEYzYk8zVkpLclJkSlFmU3VQUXVValkuX2hLWkRfdE9sV0hVazN3Zk5vNWZZMXVlLUZ2Um5YWDBNc1pkanpRVkN6cyJ9","signature":"g1q5TrhJiThHU-2kcCj5Xy7tlGXWHK9pQnR19HQbBQ4EcufOAvwozJcWb-K6_50uDWsXlD82v31eCcDG1dpxpGuAxVrwg42xB0w-jyyZ4knxSYz6AYYdVM4kyoNRhyGm7-W8GY0SvjUQ2EIlmfaaHeSre05VdEAt3-MY3usXEJNhsKPZJzff7qW6a_m-5muFS_LQXWI0KZ_DeCtCLbzv1TmVTLNIPalKYZ7X_E7TY94DrmxFWf-mh6UGu1fdWa2ACqnde4YJC90zSqjTvMTOkjDyZjVbo7DwhZYa_YhocrrrWqcHV_kfbV_Dqas70ZuKyFIKo0uQS_-4g0r8rxu-vg"}'
+      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJwRXRBdUhGWjNmbEtlei1sSEhjNXlqUmFWWjZrekw5MGRTM0ZRWnk4Tmh1aTFuODNwTDlva2dsUk5OVUpWQk9QTUVxXzJYVzg0V1VfbTByLThXLVZvbzE0cWg3TnM5ME0yMGlxRzlDNmdPcE5qOHUyRjloRDRuR2VVYnpEV29JT0xyT1NVX2lmVzBaZUlxajZNQ2g4WTBZcE1XUHhfMFBIUDBaYlhTRnBiekZUaFAxM1dZV1RXWWtvUk9wSHpNa0tCem9pSHhxLXM4Rlc4aVpoU3JWMWF3anpqblE1UVR2N3d3c05zU1hnbGJrNnFRU2RjWkpaQ003NGM3b0laQVNESVhyc1ZrYVlhOW16QzFjeW9sTXRCbkVhYUVFRzhCY2NhX0JTdmNXdVFVR3ZXeUg0SzRTTWgxMU1KbDlBUVJZdmtqanEtV19nQXFsRmcybzBMV0JybXcifSwibm9uY2UiOiJjTFJsWTVzaThxcWlrLTlpT3o0UjE3VnFLTnJuX3pkUkVUQ2o0clVaSC04In0","payload":"eyJyZXNvdXJjZSI6ImNoYWxsZW5nZSIsInR5cGUiOiJodHRwLTAxIiwia2V5QXV0aG9yaXphdGlvbiI6InRxc1FHTktxZEF6ZUZNUmVnMzNYTDJ4QTJXaUJNVF9tcU5xTkR2QkNaQmcuakpZUHdWaUhNR0d0czlIQ0QxUUhybURpclhhVzd0UWhqVjBrcXpITjVtbyJ9","signature":"OmTPkFgawr-TOlSGJ0EIKjUbP2W5IY6cY4ykq5HS1q3uKWuPSStiaStNIZqQ2ks1Zc8qllZ3526dXZlxzX1yxQU8InX0KIRku8_UFfoCoTtS-EvhiDM92OLI0UOYH1ng07giXyRiI0AfiNMGWKziAQrMtNYIZSQM77IrB4mGPP0dseQxPJSM5q4wGgLK2HafzAHuoRqst8CewEUfW-fbVxF5YiBQbvYbJxHDxyDTHY2UTfRfIUqD5fNocgY7SBVAMD6JYD-yXiHPm0pUfQaHWHZmbVsbIbBA_s2CTp-UVbPewUlwA3-_7TOlgk_bKK6uh70wcOkiP5b1vdsV6kexLA"}'
     headers:
       User-Agent:
-      - Acme::Client v0.4.0 (https://github.com/unixcharles/acme-client)
+      - Acme::Client v0.5.0 (https://github.com/unixcharles/acme-client)
   response:
     status:
       code: 202
       message: 
     headers:
       boulder-request-id:
-      - 0m7mm0k2GuF0xqXs8CHJQQLlqw0A9UKzhVkPoPTuGU4
+      - tZINoNLg19Kc0Hh-KdWZC2GI9RXgpG9jCE_mVth1AKU
       boulder-requester:
-      - '18'
+      - '2'
       cache-control:
       - public, max-age=0, no-cache
       content-type:
       - application/json
       link:
-      - <http://127.0.0.1:4000/acme/authz/VHGNb4XEUPaw1x050wWrOenpTbtlm0YABhXrO7u9wfM>;rel="up"
+      - <http://172.17.0.1:4000/acme/authz/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8>;rel="up"
       location:
-      - http://127.0.0.1:4000/acme/challenge/VHGNb4XEUPaw1x050wWrOenpTbtlm0YABhXrO7u9wfM/76
+      - http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/6
       replay-nonce:
-      - up7yhpVazeddN7JIWqlRfzX5UlXdDDs16AaPISReJxA
+      - C7LfVufMA5TkxP72DICjKrekA4wIWbV101kuuDjBU9Y
       date:
-      - Sun, 21 Aug 2016 18:26:33 GMT
+      - Mon, 21 Nov 2016 19:25:01 GMT
       content-length:
       - '313'
       connection:
@@ -256,97 +258,803 @@ http_interactions:
         {
           "type": "http-01",
           "status": "pending",
-          "uri": "http://127.0.0.1:4000/acme/challenge/VHGNb4XEUPaw1x050wWrOenpTbtlm0YABhXrO7u9wfM/76",
-          "token": "t36nWI5tShQiFmrtSM7_hF3bO3VJKrRdJQfSuPQuUjY",
-          "keyAuthorization": "t36nWI5tShQiFmrtSM7_hF3bO3VJKrRdJQfSuPQuUjY._hKZD_tOlWHUk3wfNo5fY1ue-FvRnXX0MsZdjzQVCzs"
+          "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/6",
+          "token": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg",
+          "keyAuthorization": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg.jJYPwViHMGGts9HCD1QHrmDirXaW7tQhjV0kqzHN5mo"
         }
     http_version: 
-  recorded_at: Sun, 21 Aug 2016 18:26:33 GMT
+  recorded_at: Mon, 21 Nov 2016 19:25:01 GMT
 - request:
     method: get
-    uri: http://127.0.0.1:4000/acme/challenge/VHGNb4XEUPaw1x050wWrOenpTbtlm0YABhXrO7u9wfM/76
+    uri: http://172.17.0.1:4000/acme/authz/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8
     body:
       encoding: UTF-8
-      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJ6SWRnYjYwM3pXekVxS2I1X2d4bVdLT3RZcVN4anBrdEZ5TFlOTGtBWHQxSFVGdTlLWFA0alVaWTU1a3Joa0h1QzNZajBuX1JUUkd6X3d6aGtTX2dUNGRIQy1xM3JHT2FJdnhNZEZUcFNrX2VXRGFsbjgyWVpPM1M1dmx5VDF5ckFNVW5HZVZ5YWlWZGE5WEs1TkZIUGQ4ZE8zU01PNi1FcFdkVkgxZGwwWWxsemlCTmpFYmZwUkxvYlJiRUVRU01CLXlfNEVTRGlFWDJZQWFScG1QY2Q3dTc5aS1FQk5zd0FGM2pHbmxjWDllbExpSkZseXFVMFlvRGV1d2VFUmM0NzFUU2ktOEdoTUVCSmFCMUNXc0NjSFN2UjNoenp3QTctb3pCd0ttN3poOGJlM0tINmtFYUhYTVA2eEVmZnJLTVJjVjRvcW9iU21tUjlEVHdkWVdqTFEifSwibm9uY2UiOiJ1cDd5aHBWYXplZGRON0pJV3FsUmZ6WDVVbFhkRERzMTZBYVBJU1JlSnhBIn0","payload":"bnVsbA","signature":"Acg0-xI019VdDGBLaCT68xsAyz5d83psyd6yDC1OiJxfEgVFv4SXUoDN9ddJc0H3a0VJuQYzSIa16hB-b4fdvm57h4nLgelmKDfpnvbHLPpIdWjqgsFataOPqPbmUIHvK2oyFmc-4koOkm-PAknbahQxL2Yis94qx1ujBWDr0PzZZWnzGPenq_euZR3lt9kc8yJnSMyWTQL2DsX2_QHUfWdTdPLpahJuTpZUpc9ZHVbxpsj2GQGSVw1sLF09n7HfGCtfqMhA6x8MwDtuQDX76b9hso-PdByMGBz9vZDNs1BcHMknXMip8nbaETg1_StRALfS34Nf8b0KsJaax4jFZw"}'
+      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJwRXRBdUhGWjNmbEtlei1sSEhjNXlqUmFWWjZrekw5MGRTM0ZRWnk4Tmh1aTFuODNwTDlva2dsUk5OVUpWQk9QTUVxXzJYVzg0V1VfbTByLThXLVZvbzE0cWg3TnM5ME0yMGlxRzlDNmdPcE5qOHUyRjloRDRuR2VVYnpEV29JT0xyT1NVX2lmVzBaZUlxajZNQ2g4WTBZcE1XUHhfMFBIUDBaYlhTRnBiekZUaFAxM1dZV1RXWWtvUk9wSHpNa0tCem9pSHhxLXM4Rlc4aVpoU3JWMWF3anpqblE1UVR2N3d3c05zU1hnbGJrNnFRU2RjWkpaQ003NGM3b0laQVNESVhyc1ZrYVlhOW16QzFjeW9sTXRCbkVhYUVFRzhCY2NhX0JTdmNXdVFVR3ZXeUg0SzRTTWgxMU1KbDlBUVJZdmtqanEtV19nQXFsRmcybzBMV0JybXcifSwibm9uY2UiOiJDN0xmVnVmTUE1VGt4UDcyRElDaktyZWtBNHdJV2JWMTAxa3V1RGpCVTlZIn0","payload":"bnVsbA","signature":"mo2JOh3F38FnzAK8eucapdXBGeVnCG0EyFcu45tseuBh88hSdlmHTv-sn9eXd9wGFNk8-sAL7mTUEtGXTvD3tcj2bNeSZICgmFflzhD1LX71cXLFNL2n3d6M9MezFbeEbiL1I4v4VLbQvAFgJK6SPYfoaNC32xd20gBzzUu6kb8QGrzQqKAZ95bz43uXp9LbJoz8e0a-JeS6dtLgbsaMLD10CynrhoN4R3B3TP5BvTkVq2dqWVOPnwbDsm-r01lAEjY8YtZiXpwBiD_6SS3X_7hQkLmuekxWfM9MrN-Ejb11XzLqq7Wo3dRGav9dFAGKyhGe6ZI0x8UirQijuyxFOA"}'
     headers:
       User-Agent:
-      - Acme::Client v0.4.0 (https://github.com/unixcharles/acme-client)
+      - Acme::Client v0.5.0 (https://github.com/unixcharles/acme-client)
   response:
     status:
-      code: 202
+      code: 200
       message: 
     headers:
       boulder-request-id:
-      - lCkx5faDUJpXTfgHtTW-Adscj7oijtbMwGjVt_dJERs
+      - xovk5-NDKzQSQSPU6QrGYyuydZRS4-CSaYHpX58Rogs
       cache-control:
       - public, max-age=0, no-cache
       content-type:
       - application/json
       link:
-      - <http://127.0.0.1:4000/acme/authz/VHGNb4XEUPaw1x050wWrOenpTbtlm0YABhXrO7u9wfM>;rel="up"
-      location:
-      - http://127.0.0.1:4000/acme/challenge/VHGNb4XEUPaw1x050wWrOenpTbtlm0YABhXrO7u9wfM/76
+      - <http://172.17.0.1:4000/acme/new-cert>;rel="next"
       replay-nonce:
-      - hz5xBwe0JEajE-Iq_d1j9Jz50-6sCbtxGwOeAjESQRU
+      - j-xSSCIGtS34R-1QBCIGrNEXLIU91F5oUFB3W9GYVLA
       date:
-      - Sun, 21 Aug 2016 18:26:34 GMT
+      - Mon, 21 Nov 2016 19:25:02 GMT
       content-length:
-      - '611'
+      - '1037'
       connection:
       - close
     body:
       encoding: UTF-8
       string: |-
         {
-          "type": "http-01",
-          "status": "valid",
-          "uri": "http://127.0.0.1:4000/acme/challenge/VHGNb4XEUPaw1x050wWrOenpTbtlm0YABhXrO7u9wfM/76",
-          "token": "t36nWI5tShQiFmrtSM7_hF3bO3VJKrRdJQfSuPQuUjY",
-          "keyAuthorization": "t36nWI5tShQiFmrtSM7_hF3bO3VJKrRdJQfSuPQuUjY._hKZD_tOlWHUk3wfNo5fY1ue-FvRnXX0MsZdjzQVCzs",
-          "validationRecord": [
+          "identifier": {
+            "type": "dns",
+            "value": "example.com"
+          },
+          "status": "pending",
+          "expires": "2016-11-28T19:25:01Z",
+          "challenges": [
             {
-              "url": "http://example.com:5002/.well-known/acme-challenge/t36nWI5tShQiFmrtSM7_hF3bO3VJKrRdJQfSuPQuUjY",
-              "hostname": "example.com",
-              "port": "5002",
-              "addressesResolved": [
-                "172.17.0.1"
-              ],
-              "addressUsed": "172.17.0.1"
+              "type": "dns-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/4",
+              "token": "LeSLL1Zh_Z4KlU5wlNUhZ2gxbpG6ZjSua82fKFaHmG4"
+            },
+            {
+              "type": "tls-sni-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/5",
+              "token": "TrvZZYFHccpW9IcBw5urlaNgSSMalw8OL6HnhBVL71c"
+            },
+            {
+              "type": "http-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/6",
+              "token": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg",
+              "keyAuthorization": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg.jJYPwViHMGGts9HCD1QHrmDirXaW7tQhjV0kqzHN5mo"
             }
+          ],
+          "combinations": [
+            [
+              1
+            ],
+            [
+              2
+            ],
+            [
+              0
+            ]
           ]
         }
     http_version: 
-  recorded_at: Sun, 21 Aug 2016 18:26:34 GMT
+  recorded_at: Mon, 21 Nov 2016 19:25:02 GMT
+- request:
+    method: get
+    uri: http://172.17.0.1:4000/acme/authz/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8
+    body:
+      encoding: UTF-8
+      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJwRXRBdUhGWjNmbEtlei1sSEhjNXlqUmFWWjZrekw5MGRTM0ZRWnk4Tmh1aTFuODNwTDlva2dsUk5OVUpWQk9QTUVxXzJYVzg0V1VfbTByLThXLVZvbzE0cWg3TnM5ME0yMGlxRzlDNmdPcE5qOHUyRjloRDRuR2VVYnpEV29JT0xyT1NVX2lmVzBaZUlxajZNQ2g4WTBZcE1XUHhfMFBIUDBaYlhTRnBiekZUaFAxM1dZV1RXWWtvUk9wSHpNa0tCem9pSHhxLXM4Rlc4aVpoU3JWMWF3anpqblE1UVR2N3d3c05zU1hnbGJrNnFRU2RjWkpaQ003NGM3b0laQVNESVhyc1ZrYVlhOW16QzFjeW9sTXRCbkVhYUVFRzhCY2NhX0JTdmNXdVFVR3ZXeUg0SzRTTWgxMU1KbDlBUVJZdmtqanEtV19nQXFsRmcybzBMV0JybXcifSwibm9uY2UiOiJqLXhTU0NJR3RTMzRSLTFRQkNJR3JORVhMSVU5MUY1b1VGQjNXOUdZVkxBIn0","payload":"bnVsbA","signature":"h56WgrSpJ96Z9SGdy3LjsjX7p4ZtLZumXp3lc6ckHZiX9UYF7jKB-Q9uf9GPY1asd52nwyTT0GTMl3FJeWvSWdQnHbH5vF1E_6kQCwZllYKR7hE__52nDDVTQuOSfHRRpxT7jVP1d3Tx8drfcL3N3ectM38flExSNEfdJ9RlsJonfhpC3AU4euNGCdXXwrR14twR4SrhZfi_-AMBr4lFrPJfCCIQxrKY7H-i8_PhD4PzZzZYhS-iqWdpbpfOaj6OVOYGfDwYXb-sdNYDIrgaM5yDk_mPHT9LDki3at11f6QIURle9FkoQ5wqneGYZknYiLD2jdAjtITJxWW6QYuO4g"}'
+    headers:
+      User-Agent:
+      - Acme::Client v0.5.0 (https://github.com/unixcharles/acme-client)
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      boulder-request-id:
+      - aRCmXRMR2JQpQ9zwCHXM822-C-h_OUS8zqSsXIXtQf0
+      cache-control:
+      - public, max-age=0, no-cache
+      content-type:
+      - application/json
+      link:
+      - <http://172.17.0.1:4000/acme/new-cert>;rel="next"
+      replay-nonce:
+      - souBDszgG2twY43IW6AYZoTeGl-fKXtVgVxN-QPE1VY
+      date:
+      - Mon, 21 Nov 2016 19:25:03 GMT
+      content-length:
+      - '1037'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "identifier": {
+            "type": "dns",
+            "value": "example.com"
+          },
+          "status": "pending",
+          "expires": "2016-11-28T19:25:01Z",
+          "challenges": [
+            {
+              "type": "dns-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/4",
+              "token": "LeSLL1Zh_Z4KlU5wlNUhZ2gxbpG6ZjSua82fKFaHmG4"
+            },
+            {
+              "type": "tls-sni-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/5",
+              "token": "TrvZZYFHccpW9IcBw5urlaNgSSMalw8OL6HnhBVL71c"
+            },
+            {
+              "type": "http-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/6",
+              "token": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg",
+              "keyAuthorization": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg.jJYPwViHMGGts9HCD1QHrmDirXaW7tQhjV0kqzHN5mo"
+            }
+          ],
+          "combinations": [
+            [
+              1
+            ],
+            [
+              2
+            ],
+            [
+              0
+            ]
+          ]
+        }
+    http_version: 
+  recorded_at: Mon, 21 Nov 2016 19:25:03 GMT
+- request:
+    method: get
+    uri: http://172.17.0.1:4000/acme/authz/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8
+    body:
+      encoding: UTF-8
+      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJwRXRBdUhGWjNmbEtlei1sSEhjNXlqUmFWWjZrekw5MGRTM0ZRWnk4Tmh1aTFuODNwTDlva2dsUk5OVUpWQk9QTUVxXzJYVzg0V1VfbTByLThXLVZvbzE0cWg3TnM5ME0yMGlxRzlDNmdPcE5qOHUyRjloRDRuR2VVYnpEV29JT0xyT1NVX2lmVzBaZUlxajZNQ2g4WTBZcE1XUHhfMFBIUDBaYlhTRnBiekZUaFAxM1dZV1RXWWtvUk9wSHpNa0tCem9pSHhxLXM4Rlc4aVpoU3JWMWF3anpqblE1UVR2N3d3c05zU1hnbGJrNnFRU2RjWkpaQ003NGM3b0laQVNESVhyc1ZrYVlhOW16QzFjeW9sTXRCbkVhYUVFRzhCY2NhX0JTdmNXdVFVR3ZXeUg0SzRTTWgxMU1KbDlBUVJZdmtqanEtV19nQXFsRmcybzBMV0JybXcifSwibm9uY2UiOiJzb3VCRHN6Z0cydHdZNDNJVzZBWVpvVGVHbC1mS1h0VmdWeE4tUVBFMVZZIn0","payload":"bnVsbA","signature":"ZUB21EekO0N3fax0iyxuTF-Ib5v6wOIDquq21qRsoscjXFaK9tloKGzWE85KM4Q9X65F5rgZlNJSFpmVTovMyYgLWs81hxklZz4gl8SzXZWEfEjt8ytwC_xjYi5Bat4z9HUi8n2b1LcJoiI8dZihjq5mlfZ6KPsCVFSdULzIR7qTRxXKhHCQeQu9gr1antuL5JPuNl0aXrQ2KUTX8NYRpUv69-JVlptD6ABvMSwaqxAVFnZdfDrJxLiW7pzfKusYnJNbEyz9xWcYDDU2rmLY17TnF1Z8rIwPbjVe924UmqCL2o7LBgnpqglrTmsBobJp2DAznQ8Hw8CBY2w6x-sr-A"}'
+    headers:
+      User-Agent:
+      - Acme::Client v0.5.0 (https://github.com/unixcharles/acme-client)
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      boulder-request-id:
+      - gOd6AVH3YBXbxIapIR52wbJoAGxrrblo97inUTBtfB8
+      cache-control:
+      - public, max-age=0, no-cache
+      content-type:
+      - application/json
+      link:
+      - <http://172.17.0.1:4000/acme/new-cert>;rel="next"
+      replay-nonce:
+      - k7FyNt9gYtX_ir8Me51gkiT-ojgNfugzV910gWhfADc
+      date:
+      - Mon, 21 Nov 2016 19:25:04 GMT
+      content-length:
+      - '1037'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "identifier": {
+            "type": "dns",
+            "value": "example.com"
+          },
+          "status": "pending",
+          "expires": "2016-11-28T19:25:01Z",
+          "challenges": [
+            {
+              "type": "dns-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/4",
+              "token": "LeSLL1Zh_Z4KlU5wlNUhZ2gxbpG6ZjSua82fKFaHmG4"
+            },
+            {
+              "type": "tls-sni-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/5",
+              "token": "TrvZZYFHccpW9IcBw5urlaNgSSMalw8OL6HnhBVL71c"
+            },
+            {
+              "type": "http-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/6",
+              "token": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg",
+              "keyAuthorization": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg.jJYPwViHMGGts9HCD1QHrmDirXaW7tQhjV0kqzHN5mo"
+            }
+          ],
+          "combinations": [
+            [
+              1
+            ],
+            [
+              2
+            ],
+            [
+              0
+            ]
+          ]
+        }
+    http_version: 
+  recorded_at: Mon, 21 Nov 2016 19:25:04 GMT
+- request:
+    method: get
+    uri: http://172.17.0.1:4000/acme/authz/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8
+    body:
+      encoding: UTF-8
+      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJwRXRBdUhGWjNmbEtlei1sSEhjNXlqUmFWWjZrekw5MGRTM0ZRWnk4Tmh1aTFuODNwTDlva2dsUk5OVUpWQk9QTUVxXzJYVzg0V1VfbTByLThXLVZvbzE0cWg3TnM5ME0yMGlxRzlDNmdPcE5qOHUyRjloRDRuR2VVYnpEV29JT0xyT1NVX2lmVzBaZUlxajZNQ2g4WTBZcE1XUHhfMFBIUDBaYlhTRnBiekZUaFAxM1dZV1RXWWtvUk9wSHpNa0tCem9pSHhxLXM4Rlc4aVpoU3JWMWF3anpqblE1UVR2N3d3c05zU1hnbGJrNnFRU2RjWkpaQ003NGM3b0laQVNESVhyc1ZrYVlhOW16QzFjeW9sTXRCbkVhYUVFRzhCY2NhX0JTdmNXdVFVR3ZXeUg0SzRTTWgxMU1KbDlBUVJZdmtqanEtV19nQXFsRmcybzBMV0JybXcifSwibm9uY2UiOiJrN0Z5TnQ5Z1l0WF9pcjhNZTUxZ2tpVC1vamdOZnVnelY5MTBnV2hmQURjIn0","payload":"bnVsbA","signature":"DnlxqsmvG3D2LjeQtr2lYEaZu1y90Ot0h9rOpRM0QNhwFle1KL-Hj4Bu8HEH47lv4_Nq7epj7jBjpZtT3FA2VGWN6S5uArVeJ-B4Of29qutQyfdPh2qALlkQkMi72wEZEcyz2lhVlbqyVxOBJi0upUFERoKGRI3rYmar7gkyPa_8MBWj4uqiza5Sqw3rdzrRMPvkznl5ATHhNojt_9o7cAhxZzxjvicP6kLsKdDdc0FO-KWCSZWf5M3vxGqoUjVeuv8fZ89MPh6AKasWJmbAGyp51bvVlwEGYiDGA8pJj3rPIkutHdjGlJzU6Ikvxmgm13kB7qQGHXUZMvstTJc-QQ"}'
+    headers:
+      User-Agent:
+      - Acme::Client v0.5.0 (https://github.com/unixcharles/acme-client)
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      boulder-request-id:
+      - hDVZNvsTQShfR0x24SpGKzuovKf9LrXBRsHfUxoA_As
+      cache-control:
+      - public, max-age=0, no-cache
+      content-type:
+      - application/json
+      link:
+      - <http://172.17.0.1:4000/acme/new-cert>;rel="next"
+      replay-nonce:
+      - VkUmOuL1bkE5JILlTdWBaYZQDf-o7HffkDM0YDBzuI8
+      date:
+      - Mon, 21 Nov 2016 19:25:05 GMT
+      content-length:
+      - '1037'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "identifier": {
+            "type": "dns",
+            "value": "example.com"
+          },
+          "status": "pending",
+          "expires": "2016-11-28T19:25:01Z",
+          "challenges": [
+            {
+              "type": "dns-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/4",
+              "token": "LeSLL1Zh_Z4KlU5wlNUhZ2gxbpG6ZjSua82fKFaHmG4"
+            },
+            {
+              "type": "tls-sni-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/5",
+              "token": "TrvZZYFHccpW9IcBw5urlaNgSSMalw8OL6HnhBVL71c"
+            },
+            {
+              "type": "http-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/6",
+              "token": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg",
+              "keyAuthorization": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg.jJYPwViHMGGts9HCD1QHrmDirXaW7tQhjV0kqzHN5mo"
+            }
+          ],
+          "combinations": [
+            [
+              1
+            ],
+            [
+              2
+            ],
+            [
+              0
+            ]
+          ]
+        }
+    http_version: 
+  recorded_at: Mon, 21 Nov 2016 19:25:05 GMT
+- request:
+    method: get
+    uri: http://172.17.0.1:4000/acme/authz/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8
+    body:
+      encoding: UTF-8
+      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJwRXRBdUhGWjNmbEtlei1sSEhjNXlqUmFWWjZrekw5MGRTM0ZRWnk4Tmh1aTFuODNwTDlva2dsUk5OVUpWQk9QTUVxXzJYVzg0V1VfbTByLThXLVZvbzE0cWg3TnM5ME0yMGlxRzlDNmdPcE5qOHUyRjloRDRuR2VVYnpEV29JT0xyT1NVX2lmVzBaZUlxajZNQ2g4WTBZcE1XUHhfMFBIUDBaYlhTRnBiekZUaFAxM1dZV1RXWWtvUk9wSHpNa0tCem9pSHhxLXM4Rlc4aVpoU3JWMWF3anpqblE1UVR2N3d3c05zU1hnbGJrNnFRU2RjWkpaQ003NGM3b0laQVNESVhyc1ZrYVlhOW16QzFjeW9sTXRCbkVhYUVFRzhCY2NhX0JTdmNXdVFVR3ZXeUg0SzRTTWgxMU1KbDlBUVJZdmtqanEtV19nQXFsRmcybzBMV0JybXcifSwibm9uY2UiOiJWa1VtT3VMMWJrRTVKSUxsVGRXQmFZWlFEZi1vN0hmZmtETTBZREJ6dUk4In0","payload":"bnVsbA","signature":"d9rewxAKvZ1zgfFSerJZYAoo60z9eFx0nUXnWf9AbwJxQig7DP4-aLc9DmfZNA0YcruxYp7d0vJvezsIx7LdYW7jzd7_DE6xvnFKbTXppxNaQ_McaDaHkJJ3ZpUIbmZDbLnC9rV0GpuZ3z3vxIEw-iWMHreMqz4hwo9oZ-d3m2LS3wy_dTzR8jrmj1xH_cReUrxRD6Atri9AJAqdQbHlJS6oux0juQP-3Epa122kGI5ihEVdlnxa4uFcsMANTPcXxwCr7J5PPyXYj2HTjk8-IMPswcuLvI8Gh3lqYr8244gG6TEN-3OCcZfKD3D7Zy4_mmmF-UoEgJFg5UTMdPPkoQ"}'
+    headers:
+      User-Agent:
+      - Acme::Client v0.5.0 (https://github.com/unixcharles/acme-client)
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      boulder-request-id:
+      - NZYuRQQibKUS2-qP5Jrlt8oWhzvFajm4jEy3zoSeDTM
+      cache-control:
+      - public, max-age=0, no-cache
+      content-type:
+      - application/json
+      link:
+      - <http://172.17.0.1:4000/acme/new-cert>;rel="next"
+      replay-nonce:
+      - VpUoxhYuRYQPNdj_UeC9w41qQSQYIfT0IvLoOf2bUic
+      date:
+      - Mon, 21 Nov 2016 19:25:06 GMT
+      content-length:
+      - '1037'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "identifier": {
+            "type": "dns",
+            "value": "example.com"
+          },
+          "status": "pending",
+          "expires": "2016-11-28T19:25:01Z",
+          "challenges": [
+            {
+              "type": "dns-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/4",
+              "token": "LeSLL1Zh_Z4KlU5wlNUhZ2gxbpG6ZjSua82fKFaHmG4"
+            },
+            {
+              "type": "tls-sni-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/5",
+              "token": "TrvZZYFHccpW9IcBw5urlaNgSSMalw8OL6HnhBVL71c"
+            },
+            {
+              "type": "http-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/6",
+              "token": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg",
+              "keyAuthorization": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg.jJYPwViHMGGts9HCD1QHrmDirXaW7tQhjV0kqzHN5mo"
+            }
+          ],
+          "combinations": [
+            [
+              1
+            ],
+            [
+              2
+            ],
+            [
+              0
+            ]
+          ]
+        }
+    http_version: 
+  recorded_at: Mon, 21 Nov 2016 19:25:06 GMT
+- request:
+    method: get
+    uri: http://172.17.0.1:4000/acme/authz/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8
+    body:
+      encoding: UTF-8
+      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJwRXRBdUhGWjNmbEtlei1sSEhjNXlqUmFWWjZrekw5MGRTM0ZRWnk4Tmh1aTFuODNwTDlva2dsUk5OVUpWQk9QTUVxXzJYVzg0V1VfbTByLThXLVZvbzE0cWg3TnM5ME0yMGlxRzlDNmdPcE5qOHUyRjloRDRuR2VVYnpEV29JT0xyT1NVX2lmVzBaZUlxajZNQ2g4WTBZcE1XUHhfMFBIUDBaYlhTRnBiekZUaFAxM1dZV1RXWWtvUk9wSHpNa0tCem9pSHhxLXM4Rlc4aVpoU3JWMWF3anpqblE1UVR2N3d3c05zU1hnbGJrNnFRU2RjWkpaQ003NGM3b0laQVNESVhyc1ZrYVlhOW16QzFjeW9sTXRCbkVhYUVFRzhCY2NhX0JTdmNXdVFVR3ZXeUg0SzRTTWgxMU1KbDlBUVJZdmtqanEtV19nQXFsRmcybzBMV0JybXcifSwibm9uY2UiOiJWcFVveGhZdVJZUVBOZGpfVWVDOXc0MXFRU1FZSWZUMEl2TG9PZjJiVWljIn0","payload":"bnVsbA","signature":"FLVpfbqP6bk69XpmR7ZUuWkZ8QuDHJrBP2I-GF5EFKy2nqXBTVEYreiUp-0v7Xn_VSaV2DuhDhxKfIKP989hd-CZemgEptO2JWcCA5bW8P9ObIZNEE-EgJXGFu8iBAxv4nalbvgIiw2wpOyhzTmdnWLdooTZVV8fbmLTdyzZdJBuju_J5DPTJjJlhTQ42BIByHqdbUe_VOlBO93FIQvVymL0_FK5HtU3O1i3vBNz5hs-p1CxYkqA440tqL897X_9m0acB4FsaD8V86kYXXSPN4w6S4GXkJCSvqjZ50a_V-RUCTAOwIoq-RWAfu2AWyRkHX_BGwfWemb7fUpU7RAujg"}'
+    headers:
+      User-Agent:
+      - Acme::Client v0.5.0 (https://github.com/unixcharles/acme-client)
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      boulder-request-id:
+      - DOAfgBmvpXfyo01cpMaxHBKccMv9_y8YZ3vA7P3uvSY
+      cache-control:
+      - public, max-age=0, no-cache
+      content-type:
+      - application/json
+      link:
+      - <http://172.17.0.1:4000/acme/new-cert>;rel="next"
+      replay-nonce:
+      - 3m0Dne9vPNEB-LFLMbxuRHBZgqgH9xKZiwdQeZ828UU
+      date:
+      - Mon, 21 Nov 2016 19:25:07 GMT
+      content-length:
+      - '1037'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "identifier": {
+            "type": "dns",
+            "value": "example.com"
+          },
+          "status": "pending",
+          "expires": "2016-11-28T19:25:01Z",
+          "challenges": [
+            {
+              "type": "dns-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/4",
+              "token": "LeSLL1Zh_Z4KlU5wlNUhZ2gxbpG6ZjSua82fKFaHmG4"
+            },
+            {
+              "type": "tls-sni-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/5",
+              "token": "TrvZZYFHccpW9IcBw5urlaNgSSMalw8OL6HnhBVL71c"
+            },
+            {
+              "type": "http-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/6",
+              "token": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg",
+              "keyAuthorization": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg.jJYPwViHMGGts9HCD1QHrmDirXaW7tQhjV0kqzHN5mo"
+            }
+          ],
+          "combinations": [
+            [
+              1
+            ],
+            [
+              2
+            ],
+            [
+              0
+            ]
+          ]
+        }
+    http_version: 
+  recorded_at: Mon, 21 Nov 2016 19:25:07 GMT
+- request:
+    method: get
+    uri: http://172.17.0.1:4000/acme/authz/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8
+    body:
+      encoding: UTF-8
+      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJwRXRBdUhGWjNmbEtlei1sSEhjNXlqUmFWWjZrekw5MGRTM0ZRWnk4Tmh1aTFuODNwTDlva2dsUk5OVUpWQk9QTUVxXzJYVzg0V1VfbTByLThXLVZvbzE0cWg3TnM5ME0yMGlxRzlDNmdPcE5qOHUyRjloRDRuR2VVYnpEV29JT0xyT1NVX2lmVzBaZUlxajZNQ2g4WTBZcE1XUHhfMFBIUDBaYlhTRnBiekZUaFAxM1dZV1RXWWtvUk9wSHpNa0tCem9pSHhxLXM4Rlc4aVpoU3JWMWF3anpqblE1UVR2N3d3c05zU1hnbGJrNnFRU2RjWkpaQ003NGM3b0laQVNESVhyc1ZrYVlhOW16QzFjeW9sTXRCbkVhYUVFRzhCY2NhX0JTdmNXdVFVR3ZXeUg0SzRTTWgxMU1KbDlBUVJZdmtqanEtV19nQXFsRmcybzBMV0JybXcifSwibm9uY2UiOiIzbTBEbmU5dlBORUItTEZMTWJ4dVJIQlpncWdIOXhLWml3ZFFlWjgyOFVVIn0","payload":"bnVsbA","signature":"J4M_jHLVHD_4Lt5kvIpeAnf5QklJKShSWTDgAJ1G2m4SHBstcGN-OrqoZ1XiWsQj12C4ryoUCf1-NDrVPKsO1M2jkzT2nQvEjCsmJjfim2y97lz5ZtBz29B-PYH3BpCqBlRC35OHPW6tshis-1CvE1Q72bV7Gl9rFFAM6bIo-vFKCPKQV3jyLxnY1p66lJIbrvxfoSdWpNwQ46RXSUDOfnJc9LmhTaEPAD3bAVLFvnSmtOPXqqZayixiuJP-JUvHTWhblnYHS2tUOyWPVIdju511ONlSRIx_Ccsckmutm4gs-Aw5W6Uv3mdBNQTopUXgRXRtrHwEJA3-od8Mf8ndgw"}'
+    headers:
+      User-Agent:
+      - Acme::Client v0.5.0 (https://github.com/unixcharles/acme-client)
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      boulder-request-id:
+      - Ab7qqmHYkO5Whyt8ELPe_5pLPj0BuLkZDFtzYbQae54
+      cache-control:
+      - public, max-age=0, no-cache
+      content-type:
+      - application/json
+      link:
+      - <http://172.17.0.1:4000/acme/new-cert>;rel="next"
+      replay-nonce:
+      - JTznDrfryDwyt2JDUK5c40nHQLI_ONE9SWgug06xi_8
+      date:
+      - Mon, 21 Nov 2016 19:25:08 GMT
+      content-length:
+      - '1037'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "identifier": {
+            "type": "dns",
+            "value": "example.com"
+          },
+          "status": "pending",
+          "expires": "2016-11-28T19:25:01Z",
+          "challenges": [
+            {
+              "type": "dns-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/4",
+              "token": "LeSLL1Zh_Z4KlU5wlNUhZ2gxbpG6ZjSua82fKFaHmG4"
+            },
+            {
+              "type": "tls-sni-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/5",
+              "token": "TrvZZYFHccpW9IcBw5urlaNgSSMalw8OL6HnhBVL71c"
+            },
+            {
+              "type": "http-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/6",
+              "token": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg",
+              "keyAuthorization": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg.jJYPwViHMGGts9HCD1QHrmDirXaW7tQhjV0kqzHN5mo"
+            }
+          ],
+          "combinations": [
+            [
+              1
+            ],
+            [
+              2
+            ],
+            [
+              0
+            ]
+          ]
+        }
+    http_version: 
+  recorded_at: Mon, 21 Nov 2016 19:25:08 GMT
+- request:
+    method: get
+    uri: http://172.17.0.1:4000/acme/authz/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8
+    body:
+      encoding: UTF-8
+      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJwRXRBdUhGWjNmbEtlei1sSEhjNXlqUmFWWjZrekw5MGRTM0ZRWnk4Tmh1aTFuODNwTDlva2dsUk5OVUpWQk9QTUVxXzJYVzg0V1VfbTByLThXLVZvbzE0cWg3TnM5ME0yMGlxRzlDNmdPcE5qOHUyRjloRDRuR2VVYnpEV29JT0xyT1NVX2lmVzBaZUlxajZNQ2g4WTBZcE1XUHhfMFBIUDBaYlhTRnBiekZUaFAxM1dZV1RXWWtvUk9wSHpNa0tCem9pSHhxLXM4Rlc4aVpoU3JWMWF3anpqblE1UVR2N3d3c05zU1hnbGJrNnFRU2RjWkpaQ003NGM3b0laQVNESVhyc1ZrYVlhOW16QzFjeW9sTXRCbkVhYUVFRzhCY2NhX0JTdmNXdVFVR3ZXeUg0SzRTTWgxMU1KbDlBUVJZdmtqanEtV19nQXFsRmcybzBMV0JybXcifSwibm9uY2UiOiJKVHpuRHJmcnlEd3l0MkpEVUs1YzQwbkhRTElfT05FOVNXZ3VnMDZ4aV84In0","payload":"bnVsbA","signature":"R4aw4OO73_eD1LpTq9YKjQe74Iz86dcoXmfkqiHcGjW0shWQ4aZpSo8bpcdX60dbjV6WuPTxc7gQa8vHTIQj7RAgIdj6QnDPOnDDYfZdP7dEtts3oXBJC73zizonFSzro9BWOToV79e10SO8-W1rBOrrFgyoMP8jpoFJgIyQhlpg3jkhJ1U58JNrptRItIvTyl4FQOaLBt2g1WRa6rprtJJgyo1eKnqO9kbfI2LrTkfIwpqW0DVIIlv9guW9sIOgd-VXHxOXKcIizvXR9SyiW5AbgS282g0THtwTKWLdimgzc_JPGGP1EJl8P6iRVzI8qttycWLCOFDK2zshSmLTOA"}'
+    headers:
+      User-Agent:
+      - Acme::Client v0.5.0 (https://github.com/unixcharles/acme-client)
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      boulder-request-id:
+      - 5ndjm-PbgevGviCuQjvV_J9Nzggtjjk2gqHqgTvv0fA
+      cache-control:
+      - public, max-age=0, no-cache
+      content-type:
+      - application/json
+      link:
+      - <http://172.17.0.1:4000/acme/new-cert>;rel="next"
+      replay-nonce:
+      - ad0Val_MQ4cFAjoOKF4D-mrvD2G1_Es9xNvXKZOA8MQ
+      date:
+      - Mon, 21 Nov 2016 19:25:09 GMT
+      content-length:
+      - '1037'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "identifier": {
+            "type": "dns",
+            "value": "example.com"
+          },
+          "status": "pending",
+          "expires": "2016-11-28T19:25:01Z",
+          "challenges": [
+            {
+              "type": "dns-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/4",
+              "token": "LeSLL1Zh_Z4KlU5wlNUhZ2gxbpG6ZjSua82fKFaHmG4"
+            },
+            {
+              "type": "tls-sni-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/5",
+              "token": "TrvZZYFHccpW9IcBw5urlaNgSSMalw8OL6HnhBVL71c"
+            },
+            {
+              "type": "http-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/6",
+              "token": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg",
+              "keyAuthorization": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg.jJYPwViHMGGts9HCD1QHrmDirXaW7tQhjV0kqzHN5mo"
+            }
+          ],
+          "combinations": [
+            [
+              1
+            ],
+            [
+              2
+            ],
+            [
+              0
+            ]
+          ]
+        }
+    http_version: 
+  recorded_at: Mon, 21 Nov 2016 19:25:09 GMT
+- request:
+    method: get
+    uri: http://172.17.0.1:4000/acme/authz/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8
+    body:
+      encoding: UTF-8
+      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJwRXRBdUhGWjNmbEtlei1sSEhjNXlqUmFWWjZrekw5MGRTM0ZRWnk4Tmh1aTFuODNwTDlva2dsUk5OVUpWQk9QTUVxXzJYVzg0V1VfbTByLThXLVZvbzE0cWg3TnM5ME0yMGlxRzlDNmdPcE5qOHUyRjloRDRuR2VVYnpEV29JT0xyT1NVX2lmVzBaZUlxajZNQ2g4WTBZcE1XUHhfMFBIUDBaYlhTRnBiekZUaFAxM1dZV1RXWWtvUk9wSHpNa0tCem9pSHhxLXM4Rlc4aVpoU3JWMWF3anpqblE1UVR2N3d3c05zU1hnbGJrNnFRU2RjWkpaQ003NGM3b0laQVNESVhyc1ZrYVlhOW16QzFjeW9sTXRCbkVhYUVFRzhCY2NhX0JTdmNXdVFVR3ZXeUg0SzRTTWgxMU1KbDlBUVJZdmtqanEtV19nQXFsRmcybzBMV0JybXcifSwibm9uY2UiOiJhZDBWYWxfTVE0Y0ZBam9PS0Y0RC1tcnZEMkcxX0VzOXhOdlhLWk9BOE1RIn0","payload":"bnVsbA","signature":"TDFP8hvo6-cNShpR6tf701Hk4_P82YXN7U6Od2aJz-0tn1wiiZrglNiaiBMnpfOAfZwMXO98w-IaCUXjkqEGNPkkEDmoH4eveGAol99NLmDy5l9kBZ-v-8byMmWfiTQvmI6TE4nqIHX0SIoqTXqnTs6KveEiHF41LDKio3pms05ugNIcY3MHq3GvcBkwyBhdLJ5gpJp6-VkbZLpPySF3J4no5A_7y6Od5n5F4XtFX3ig4wDxyIoSa1pdv-P-siAUbdXAjbTDt1rX5JvzTDwRcfa1D6JhXtG5YdMbMef5I_mOeoq-trW3cBIoNZD8UQQ8O9R8Zx4DmrDj7JtmVHR7eg"}'
+    headers:
+      User-Agent:
+      - Acme::Client v0.5.0 (https://github.com/unixcharles/acme-client)
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      boulder-request-id:
+      - W0OLO9n357QOF6e5LPiOt_csXHGrZ4SrmtN9kYFToJk
+      cache-control:
+      - public, max-age=0, no-cache
+      content-type:
+      - application/json
+      link:
+      - <http://172.17.0.1:4000/acme/new-cert>;rel="next"
+      replay-nonce:
+      - VAw4ALqDAVveor4ByBMZsIgfoG1JKeLbGHSEqsKBWlY
+      date:
+      - Mon, 21 Nov 2016 19:25:10 GMT
+      content-length:
+      - '1037'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "identifier": {
+            "type": "dns",
+            "value": "example.com"
+          },
+          "status": "pending",
+          "expires": "2016-11-28T19:25:01Z",
+          "challenges": [
+            {
+              "type": "dns-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/4",
+              "token": "LeSLL1Zh_Z4KlU5wlNUhZ2gxbpG6ZjSua82fKFaHmG4"
+            },
+            {
+              "type": "tls-sni-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/5",
+              "token": "TrvZZYFHccpW9IcBw5urlaNgSSMalw8OL6HnhBVL71c"
+            },
+            {
+              "type": "http-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/6",
+              "token": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg",
+              "keyAuthorization": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg.jJYPwViHMGGts9HCD1QHrmDirXaW7tQhjV0kqzHN5mo"
+            }
+          ],
+          "combinations": [
+            [
+              1
+            ],
+            [
+              2
+            ],
+            [
+              0
+            ]
+          ]
+        }
+    http_version: 
+  recorded_at: Mon, 21 Nov 2016 19:25:10 GMT
+- request:
+    method: get
+    uri: http://172.17.0.1:4000/acme/authz/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8
+    body:
+      encoding: UTF-8
+      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJwRXRBdUhGWjNmbEtlei1sSEhjNXlqUmFWWjZrekw5MGRTM0ZRWnk4Tmh1aTFuODNwTDlva2dsUk5OVUpWQk9QTUVxXzJYVzg0V1VfbTByLThXLVZvbzE0cWg3TnM5ME0yMGlxRzlDNmdPcE5qOHUyRjloRDRuR2VVYnpEV29JT0xyT1NVX2lmVzBaZUlxajZNQ2g4WTBZcE1XUHhfMFBIUDBaYlhTRnBiekZUaFAxM1dZV1RXWWtvUk9wSHpNa0tCem9pSHhxLXM4Rlc4aVpoU3JWMWF3anpqblE1UVR2N3d3c05zU1hnbGJrNnFRU2RjWkpaQ003NGM3b0laQVNESVhyc1ZrYVlhOW16QzFjeW9sTXRCbkVhYUVFRzhCY2NhX0JTdmNXdVFVR3ZXeUg0SzRTTWgxMU1KbDlBUVJZdmtqanEtV19nQXFsRmcybzBMV0JybXcifSwibm9uY2UiOiJWQXc0QUxxREFWdmVvcjRCeUJNWnNJZ2ZvRzFKS2VMYkdIU0Vxc0tCV2xZIn0","payload":"bnVsbA","signature":"MSaEyWtCMBAvovgd52QLPB6wbvZOfkgG-THqTvxNI_tDySTLKQAdUNWYlJHJKJfNSxShC9NvfJ41Zt3ABP38lL4To9Qz7jpMHiybuT6IRPj9nsBSnh_oNEv0pqiRwllUWb6FKdKUHw3go6jnf1nmlfAmuX2tEpSQl_8wjr0uu63dDGfyHgD0uIXufiLO-qhz0soKbFH7jghykRu8IFbyRtue5_Z2P6nHfN8e5JHY304VUmW62a1_-ngchAezaZ92400JrbmrqiMDg6v1BuJbApZgHOD_3tf52q9PlllJukPsqHV06rwnH-RbS7piymu92CI8Q6w4RP6_8uS0dE7DGQ"}'
+    headers:
+      User-Agent:
+      - Acme::Client v0.5.0 (https://github.com/unixcharles/acme-client)
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      boulder-request-id:
+      - fqZoAOG3soqQOwlQXogQoUKGL66p35qgpJsdRy8uuAQ
+      cache-control:
+      - public, max-age=0, no-cache
+      content-type:
+      - application/json
+      link:
+      - <http://172.17.0.1:4000/acme/new-cert>;rel="next"
+      replay-nonce:
+      - 27qHW8WtEJB1Ls0B9Ge6AbeyFp6cEE5mbkb8yT2L0dY
+      date:
+      - Mon, 21 Nov 2016 19:25:11 GMT
+      content-length:
+      - '1377'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "identifier": {
+            "type": "dns",
+            "value": "example.com"
+          },
+          "status": "valid",
+          "expires": "2017-02-19T19:25:11Z",
+          "challenges": [
+            {
+              "type": "dns-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/4",
+              "token": "LeSLL1Zh_Z4KlU5wlNUhZ2gxbpG6ZjSua82fKFaHmG4"
+            },
+            {
+              "type": "tls-sni-01",
+              "status": "pending",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/5",
+              "token": "TrvZZYFHccpW9IcBw5urlaNgSSMalw8OL6HnhBVL71c"
+            },
+            {
+              "type": "http-01",
+              "status": "valid",
+              "uri": "http://172.17.0.1:4000/acme/challenge/dm5shBqtXyz5znkjRD3O9nkoAspAExUDREKJwUygKR8/6",
+              "token": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg",
+              "keyAuthorization": "tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg.jJYPwViHMGGts9HCD1QHrmDirXaW7tQhjV0kqzHN5mo",
+              "validationRecord": [
+                {
+                  "url": "http://example.com:5002/.well-known/acme-challenge/tqsQGNKqdAzeFMReg33XL2xA2WiBMT_mqNqNDvBCZBg",
+                  "hostname": "example.com",
+                  "port": "5002",
+                  "addressesResolved": [
+                    "172.17.0.1"
+                  ],
+                  "addressUsed": "172.17.0.1"
+                }
+              ]
+            }
+          ],
+          "combinations": [
+            [
+              1
+            ],
+            [
+              2
+            ],
+            [
+              0
+            ]
+          ]
+        }
+    http_version: 
+  recorded_at: Mon, 21 Nov 2016 19:25:11 GMT
 - request:
     method: post
     uri: http://172.17.0.1:4000/acme/new-cert
     body:
       encoding: UTF-8
-      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJ6SWRnYjYwM3pXekVxS2I1X2d4bVdLT3RZcVN4anBrdEZ5TFlOTGtBWHQxSFVGdTlLWFA0alVaWTU1a3Joa0h1QzNZajBuX1JUUkd6X3d6aGtTX2dUNGRIQy1xM3JHT2FJdnhNZEZUcFNrX2VXRGFsbjgyWVpPM1M1dmx5VDF5ckFNVW5HZVZ5YWlWZGE5WEs1TkZIUGQ4ZE8zU01PNi1FcFdkVkgxZGwwWWxsemlCTmpFYmZwUkxvYlJiRUVRU01CLXlfNEVTRGlFWDJZQWFScG1QY2Q3dTc5aS1FQk5zd0FGM2pHbmxjWDllbExpSkZseXFVMFlvRGV1d2VFUmM0NzFUU2ktOEdoTUVCSmFCMUNXc0NjSFN2UjNoenp3QTctb3pCd0ttN3poOGJlM0tINmtFYUhYTVA2eEVmZnJLTVJjVjRvcW9iU21tUjlEVHdkWVdqTFEifSwibm9uY2UiOiJoejV4QndlMEpFYWpFLUlxX2QxajlKejUwLTZzQ2J0eEd3T2VBakVTUVJVIn0","payload":"eyJyZXNvdXJjZSI6Im5ldy1jZXJ0IiwiY3NyIjoiTUlJQ1d6Q0NBVU1DQVFJd0ZqRVVNQklHQTFVRUF3d0xaWGhoYlhCc1pTNWpiMjB3Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLQW9JQkFRRFY1dU5BVkNnRWI0cnpwcWE1eS1Od2xRbHBkZ1NNS0pIQlhoMlpvZEtPMkRZU0JRZ0xmcVluNnU3U2hSRDFJdHhQcjZJRXBoellnc29kSW5YN2pSX0RYWnlERGtLY0Z6Zkh5OV9Hc1c5Yzd4Y0I2WUExalpNVU1XazZNYXN4akNoSEhJbXZxTlRUc2xwTFFUNEJXckVudkVWV0xfUmxPQjFqaVlZZVlLa3lBYVZoVTBIQzRFQjM4OExJTlZrenB1dVJMU0x5ZWFyWG9sZUlManNTNGVsdW9QVkVNUHhCaDFYUEt4YWFDSlBGcFpmTm9ZdE9pZmZtSDlGekNZSXZBRnIyWGtFWXhUZGJaaVFwYV9BUzJ2S3Nnd0E4bmQzaEY2MFhoQTFuZDVvcUNpUWNHeDI0eHRJV2VyeVAwYWNRLUQ3QmZVUjdIUFhVdDBISkRab3NTN0FSQWdNQkFBR2dBREFOQmdrcWhraUc5dzBCQVFzRkFBT0NBUUVBcFFJWVh5aW9WcnF0eDVaaG44VTdnRFgtSXYwcUVtQmxDTEtHdlFEWmZVOGRLNTJkb1NEUS1semtSMWhiY3d6VUlmZ2tCdGZYLWRUdVJXWWxGVU9zU2xJeVpPSUZMbkJSMnlneDYxZEJOMUdaYVlhX2dEdkNrS1YzVVBCSGtPWWcwUkZteko4VEV4QjJnRTJlSEJqNUIxb24yRlMwdF9GQ0dObEhVYlgwdG1qMUVSd01kSkxKY0Z1dzJLRlN6QW5FLWgzcFhhbjFrQk4zXzQ0RzJaQ2RsWVpaa1lqbUZUNnBDRjRiMlVjeEdNNWVEYUF1bEtIV1FpRzBUOTlabVlnQnNlcE1senJtNFJCeGJJSGw5YV9oQ1Q4a2gxWVg0bTA3Nm4ydnJFSlFYa1dkMzNrUEZqNVhYU18yczFKVkZScHJ1ZWhwS0ZXNFprZkFCT01MTTJPb1FRPT0ifQ","signature":"eoRSADtPKbwmWbHLkSkV6cMWKYyCIX9AUm4N5jpcfsbi8Ug8MxvqVgnsd_KR-pF2lm7Xk9YoySmM4W4IElXVyHStTlAoufWjlaetYi-y3gVUMiclO7-uUymLM55TtaIqjxKM-6CUnN6bNWsDX5nEtHSV95351Q8LgVICBOh9FVGwqbb3Saf7AzqibguaAuWS2DwGPaGnOD89ff1OJsPj4dzcRJ9kHRGenTqNIk2YM7MZxIV8-EAbmY_yLn4MoJ13T35iuumiu9dgT8-1hq_YANpR0aYXnsadAp87mvKQpca7syAzHrORB6J_804s4ItCTd0NVPkInkR4mnfaihj92g"}'
+      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJwRXRBdUhGWjNmbEtlei1sSEhjNXlqUmFWWjZrekw5MGRTM0ZRWnk4Tmh1aTFuODNwTDlva2dsUk5OVUpWQk9QTUVxXzJYVzg0V1VfbTByLThXLVZvbzE0cWg3TnM5ME0yMGlxRzlDNmdPcE5qOHUyRjloRDRuR2VVYnpEV29JT0xyT1NVX2lmVzBaZUlxajZNQ2g4WTBZcE1XUHhfMFBIUDBaYlhTRnBiekZUaFAxM1dZV1RXWWtvUk9wSHpNa0tCem9pSHhxLXM4Rlc4aVpoU3JWMWF3anpqblE1UVR2N3d3c05zU1hnbGJrNnFRU2RjWkpaQ003NGM3b0laQVNESVhyc1ZrYVlhOW16QzFjeW9sTXRCbkVhYUVFRzhCY2NhX0JTdmNXdVFVR3ZXeUg0SzRTTWgxMU1KbDlBUVJZdmtqanEtV19nQXFsRmcybzBMV0JybXcifSwibm9uY2UiOiIyN3FIVzhXdEVKQjFMczBCOUdlNkFiZXlGcDZjRUU1bWJrYjh5VDJMMGRZIn0","payload":"eyJyZXNvdXJjZSI6Im5ldy1jZXJ0IiwiY3NyIjoiTUlJQ1d6Q0NBVU1DQVFJd0ZqRVVNQklHQTFVRUF3d0xaWGhoYlhCc1pTNWpiMjB3Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLQW9JQkFRRFVWVERiVGd0QVFJekpMeDVDRWx2TmZ0dmxtWGRWM3NBYUhZaDctVV9wZVFscjNiVS0xdGJHZG00c1ZxVVBrUGQtTkpGdEhVVzZ4aUtiMVlxOUxndWJhRWNmT1lhRDAtTmt3U1V4VS1NTldWSWl4ZU95Y3pYR0NLWWRocElESkRuUEtoMGdLRmxtRS04YjI1YklleVJRbHQyN3pnNjFmUksyR0xaNFB5TWdNOGg3WXRnVjEyLWlwMDZaNzVMZVEzc2Zrd2NUNUlUcVVaZTZLWFpkLXM3S1RPOGlQaTZ0bll5TGpSTU9Ha1o2dmQ3Wm1BWF84ZWRFNzdQelBSb2VEOHB1X3JaYXREZ1h6S2pxNkFYS2hIZHVpMWJPWU94dUJkZHhZRWxOY2k2amhHZ0ROaXM4Ukk4SnJPTDlKcF9zeVJOY0VjcUJDb1hsTXoxTEhvOXBGRm41QWdNQkFBR2dBREFOQmdrcWhraUc5dzBCQVFzRkFBT0NBUUVBRDR6Vi03bjlRd3lBV2RlWllESFVmWXdIOTJEVWx5dG9kTjdYT1dmQnI2dkJ3RFRTdExVUngxbklsZDFVSE5OUTRkc3k2Q2VCcHBpbVE4WDhCSzQ3NW9fSkFtNEhnLVkxSkQxZmVjS19tWm5yRm1QeTFvQjlhaUVuYnJweE9VWmZaWnBGVkRmTzI1WWJzbE5ucEtEdXNUTWtKZVU3QTRKV0lONXBJOXhMQnQzS0R4UHhlYk5helhwcEUtUEJGX1A1ZXItdUxhVkcxZks1R3A4OENsbjBlUjVpREZlQ0V5S1FtQVdTMDdzRXh0M0xuN1RTalNMajZlYVJpajZ2a1JERGZ4Z2doZ0xlQVpkS09aRUdpQVNBbVpsMXZrbzhZWXRONkFHYVctZDVoeE5oZ2dxTkpaUmtGNHlEcVhTM2QxNXlzT2NqNjMzRmh0QTdaQWZkeVN0cmNRPT0ifQ","signature":"VO0Tf0h4yPWF0qHH4O3GLk8tbpAIr23wGhcneIqOoWxDo1nsxXD4NpzM-TQkZfhSoZlfvmVfp73UKdWAqmjNJLQFdBxQFmRGkXd2F6YS7WsqVK9dFheMwAnxKBD2LPxWVCCTLk3oKa-cRqD2ntV8h1I5IK5KlC1sSQGGJ5Y0HVCpqF9W6cH5pPcvfg3I4AjUVdvzFj28CquoGgs2rvbmzfCplU2MIXMnZ-Dad7uycK_UinMXsz_LSdmWy2kXd-AVtABRmnzn2mzwLkXmAgLphlXKHBknOvbhF3V6pZHz_cmuRsjl0MeW8JtiQWWkFRrmZOSUVTzlJgTcKGrxgNkCJA"}'
     headers:
       User-Agent:
-      - Acme::Client v0.4.0 (https://github.com/unixcharles/acme-client)
+      - Acme::Client v0.5.0 (https://github.com/unixcharles/acme-client)
   response:
     status:
       code: 201
       message: 
     headers:
       boulder-request-id:
-      - CoXc9JyApKIsTeHxgI_M0lRojJhRgVcjTH57Eg1-Sus
+      - 5v1P-vC56GTx8EYBstohwIT3hrtEqfoXV3CasrUOPnQ
       boulder-requester:
-      - '18'
+      - '2'
       cache-control:
       - public, max-age=0, no-cache
       content-type:
       - application/pkix-cert
       link:
-      - <http://127.0.0.1:4000/acme/issuer-cert>;rel="up"
+      - <http://172.17.0.1:4000/acme/issuer-cert>;rel="up"
       location:
-      - http://127.0.0.1:4000/acme/cert/ff54fa165c0e20f4655b7d047448435b328f
+      - http://172.17.0.1:4000/acme/cert/fff1e610e7457be5fec022670772ec40f87f
       replay-nonce:
-      - MJQg4oZoBT2aXqIEDTCHio_aHDa39c0wBQgTG66PPL0
+      - G_zlVaAHO32ymR1YZIH25ZIpQidXpidfw7aGGszdTs8
       date:
-      - Sun, 21 Aug 2016 18:26:34 GMT
+      - Mon, 21 Nov 2016 19:25:12 GMT
       content-length:
       - '1156'
       connection:
@@ -354,19 +1062,19 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        MIIEgDCCA2igAwIBAgITAP9U+hZcDiD0ZVt9BHRIQ1syjzANBgkqhkiG9w0B
-        AQsFADAfMR0wGwYDVQQDExRoYXBweSBoYWNrZXIgZmFrZSBDQTAeFw0xNjA4
-        MjExNzI3MDBaFw0xNjExMTkxNzI3MDBaMEUxFDASBgNVBAMTC2V4YW1wbGUu
-        Y29tMS0wKwYDVQQFEyRmZjU0ZmExNjVjMGUyMGY0NjU1YjdkMDQ3NDQ4NDM1
-        YjMyOGYwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDV5uNAVCgE
-        b4rzpqa5y+NwlQlpdgSMKJHBXh2ZodKO2DYSBQgLfqYn6u7ShRD1ItxPr6IE
-        phzYgsodInX7jR/DXZyDDkKcFzfHy9/GsW9c7xcB6YA1jZMUMWk6MasxjChH
-        HImvqNTTslpLQT4BWrEnvEVWL/RlOB1jiYYeYKkyAaVhU0HC4EB388LINVkz
-        puuRLSLyearXoleILjsS4eluoPVEMPxBh1XPKxaaCJPFpZfNoYtOiffmH9Fz
-        CYIvAFr2XkEYxTdbZiQpa/AS2vKsgwA8nd3hF60XhA1nd5oqCiQcGx24xtIW
-        eryP0acQ+D7BfUR7HPXUt0HJDZosS7ARAgMBAAGjggGNMIIBiTAOBgNVHQ8B
+        MIIEgDCCA2igAwIBAgITAP/x5hDnRXvl/sAiZwdy7ED4fzANBgkqhkiG9w0B
+        AQsFADAfMR0wGwYDVQQDDBRoMnBweSBoMmNrZXIgZmFrZSBDQTAeFw0xNjEx
+        MjExODI1MDBaFw0xNzAyMTkxODI1MDBaMEUxFDASBgNVBAMTC2V4YW1wbGUu
+        Y29tMS0wKwYDVQQFEyRmZmYxZTYxMGU3NDU3YmU1ZmVjMDIyNjcwNzcyZWM0
+        MGY4N2YwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDUVTDbTgtA
+        QIzJLx5CElvNftvlmXdV3sAaHYh7+U/peQlr3bU+1tbGdm4sVqUPkPd+NJFt
+        HUW6xiKb1Yq9LgubaEcfOYaD0+NkwSUxU+MNWVIixeOyczXGCKYdhpIDJDnP
+        Kh0gKFlmE+8b25bIeyRQlt27zg61fRK2GLZ4PyMgM8h7YtgV12+ip06Z75Le
+        Q3sfkwcT5ITqUZe6KXZd+s7KTO8iPi6tnYyLjRMOGkZ6vd7ZmAX/8edE77Pz
+        PRoeD8pu/rZatDgXzKjq6AXKhHdui1bOYOxuBddxYElNci6jhGgDNis8RI8J
+        rOL9Jp/syRNcEcqBCoXlMz1LHo9pFFn5AgMBAAGjggGNMIIBiTAOBgNVHQ8B
         Af8EBAMCBaAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMAwGA1Ud
-        EwEB/wQCMAAwHQYDVR0OBBYEFGubMunXEgW7+FFC2GZ/QACp2EhmMB8GA1Ud
+        EwEB/wQCMAAwHQYDVR0OBBYEFOjziKFgMJINfXoyK568F9NA1dy5MB8GA1Ud
         IwQYMBaAFPt4TxL5YBWDLJ8XfzQZsy426kGJMGYGCCsGAQUFBwEBBFowWDAi
         BggrBgEFBQcwAYYWaHR0cDovLzEyNy4wLjAuMTo0MDAyLzAyBggrBgEFBQcw
         AoYmaHR0cDovLzEyNy4wLjAuMTo0MDAwL2FjbWUvaXNzdWVyLWNlcnQwFgYD
@@ -374,38 +1082,38 @@ http_interactions:
         L2V4YW1wbGUuY29tL2NybDBhBgNVHSAEWjBYMAgGBmeBDAECATBMBgMqAwQw
         RTAiBggrBgEFBQcCARYWaHR0cDovL2V4YW1wbGUuY29tL2NwczAfBggrBgEF
         BQcCAjATDBFEbyBXaGF0IFRob3UgV2lsdDANBgkqhkiG9w0BAQsFAAOCAQEA
-        LNVwbM1s9PKogqblZHr9ei5bO2s3RsI9Vxd5xll/3PB4fUdg9wbc97u7SNEn
-        jUd2KtPZJMpC59G3fWsVU9XhlbBPuoCVNz3SXQLFcKfZyJnEu7EaT/TbhJqW
-        rure7FnZEV8sfKHCgXoAhxyxE3+S0/vBTFteD/vT5gIX59/zH60ZXp0T48iY
-        nwc7ZPR3xqkwd4N1GuiXH647IuNB+51I82+Yc6AJlP/J5uYwGHjQd1wywLSC
-        fWxIBJuNl9YWb9Aj0BfSJzNfBVwpWE/ngA74CbgJbIO6wFGaKKEvVamCODcN
-        B+HKKtJgM7S2EZmORH0J5jv15w5n+uETtoCKHrYtOQ==
+        a36jsWEmOVq+6vFWkKc+Qjd/p51XSAgcHG8iKSuwB0+LafdGaChvdAqyVNzG
+        PJyDdgU5iY2vKEf9/cBdxGuezE/0MZlFod4iaup6DR0b5oFs8WnW6O0jVD6r
+        Mh+vwuJAf3FXr+EDyyGV7lgxC+6+p1GJugvPxCheH6irOwKr3xfM1rmAGTXD
+        mtG4MtOJ477ndKVgxjNM2dwdCCyL+wZSsITO0JJL7YhgoYwJ6T5uXhDy21rm
+        Q6lvLBKsu8aTpSOuxEVSevVGujFb4HUZ9dONSzk3HEEeB1t11O4hXtPq2zn9
+        CaiwESMz9f87BlJXrIQZpuihVKUb9+jrB87WaRIKyQ==
     http_version: 
-  recorded_at: Sun, 21 Aug 2016 18:26:34 GMT
+  recorded_at: Mon, 21 Nov 2016 19:25:12 GMT
 - request:
     method: get
-    uri: http://127.0.0.1:4000/acme/issuer-cert
+    uri: http://172.17.0.1:4000/acme/issuer-cert
     body:
       encoding: UTF-8
-      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJ6SWRnYjYwM3pXekVxS2I1X2d4bVdLT3RZcVN4anBrdEZ5TFlOTGtBWHQxSFVGdTlLWFA0alVaWTU1a3Joa0h1QzNZajBuX1JUUkd6X3d6aGtTX2dUNGRIQy1xM3JHT2FJdnhNZEZUcFNrX2VXRGFsbjgyWVpPM1M1dmx5VDF5ckFNVW5HZVZ5YWlWZGE5WEs1TkZIUGQ4ZE8zU01PNi1FcFdkVkgxZGwwWWxsemlCTmpFYmZwUkxvYlJiRUVRU01CLXlfNEVTRGlFWDJZQWFScG1QY2Q3dTc5aS1FQk5zd0FGM2pHbmxjWDllbExpSkZseXFVMFlvRGV1d2VFUmM0NzFUU2ktOEdoTUVCSmFCMUNXc0NjSFN2UjNoenp3QTctb3pCd0ttN3poOGJlM0tINmtFYUhYTVA2eEVmZnJLTVJjVjRvcW9iU21tUjlEVHdkWVdqTFEifSwibm9uY2UiOiJNSlFnNG9ab0JUMmFYcUlFRFRDSGlvX2FIRGEzOWMwd0JRZ1RHNjZQUEwwIn0","payload":"bnVsbA","signature":"uoCjcvXutfyxCa1fa-L2rdDUAL9ONZu1fwfjKhofd8SPettCJvAlA9ltdN1r5tqUV04QjBRHFschH2RtFTgUBWk-B14lU47V-ihlonk2lofSJr0aC_nnkCT2QR_ZMIEiIId4S7zZQA_FkWG7I6U-97biyk_wnvkTQwkD9pYMQwNtOaRuKpcPXrO7mc0sMG6KbhZ_cxZDCPaDivn-KKuZXw07qW4aQjm3UcesVbAtw4pUyfUH_Q5OdpR19cudFEnxg70GYS4F1MozfSqV5WMl0iIYLx_uAB5A3ivMaIyIL6CnB85u4EhoLEeWnAmYr77XRt_bAYgSLkXsXd0BBVIl0w"}'
+      string: '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp3ayI6eyJlIjoiQVFBQiIsImt0eSI6IlJTQSIsIm4iOiJwRXRBdUhGWjNmbEtlei1sSEhjNXlqUmFWWjZrekw5MGRTM0ZRWnk4Tmh1aTFuODNwTDlva2dsUk5OVUpWQk9QTUVxXzJYVzg0V1VfbTByLThXLVZvbzE0cWg3TnM5ME0yMGlxRzlDNmdPcE5qOHUyRjloRDRuR2VVYnpEV29JT0xyT1NVX2lmVzBaZUlxajZNQ2g4WTBZcE1XUHhfMFBIUDBaYlhTRnBiekZUaFAxM1dZV1RXWWtvUk9wSHpNa0tCem9pSHhxLXM4Rlc4aVpoU3JWMWF3anpqblE1UVR2N3d3c05zU1hnbGJrNnFRU2RjWkpaQ003NGM3b0laQVNESVhyc1ZrYVlhOW16QzFjeW9sTXRCbkVhYUVFRzhCY2NhX0JTdmNXdVFVR3ZXeUg0SzRTTWgxMU1KbDlBUVJZdmtqanEtV19nQXFsRmcybzBMV0JybXcifSwibm9uY2UiOiJHX3psVmFBSE8zMnltUjFZWklIMjVaSXBRaWRYcGlkZnc3YUdHc3pkVHM4In0","payload":"bnVsbA","signature":"bCmitoKkY_DQloSHwlA0xNstRsPp6Wujo3Lu-3nxSpnn3sGI0DWX18uYEScfAvWs0478WPp0Nw2RsbRlVX1TDdaK3Glhn1xB4diJe-Q-CrrqQs9IIzbW7_dbnNGfDCqlqDjQn_LqlVybQnGBKdy245qpjnl4dI5fpswnP9q-qZlUMyNk9OUvCj-6MCawRRPTyu1TB9MODLf6Z7GNYBHn7P72w0dTTx1o3DYx6a6UrEzyUzakBzqenBEHLD3oE1opvzMABBmhlnlDpFT4EeMNpzJveJUcLYF5pIUI8ICrrVf7KOWvyZvr7T9_xVn2C3M_ahr38Fm_KTrN91x2OrpXNw"}'
     headers:
       User-Agent:
-      - Acme::Client v0.4.0 (https://github.com/unixcharles/acme-client)
+      - Acme::Client v0.5.0 (https://github.com/unixcharles/acme-client)
   response:
     status:
       code: 200
       message: 
     headers:
       boulder-request-id:
-      - TblVSE73Ee-A1-qFBzr0N-eL5RtVhUkpPnGJN8PJ3HQ
+      - _9cH2K0EiQDM8-HKLuHrENfaTZkW4RZCBKDpMMjIpEM
       cache-control:
       - public, max-age=0, no-cache
       content-type:
       - application/pkix-cert
       replay-nonce:
-      - QKMA7yLnNLA2rkWLAUUMjbq1ZO0mTcZt3uu-9YJT9rs
+      - Al9R37tKA6F9sDqBYkopZdYnf_pyYusxii_vvb42I20
       date:
-      - Sun, 21 Aug 2016 18:26:34 GMT
+      - Mon, 21 Nov 2016 19:25:12 GMT
       content-length:
       - '1166'
       connection:
@@ -440,5 +1148,5 @@ http_interactions:
         x/4xbQa1v2frNvFBCmO59goz+jnWvfTtj2NjwDZ7vlMBsPm16dbKYC840uvR
         oZjxqsdc3ChCZjqimFqlNG/xoPA8+dTicZzCXE9ijPIcvW6y1aa3bGw=
     http_version: 
-  recorded_at: Sun, 21 Aug 2016 18:26:34 GMT
+  recorded_at: Mon, 21 Nov 2016 19:25:12 GMT
 recorded_with: VCR 3.0.3

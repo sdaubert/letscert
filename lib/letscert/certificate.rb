@@ -201,6 +201,7 @@ module LetsCert
     def check_roots(roots)
       no_roots = roots.select { |_k, v| v.nil? }
 
+      # rubocop:disable Style/GuardClause
       unless no_roots.empty?
         raise Error, 'root for the following domain(s) are not specified: ' \
                      "#{no_roots.keys.join(', ')}.\nTry --default_root or " \
