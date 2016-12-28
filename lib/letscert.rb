@@ -29,5 +29,11 @@ module LetsCert
 
 end
 
+if RbConfig::CONFIG['MAJOR'] == '2' && RbConfig::CONFIG['MINOR'].to_i < 4
+  # Ruby < 2.4 has bugs in OpenSSL.
+  # Need to mokey patch it.
+  require_relative 'letscert/openssl'
+end
+
 require_relative 'letscert/version'
 require_relative 'letscert/runner'
