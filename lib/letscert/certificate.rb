@@ -301,35 +301,31 @@ module LetsCert
 
     # Generate a key from options
     # @param [Hash] options +:cert_ecdsa+ and +:cert_rsa+ are mutually
-    #  exclusive. +:cert_rsa+ is taken first if +:cert_key_size+ is also
-    #  defined.
-    # @option options [Integer] cert_ecdsa key size to generate a ECDSA key
-    # @option options [Integer] cert_rsa key size to generate a RSA key
-    # @option options [Integer] cert_key_size key size to generate a RSA key
+    #  exclusive.
+    # @option options [Integer] :cert_ecdsa curve for which generate a cert
+    # @option options [Integer] :cert_rsa key size to generate a RSA key
     # @return [OpenSSL::Pkey::PKey]
     # @raise [Error]
     def generate_key(options)
-      if options[:cert_ecdsa] and
-         (options[:cert_rsa] or options[:cert_key_size])
+      if options[:cert_ecdsa] and options[:cert_rsa]
         raise Error, 'cannot generate a ECDSA key and a RSA key in one shot'
       end
 
       if options[:cert_ecdsa]
-        generate_ecdsa_key(options)
+        generate_ecdsa_key options[:cert_ecdsa]
       else
-        key_size = options[:cert_rsa] || options[:cert_key_size]
-        OpenSSL::PKey::RSA.generate key_size
+        OpenSSL::PKey::RSA.generate options[:cert_rsa]
       end
     end
 
     # Generate a ECDSA key
-    # @param [Hash] options option hash
+    # @param [String] curve curve name
     # @return [OpenSSL::PKey::EC]
-    def generate_ecdsa_key(options)
+    def generate_ecdsa_key(curve)
       key = OpenSSL::PKey::EC.new
-      key.group = OpenSSL::PKey::EC::Group.new options[:cert_ecdsa]
+      key.group = OpenSSL::PKey::EC::Group.new(curve)
       key.generate_key
-    rescue OpenSSL::PKey::ECError => ex
+    rescue OpenSSL::PKey::EC::Group::Error => ex
       raise unless ex.message =~ /^unknown curve/
       msg = "unknown curve. Supported curves are:\n"
       msg << secure_curves.join("\n")
