@@ -36,7 +36,7 @@ module LetsCert
     let(:options) { { roots: { 'example.com' => @tmpdir },
                       server: LetsCert::TEST::SERVER,
                       email: 'test@example.org',
-                      cert_key_size: 2048 } }
+                      cert_rsa: 2048 } }
 
     context '#get' do
 
@@ -191,7 +191,8 @@ module LetsCert
       end
 
       it 'generates a certificate for a ECDSA key' do
-        options[:cert_key_size] = nil
+        options[:files] = %w(fake)
+        options.delete :cert_rsa
         options[:cert_ecdsa] = 'prime256v1'
 
         VCR.use_cassette('http-01-challenge-ecdsa') do
@@ -199,8 +200,9 @@ module LetsCert
             certificate.get(@account_key2048, nil, options)
           end
         end
-        p certificate.cert.signature_algorihm
+        expect(certificate.cert.public_key).to be_a(OpenSSL::PKey::EC)
         expect(IOPluginHelper::FakeIOPlugin.saved_data[:cert]).to eq(certificate.cert)
+        expect(IOPluginHelper::FakeIOPlugin.saved_data[:chain]).to eq(certificate.chain)
       end
 
     end
