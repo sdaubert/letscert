@@ -315,6 +315,29 @@ module LetsCert
         end
       end
 
+      it 'returns 0 when there is no error and a new ECDSA certificate is created' do
+        add_option 'domain', 'example.com'
+        TEST::RUNNER_FILES.each { |file| add_option 'file', file }
+        add_option 'email', 'webmaster@example.com'
+        add_option 'server', TEST::SERVER
+        add_option 'cert-ecdsa', 'secp384r1'
+
+        Dir.mktmpdir('test_lestcert_runner') do |tmpdir|
+          add_option 'default-root', tmpdir
+
+          change_dir_to tmpdir do
+            ret = -1
+            VCR.use_cassette('complete-run-to-generate-new-ecdsa-cert') do
+              serve_files_from tmpdir do
+                ret = Runner.run
+              end
+            end
+            expect(ret).to eq(0)
+            TEST::RUNNER_FILES.each { |file| expect(File.exist? file).to be(true) }
+         end
+        end
+      end
+
       it 'returns 0 when there is no error and a certificate is renewed' do
         Dir.mktmpdir('test_lestcert_runner') do |tmpdir|
           change_dir_to tmpdir do

@@ -205,6 +205,23 @@ module LetsCert
         expect(IOPluginHelper::FakeIOPlugin.saved_data[:chain]).to eq(certificate.chain)
       end
 
+      it 'raises when an unknown ECDSA curve is requested' do
+        options.delete :cert_rsa
+        options[:cert_ecdsa] = 'primus128'
+
+        VCR.use_cassette('http-01-challenge-ecdsa-raises') do
+          expect { certificate.get(@account_key2048, nil, options) }.
+            to raise_error(Error, /^unknown curve. Supported curves are/)
+        end
+      end
+
+      it 'raises when RSA and ECDSA certificates are both requested' do
+        options[:cert_ecdsa] = 'prime256v1'
+        VCR.use_cassette('http-01-challenge-ecdsa-raises') do
+          expect { certificate.get(@account_key2048, nil, options) }.
+            to raise_error(Error, /one shot/)
+        end
+      end
     end
 
     context '#revoke' do
