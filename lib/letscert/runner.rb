@@ -152,23 +152,21 @@ module LetsCert
           @options[:files] << file
         end
 
-        opts.on('--cert-ecdsa CURVE', Integer,
-                'Generate ECDSA certificate for CURVE') do |bits|
-          @options[:cert_key_size] = bits
-          @options[:sig_scheme] = :ecdsa
+        opts.on('--cert-ecdsa CURVE', String,
+                'Generate ECDSA certificate on CURVE') do |curve|
+          @options[:cert_ecdsa] = curve
         end
 
         opts.on('--cert-rsa BITS', Integer,
-                'Generate RSA certificate with a BITS-bit key') do |bits|
-          @options[:cert_key_size] = bits
-          @options[:sig_scheme] = :rsa
+                'Generate RSA certificate with a BITS-bit',
+                'private key') do |bits|
+          @options[:cert_rsa] = bits
         end
         opts.on('--cert-key-size BITS', Integer,
                 'Certificate key size in bits',
                 '(equivalent to --cert-rsa)',
                 "(default: #{RSA_DEFAULT_KEY_SIZE})") do |bits|
-          @options[:cert_key_size] = bits
-          @options[:sig_scheme] = :rsa
+          @options[:cert_rsa] = bits
         end
 
         opts.accept(ValidTime) do |valid_time|
@@ -371,9 +369,8 @@ module LetsCert
     end
 
     def select_default_cert_type_if_none_specified
-      if @options[:cert_ecdsa].nil? and @options[:cert_rsa].nil? and
-         @options[:cert_key_size].nil?
-        @options[:cert_key_size] = RSA_DEFAULT_KEY_SIZE
+      if @options[:cert_ecdsa].nil? and @options[:cert_rsa].nil?
+        @options[:cert_rsa] = RSA_DEFAULT_KEY_SIZE
       end
     end
 

@@ -103,6 +103,21 @@ module LetsCert
         expect(runner.options[:valid_min].to_seconds).to eq(days * 24 * 3600)
       end
 
+      it 'sets default options when no option is given' do
+        runner.parse_options
+        expect(runner.options.size).to eq(9)
+        expect(runner.options.keys).to include(:verbose, :domains, :files, :valid_min,
+                                               :account_key_size, :tos_sha256, :server,
+                                               :roots, :cert_rsa)
+        expect(runner.options[:verbose]).to eq(0)
+        expect(runner.options[:domains]).to eq([])
+        expect(runner.options[:files]).to eq([])
+        expect(runner.options[:valid_min].to_s).to eq('30d')
+        expect(runner.options[:account_key_size]).to eq(4096)
+        expect(runner.options[:tos_sha256]).to be_a(String)
+        expect(runner.options[:roots]).to eq({})
+        expect(runner.options[:cert_rsa]).to eq(2048)
+      end
     end
 
     it '#check_persisted checks all mandatory components are covered by files' do
@@ -314,7 +329,7 @@ module LetsCert
             TEST::RUNNER_FILES.each { |file| add_option 'file', file }
             add_option 'email', 'webmaster@example.com'
             add_option 'server', TEST::SERVER
-            add_option 'cert-key-size',TEST::KEY_LENGTH
+            add_option 'cert-rsa',TEST::KEY_LENGTH
             add_option 'default-root', tmpdir
             add_option 'valid-min', 3600*24*31*3 # 3 months to force update
 
