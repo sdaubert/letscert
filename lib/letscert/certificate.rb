@@ -156,7 +156,8 @@ module LetsCert
     def get_acme_client(account_key, options)
       return @client if @client
 
-      key = get_account_key(account_key, options[:account_key_size])
+      key = get_account_key(account_key, options[:account_key_type],
+                            options[:account_key_size])
 
       logger.debug { "connect to #{options[:server]}" }
       @client = Acme::Client.new(private_key: key, endpoint: options[:server])
@@ -211,12 +212,29 @@ module LetsCert
 
     # Generate a new account key if no one is given in +data+
     # @param [OpenSSL::PKey,nil] key
+    # @param [String] key_type +'rsa'+ or +'ecdsa'+
     # @param [Integer] key_size
     # @return [OpenSSL::PKey::PKey]
-    def get_account_key(key, key_size)
+    def get_account_key(key, key_type, key_size)
       if key.nil?
         logger.info { 'No account key. Generate a new one...' }
-        OpenSSL::PKey::RSA.new(key_size)
+        case key_type
+        when 'rsa'
+          OpenSSL::PKey::RSA.new key_size
+        when 'ecdsa'
+          curve = case key_size
+                  when 256
+                    'prime256v1'
+                  # acme-client 0.5.0: only EC256 (P-256 + SHA256) supported
+                  #when 384
+                  #  'sec384r1'
+                  else
+                    raise Error, 'ECDSA account key size: only 256 bits'
+                  end
+          generate_ecdsa_key curve
+        else
+          raise Error, "unsupported '#{key_type}' account key type"
+        end
       else
         key
       end

@@ -36,6 +36,8 @@ module LetsCert
     let(:options) { { roots: { 'example.com' => @tmpdir },
                       server: LetsCert::TEST::SERVER,
                       email: 'test@example.org',
+                      account_key_type: 'ecdsa',
+                      account_key_size: 256,
                       cert_rsa: 2048 } }
 
     context '#get' do
@@ -92,6 +94,7 @@ module LetsCert
       it 'creates an ACME account key if none exists' do
         opts = {
           roots: options[:roots],
+          account_key_type: 'rsa',
           account_key_size: 128,
         }
 
@@ -127,6 +130,15 @@ module LetsCert
         VCR.use_cassette('http-01-challenge') do
           serve_files_from @tmpdir do
             certificate.get(@account_key2048, nil, options)
+          end
+        end
+        expect(certificate.cert).to_not eq(@cert)
+      end
+
+      it 'responds to HTTP-01 challenge with a ECDSA account key' do
+        VCR.use_cassette('http-01-challenge-ecdsa-account-key') do
+          serve_files_from @tmpdir do
+            certificate.get(nil, nil, options)
           end
         end
         expect(certificate.cert).to_not eq(@cert)
