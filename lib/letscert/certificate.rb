@@ -21,6 +21,7 @@
 # SOFTWARE.
 require 'acme-client'
 require_relative 'loggable'
+require_relative 'patched_ec_pkey'
 
 # rubocop:disable Metrics/ClassLength, Style/MultilineBlockLayout
 # rubocop:disable Style/BlockEndNewline, Style/BlockDelimiters
@@ -322,7 +323,7 @@ module LetsCert
     # @param [String] curve curve name
     # @return [OpenSSL::PKey::EC]
     def generate_ecdsa_key(curve)
-      key = OpenSSL::PKey::EC.new
+      key = (PatchedECPkey.needed? ? PatchedECPkey : OpenSSL::PKey::EC).new
       key.group = OpenSSL::PKey::EC::Group.new(curve)
       key.generate_key
     rescue OpenSSL::PKey::EC::Group::Error => ex
