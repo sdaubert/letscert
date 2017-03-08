@@ -21,6 +21,7 @@
 # SOFTWARE.
 require 'acme-client'
 require_relative 'loggable'
+require_relative 'patched_ec_pkey'
 
 # rubocop:disable Metrics/ClassLength, Style/MultilineBlockLayout
 # rubocop:disable Style/BlockEndNewline, Style/BlockDelimiters
@@ -82,7 +83,7 @@ module LetsCert
              else
                logger.info { 'Generate new private key' }
                generate_certificate options[:roots].keys,
-                                    options[:cert_key_size]
+                                    options
              end
 
       options[:files] ||= []
@@ -299,6 +300,52 @@ module LetsCert
       end
     end
 
+    # Generate a key from options
+    # @param [Hash] options +:cert_ecdsa+ and +:cert_rsa+ are mutually
+    #  exclusive.
+    # @option options [Integer] :cert_ecdsa curve for which generate a cert
+    # @option options [Integer] :cert_rsa key size to generate a RSA key
+    # @return [OpenSSL::Pkey::PKey]
+    # @raise [Error]
+    def generate_key(options)
+      if options[:cert_ecdsa] and options[:cert_rsa]
+        raise Error, 'cannot generate a ECDSA key and a RSA key in one shot'
+      end
+
+      if options[:cert_ecdsa]
+        generate_ecdsa_key options[:cert_ecdsa]
+      else
+        OpenSSL::PKey::RSA.generate options[:cert_rsa]
+      end
+    end
+
+    # Generate a ECDSA key
+    # @param [String] curve curve name
+    # @return [OpenSSL::PKey::EC]
+    def generate_ecdsa_key(curve)
+      key = (PatchedECPkey.needed? ? PatchedECPkey : OpenSSL::PKey::EC).new
+      key.group = OpenSSL::PKey::EC::Group.new(curve)
+      key.generate_key
+    rescue OpenSSL::PKey::EC::Group::Error => ex
+      raise unless ex.message =~ /^unknown curve/
+      msg = "unknown curve. Supported curves are:\n"
+      msg << secure_curves.join("\n")
+      raise Error, msg
+    end
+
+    # Return array of secure curve names
+    # @return [Array<String>]
+    def secure_curves
+      curves = OpenSSL::PKey::EC.builtin_curves.map { |ary| '%-20s%s' % ary }
+      # Remove all binary curves, and prime curves which field is less than
+      # 256 bits
+      curves.reject! do |el|
+        el =~ /binary/ or (el =~ /(\d+) bit/ and $1.to_i < 256)
+      end
+
+      curves
+    end
+
     # Generate new certificate for given domains with existing private key
     # @param [Array<String>] domains
     # @param [OpenSSL::PKey::PKey] pkey private key to use
@@ -315,10 +362,11 @@ module LetsCert
 
     # Generate new certificate for given domains
     # @param [Array<String>] domains
-    # @param [Integer] pkey_size size in bits for private key to generate
+    # @param [Hash] options option hash containing +:cert_ecdsa+, +:cert_rsa+
+    #  or +:cert_key_size+ key.
     # @return [OpenSSL::PKey::PKey] generated private key
-    def generate_certificate(domains, pkey_size)
-      pkey = OpenSSL::PKey::RSA.generate(pkey_size)
+    def generate_certificate(domains, options)
+      pkey = generate_key(options)
       generate_certificate_from_pkey domains, pkey
     end
 

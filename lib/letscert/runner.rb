@@ -42,6 +42,9 @@ module LetsCert
     # Exit value for error(s)
     RETURN_ERROR = 2
 
+    # Default key size for RSA certificates
+    RSA_DEFAULT_KEY_SIZE = 2048
+
     # Get options
     # @return [Hash]
     attr_reader :options
@@ -62,7 +65,6 @@ module LetsCert
         verbose: 0,
         domains: [],
         files: [],
-        cert_key_size: 2048,
         valid_min: ValidTime.new('30d'),
         account_key_size: 4096,
         tos_sha256: '33d233c8ab558ba6c8ebc370a509acdded8b80e5d587aa5d192193f3' \
@@ -150,10 +152,21 @@ module LetsCert
           @options[:files] << file
         end
 
+        opts.on('--cert-ecdsa CURVE', String,
+                'Generate ECDSA certificate on CURVE') do |curve|
+          @options[:cert_ecdsa] = curve
+        end
+
+        opts.on('--cert-rsa BITS', Integer,
+                'Generate RSA certificate with a BITS-bit',
+                'private key') do |bits|
+          @options[:cert_rsa] = bits
+        end
         opts.on('--cert-key-size BITS', Integer,
                 'Certificate key size in bits',
-                "(default: #{@options[:cert_key_size]})") do |bits|
-          @options[:cert_key_size] = bits
+                '(equivalent to --cert-rsa)',
+                "(default: #{RSA_DEFAULT_KEY_SIZE})") do |bits|
+          @options[:cert_rsa] = bits
         end
 
         opts.accept(ValidTime) do |valid_time|
@@ -207,6 +220,7 @@ module LetsCert
 
       @opt_parser.parse!
       compute_roots
+      select_default_cert_type_if_none_specified
     end
 
     # Check all components are covered by plugins
@@ -352,6 +366,12 @@ module LetsCert
       end
 
       @options[:roots] = roots
+    end
+
+    def select_default_cert_type_if_none_specified
+      if @options[:cert_ecdsa].nil? and @options[:cert_rsa].nil?
+        @options[:cert_rsa] = RSA_DEFAULT_KEY_SIZE
+      end
     end
 
     def persisted_data

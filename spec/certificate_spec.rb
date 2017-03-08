@@ -36,7 +36,7 @@ module LetsCert
     let(:options) { { roots: { 'example.com' => @tmpdir },
                       server: LetsCert::TEST::SERVER,
                       email: 'test@example.org',
-                      cert_key_size: 2048 } }
+                      cert_rsa: 2048 } }
 
     context '#get' do
 
@@ -188,6 +188,39 @@ module LetsCert
         end
         expect(IOPluginHelper::FakeIOPlugin.saved_data[:cert]).to eq(certificate.cert)
         expect(IOPluginHelper::FakeIOPlugin.saved_data[:chain]).to eq(certificate.chain)
+      end
+
+      it 'generates a certificate for a ECDSA key' do
+        options[:files] = %w(fake)
+        options.delete :cert_rsa
+        options[:cert_ecdsa] = 'prime256v1'
+
+        VCR.use_cassette('http-01-challenge-ecdsa') do
+          serve_files_from @tmpdir do
+            certificate.get(@account_key2048, nil, options)
+          end
+        end
+        expect(certificate.cert.public_key).to be_a(OpenSSL::PKey::EC)
+        expect(IOPluginHelper::FakeIOPlugin.saved_data[:cert]).to eq(certificate.cert)
+        expect(IOPluginHelper::FakeIOPlugin.saved_data[:chain]).to eq(certificate.chain)
+      end
+
+      it 'raises when an unknown ECDSA curve is requested' do
+        options.delete :cert_rsa
+        options[:cert_ecdsa] = 'primus128'
+
+        VCR.use_cassette('http-01-challenge-ecdsa-raises') do
+          expect { certificate.get(@account_key2048, nil, options) }.
+            to raise_error(Error, /^unknown curve. Supported curves are/)
+        end
+      end
+
+      it 'raises when RSA and ECDSA certificates are both requested' do
+        options[:cert_ecdsa] = 'prime256v1'
+        VCR.use_cassette('http-01-challenge-ecdsa-raises') do
+          expect { certificate.get(@account_key2048, nil, options) }.
+            to raise_error(Error, /one shot/)
+        end
       end
     end
 

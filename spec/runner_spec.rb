@@ -103,6 +103,21 @@ module LetsCert
         expect(runner.options[:valid_min].to_seconds).to eq(days * 24 * 3600)
       end
 
+      it 'sets default options when no option is given' do
+        runner.parse_options
+        expect(runner.options.size).to eq(9)
+        expect(runner.options.keys).to include(:verbose, :domains, :files, :valid_min,
+                                               :account_key_size, :tos_sha256, :server,
+                                               :roots, :cert_rsa)
+        expect(runner.options[:verbose]).to eq(0)
+        expect(runner.options[:domains]).to eq([])
+        expect(runner.options[:files]).to eq([])
+        expect(runner.options[:valid_min].to_s).to eq('30d')
+        expect(runner.options[:account_key_size]).to eq(4096)
+        expect(runner.options[:tos_sha256]).to be_a(String)
+        expect(runner.options[:roots]).to eq({})
+        expect(runner.options[:cert_rsa]).to eq(2048)
+      end
     end
 
     it '#check_persisted checks all mandatory components are covered by files' do
@@ -300,6 +315,29 @@ module LetsCert
         end
       end
 
+      it 'returns 0 when there is no error and a new ECDSA certificate is created' do
+        add_option 'domain', 'example.com'
+        TEST::RUNNER_FILES.each { |file| add_option 'file', file }
+        add_option 'email', 'webmaster@example.com'
+        add_option 'server', TEST::SERVER
+        add_option 'cert-ecdsa', 'secp384r1'
+
+        Dir.mktmpdir('test_lestcert_runner') do |tmpdir|
+          add_option 'default-root', tmpdir
+
+          change_dir_to tmpdir do
+            ret = -1
+            VCR.use_cassette('complete-run-to-generate-new-ecdsa-cert') do
+              serve_files_from tmpdir do
+                ret = Runner.run
+              end
+            end
+            expect(ret).to eq(0)
+            TEST::RUNNER_FILES.each { |file| expect(File.exist? file).to be(true) }
+         end
+        end
+      end
+
       it 'returns 0 when there is no error and a certificate is renewed' do
         Dir.mktmpdir('test_lestcert_runner') do |tmpdir|
           change_dir_to tmpdir do
@@ -314,7 +352,7 @@ module LetsCert
             TEST::RUNNER_FILES.each { |file| add_option 'file', file }
             add_option 'email', 'webmaster@example.com'
             add_option 'server', TEST::SERVER
-            add_option 'cert-key-size',TEST::KEY_LENGTH
+            add_option 'cert-rsa',TEST::KEY_LENGTH
             add_option 'default-root', tmpdir
             add_option 'valid-min', 3600*24*31*3 # 3 months to force update
 
