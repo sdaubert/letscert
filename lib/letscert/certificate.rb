@@ -226,9 +226,8 @@ module LetsCert
           curve = case key_size
                   when 256
                     'prime256v1'
-                  # acme-client 0.5.0: only EC256 (P-256 + SHA256) supported
-                  #when 384
-                  #  'sec384r1'
+                  when 384
+                    'secp384r1'
                   else
                     raise Error, 'ECDSA account key size: only 256 bits'
                   end

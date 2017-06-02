@@ -135,8 +135,8 @@ module LetsCert
         expect(certificate.cert).to_not eq(@cert)
       end
 
-      it 'responds to HTTP-01 challenge with a ECDSA account key' do
-        VCR.use_cassette('http-01-challenge-ecdsa-account-key') do
+      it 'responds to HTTP-01 challenge with a 256-bit ECDSA account key' do
+        VCR.use_cassette('http-01-challenge-ecdsa256-account-key') do
           serve_files_from @tmpdir do
             certificate.get(nil, nil, options)
           end
@@ -144,6 +144,18 @@ module LetsCert
         expect(certificate.cert).to_not eq(@cert)
         expect(certificate.client.jwk).to be_a(Acme::Client::JWK::ECDSA)
         expect(certificate.client.jwk.jwa_alg).to eq('ES256')
+      end
+
+      it 'responds to HTTP-01 challenge with a 384-bit ECDSA account key' do
+        VCR.use_cassette('http-01-challenge-ecdsa384-account-key') do
+          serve_files_from @tmpdir do
+            options[:account_key_size] = 384
+            certificate.get(nil, nil, options)
+          end
+        end
+        expect(certificate.cert).to_not eq(@cert)
+        expect(certificate.client.jwk).to be_a(Acme::Client::JWK::ECDSA)
+        expect(certificate.client.jwk.jwa_alg).to eq('ES384')
       end
 
       it 'raises if HTTP-01 challenge is unavailable' do
