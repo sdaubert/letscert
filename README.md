@@ -26,8 +26,11 @@ letscert -d example.org:/var/www/example.org/html --email my.name@example.org \
   -f account_key.json -f key.pem -f cert.pem -f chain.pem
 ```
 
-Commands are the sames for certificate renewal.
+Theses commands generate RSA certificates, using a RSA account key. To generate ECDSA
+keys and certificates, use `--cert-ecdsa CURVE` (CURVE: `prime256v1` or `sec384r1`)
+and/or `--account-key-type ecdsa` options.
 
+Commands are the sames for certificate renewal.
 
 ## Generate a key pair and get a signed certificate for multi-domains:
 Generate a single certificate for `example.org` and `www.example.org`:
