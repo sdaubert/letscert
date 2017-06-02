@@ -229,7 +229,7 @@ module LetsCert
                   when 384
                     'secp384r1'
                   else
-                    raise Error, 'ECDSA account key size: only 256 bits'
+                    raise Error, 'ECDSA account key size: only 256 or 384 bits'
                   end
           generate_ecdsa_key curve
         else
