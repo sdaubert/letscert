@@ -50,7 +50,7 @@ module LetsCert
     # @param [OpenSSL::PKey::PKey,nil] account_key private key to
     #   authenticate to ACME server
     # @param [OpenSSL::PKey::PKey, nil] key private key from which make a
-    #   certificate. If +nil+, generate a new one with +options[:cet_key_size]+
+    #   certificate. If +nil+, generate a new one with +options[:cert_key_size]+
     #   bits.
     # @param [Hash] options option hash
     # @option options [Fixnum] :account_key_size ACME account private key size
@@ -331,8 +331,10 @@ module LetsCert
       end
 
       if options[:cert_ecdsa]
+        logger.debug { "generate a #{options[:cert_ecdsa]}-bit ECDSA private key" }
         generate_ecdsa_key options[:cert_ecdsa]
       else
+        logger.debug { "generate a #{options[:cert_rsa]}-bit RSA private key" }
         OpenSSL::PKey::RSA.generate options[:cert_rsa]
       end
     end
@@ -369,8 +371,10 @@ module LetsCert
     # @param [OpenSSL::PKey::PKey] pkey private key to use
     # @return [OpenSSL::PKey::PKey] +pkey+
     def generate_certificate_from_pkey(domains, pkey)
+      logger.debug { 'generate certificate request' }
       csr = Acme::Client::CertificateRequest.new(names: domains,
                                                  private_key: pkey)
+      logger.debug { 'requesting certificate...' }
       acme_cert = client.new_certificate(csr)
       @cert = acme_cert.x509
       @chain = acme_cert.x509_chain
