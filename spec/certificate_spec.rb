@@ -36,6 +36,8 @@ module LetsCert
     let(:options) { { roots: { 'example.com' => @tmpdir },
                       server: LetsCert::TEST::SERVER,
                       email: 'test@example.org',
+                      account_key_type: 'ecdsa',
+                      account_key_size: 256,
                       cert_rsa: 2048 } }
 
     context '#get' do
@@ -86,12 +88,13 @@ module LetsCert
           expect { certificate.get(@account_key2048, nil, opts) }.
             to raise_error(@no_server_exception)
         end
-        expect(certificate.client.private_key).to eq(@account_key2048)
+        expect(certificate.client.jwk.to_h[:n]).to eq(jwk_encode(@account_key2048.n.to_s(2)))
       end
 
       it 'creates an ACME account key if none exists' do
         opts = {
           roots: options[:roots],
+          account_key_type: 'rsa',
           account_key_size: 128,
         }
 
@@ -100,7 +103,7 @@ module LetsCert
           expect { certificate.get(nil, nil, opts) }.
             to raise_error(@no_server_exception)
         end
-        expect(certificate.client.private_key).to be_a(OpenSSL::PKey::RSA)
+        expect(certificate.client.jwk).to be_a(Acme::Client::JWK::RSA)
       end
 
       it 'creates an ACME client with provided account key and end point' do
@@ -109,7 +112,7 @@ module LetsCert
           expect { certificate.get(@account_key2048, nil, options) }.
             to raise_error(Acme::Client::Error)
         end
-        expect(certificate.client.private_key).to eq(@account_key2048)
+        expect(certificate.client.jwk.to_h[:n]).to eq(jwk_encode(@account_key2048.n.to_s(2)))
         expect(certificate.client.instance_eval { @endpoint }).to eq(options[:server])
       end
 
@@ -130,6 +133,29 @@ module LetsCert
           end
         end
         expect(certificate.cert).to_not eq(@cert)
+      end
+
+      it 'responds to HTTP-01 challenge with a 256-bit ECDSA account key' do
+        VCR.use_cassette('http-01-challenge-ecdsa256-account-key') do
+          serve_files_from @tmpdir do
+            certificate.get(nil, nil, options)
+          end
+        end
+        expect(certificate.cert).to_not eq(@cert)
+        expect(certificate.client.jwk).to be_a(Acme::Client::JWK::ECDSA)
+        expect(certificate.client.jwk.jwa_alg).to eq('ES256')
+      end
+
+      it 'responds to HTTP-01 challenge with a 384-bit ECDSA account key' do
+        VCR.use_cassette('http-01-challenge-ecdsa384-account-key') do
+          serve_files_from @tmpdir do
+            options[:account_key_size] = 384
+            certificate.get(nil, nil, options)
+          end
+        end
+        expect(certificate.cert).to_not eq(@cert)
+        expect(certificate.client.jwk).to be_a(Acme::Client::JWK::ECDSA)
+        expect(certificate.client.jwk.jwa_alg).to eq('ES384')
       end
 
       it 'raises if HTTP-01 challenge is unavailable' do

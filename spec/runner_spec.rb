@@ -103,16 +103,47 @@ module LetsCert
         expect(runner.options[:valid_min].to_seconds).to eq(days * 24 * 3600)
       end
 
+      it '--account-key-type accepts rsa' do
+        add_option 'account-key-type', 'rsa'
+
+        expect { runner.parse_options }.to_not raise_error
+        expect(runner.options[:account_key_type]).to eq('rsa')
+        expect(runner.options[:account_key_size]).to eq(4096)
+      end
+
+      it '--account-key-type accepts ecdsa' do
+        add_option 'account-key-type', 'ecdsa'
+
+        expect { runner.parse_options }.to_not raise_error
+        expect(runner.options[:account_key_type]).to eq('ecdsa')
+        expect(runner.options[:account_key_size]).to eq(384)
+      end
+
+      it '--account-key-type raises error for unsupported type' do
+        add_option 'account-key-type', 'unknown'
+        expect { runner.parse_options }.to raise_error(OptionParser::InvalidArgument)
+      end
+
+      it '--account-key-size sets the account key size' do
+        add_option 'account-key-type', 'ecdsa'
+        add_option 'account-key-size', 256
+
+        runner.parse_options
+        expect(runner.options[:account_key_type]).to eq('ecdsa')
+        expect(runner.options[:account_key_size]).to eq(256)
+      end
+
       it 'sets default options when no option is given' do
         runner.parse_options
-        expect(runner.options.size).to eq(9)
+        expect(runner.options.size).to eq(10)
         expect(runner.options.keys).to include(:verbose, :domains, :files, :valid_min,
-                                               :account_key_size, :tos_sha256, :server,
+                                               :account_key_type, :tos_sha256, :server,
                                                :roots, :cert_rsa)
         expect(runner.options[:verbose]).to eq(0)
         expect(runner.options[:domains]).to eq([])
         expect(runner.options[:files]).to eq([])
         expect(runner.options[:valid_min].to_s).to eq('30d')
+        expect(runner.options[:account_key_type]).to eq('rsa')
         expect(runner.options[:account_key_size]).to eq(4096)
         expect(runner.options[:tos_sha256]).to be_a(String)
         expect(runner.options[:roots]).to eq({})

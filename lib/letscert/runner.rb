@@ -45,6 +45,12 @@ module LetsCert
     # Default key size for RSA certificates
     RSA_DEFAULT_KEY_SIZE = 2048
 
+    # Default account key size for RSA type
+    RSA_DEFAULT_ACCOUNT_KEY_SIZE = 4096
+
+    # Default account key size for ECDSA type
+    ECDSA_DEFAULT_ACCOUNT_KEY_SIZE = 384
+
     # Get options
     # @return [Hash]
     attr_reader :options
@@ -66,7 +72,7 @@ module LetsCert
         domains: [],
         files: [],
         valid_min: ValidTime.new('30d'),
-        account_key_size: 4096,
+        account_key_type: 'rsa',
         tos_sha256: '33d233c8ab558ba6c8ebc370a509acdded8b80e5d587aa5d192193f3' \
                     '5226540f',
         server: 'https://acme-v01.api.letsencrypt.org/directory'
@@ -188,9 +194,16 @@ module LetsCert
                        ' specified  by --server')
         opts.separator('')
 
+        opts.on('--account-key-type TYPE', %w(rsa ecdsa),
+                'Account key type: rsa or ecdsa',
+                '(Defaul: rsa)') do |type|
+          @options[:account_key_type] = type
+        end
+
         opts.on('--account-key-size BITS', Integer,
                 'Account key size (default: ' \
-                "#{@options[:account_key_size]})") do |bits|
+                "#{RSA_DEFAULT_ACCOUNT_KEY_SIZE} (RSA) or ",
+                "#{ECDSA_DEFAULT_ACCOUNT_KEY_SIZE} (ECDSA))") do |bits|
           @options[:account_key_size] = bits
         end
 
@@ -221,6 +234,7 @@ module LetsCert
       @opt_parser.parse!
       compute_roots
       select_default_cert_type_if_none_specified
+      select_default_account_key_size_if_none_specified
     end
 
     # Check all components are covered by plugins
@@ -371,6 +385,15 @@ module LetsCert
     def select_default_cert_type_if_none_specified
       if @options[:cert_ecdsa].nil? and @options[:cert_rsa].nil?
         @options[:cert_rsa] = RSA_DEFAULT_KEY_SIZE
+      end
+    end
+
+    def select_default_account_key_size_if_none_specified
+      case @options[:account_key_type]
+      when 'rsa'
+        @options[:account_key_size] ||= RSA_DEFAULT_ACCOUNT_KEY_SIZE
+      when 'ecdsa'
+        @options[:account_key_size] ||= ECDSA_DEFAULT_ACCOUNT_KEY_SIZE
       end
     end
 
