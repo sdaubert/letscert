@@ -142,6 +142,8 @@ module LetsCert
           end
         end
         expect(certificate.cert).to_not eq(@cert)
+        expect(certificate.client.jwk).to be_a(Acme::Client::JWK::ECDSA)
+        expect(certificate.client.jwk.jwa_alg).to eq('ES256')
       end
 
       it 'raises if HTTP-01 challenge is unavailable' do
