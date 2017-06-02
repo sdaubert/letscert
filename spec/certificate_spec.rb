@@ -88,7 +88,7 @@ module LetsCert
           expect { certificate.get(@account_key2048, nil, opts) }.
             to raise_error(@no_server_exception)
         end
-        expect(certificate.client.private_key).to eq(@account_key2048)
+        expect(certificate.client.jwk.to_h[:n]).to eq(jwk_encode(@account_key2048.n.to_s(2)))
       end
 
       it 'creates an ACME account key if none exists' do
@@ -103,7 +103,7 @@ module LetsCert
           expect { certificate.get(nil, nil, opts) }.
             to raise_error(@no_server_exception)
         end
-        expect(certificate.client.private_key).to be_a(OpenSSL::PKey::RSA)
+        expect(certificate.client.jwk).to be_a(Acme::Client::JWK::RSA)
       end
 
       it 'creates an ACME client with provided account key and end point' do
@@ -112,7 +112,7 @@ module LetsCert
           expect { certificate.get(@account_key2048, nil, options) }.
             to raise_error(Acme::Client::Error)
         end
-        expect(certificate.client.private_key).to eq(@account_key2048)
+        expect(certificate.client.jwk.to_h[:n]).to eq(jwk_encode(@account_key2048.n.to_s(2)))
         expect(certificate.client.instance_eval { @endpoint }).to eq(options[:server])
       end
 

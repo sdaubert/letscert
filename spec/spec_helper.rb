@@ -16,6 +16,7 @@ RSpec.configure do |c|
   c.include HttpHelper
   c.include FileHelper
   c.include CertificateHelper
+  c.include JwkHelper
 end
 
 VCR.configure do |config|

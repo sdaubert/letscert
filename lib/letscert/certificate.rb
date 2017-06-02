@@ -72,6 +72,9 @@ module LetsCert
       check_roots(options[:roots])
       logger.debug { "webroots are: #{options[:roots].inspect}" }
 
+      account_key = get_account_key(account_key, options[:account_key_type],
+                                    options[:account_key_size])
+
       client = get_acme_client(account_key, options)
 
       do_challenges client, options[:roots]
@@ -88,7 +91,7 @@ module LetsCert
 
       options[:files] ||= []
       options[:files].each do |plugname|
-        IOPlugin.registered[plugname].save(account_key: client.private_key,
+        IOPlugin.registered[plugname].save(account_key: account_key,
                                            key: pkey, cert: @cert,
                                            chain: @chain)
       end
@@ -157,11 +160,8 @@ module LetsCert
     def get_acme_client(account_key, options)
       return @client if @client
 
-      key = get_account_key(account_key, options[:account_key_type],
-                            options[:account_key_size])
-
       logger.debug { "connect to #{options[:server]}" }
-      @client = Acme::Client.new(private_key: key, endpoint: options[:server])
+      @client = Acme::Client.new(private_key: account_key, endpoint: options[:server])
 
       yield @client if block_given?
 
